@@ -12,7 +12,12 @@ class VendorController extends GetxController{
   final VendorRepo vendorRepo;
   VendorController({required this.vendorRepo});
   List<VendorModel> _vendorList = [];
+  // List<FoodModel> _foodList = [];
+  // List<int> _foodListIds = [];
+
   List<VendorModel> get vendorList =>_vendorList;
+  // List<FoodModel> get foodList =>_foodList;
+  // List<int> get foodListIds =>_foodListIds;
 
   bool _isLoaded = false;
   bool get isLoaded => _isLoaded;
@@ -23,7 +28,19 @@ class VendorController extends GetxController{
 
     if(/*response.statusCode == 200*/true){
       _vendorList = [];
+      // _foodList = [];
+      // _foodListIds = [];
       _vendorList.addAll(Vendors.fromJson(data).contents);
+
+      // for (var i = 0; i < vendorList.length; i++)
+      //   {
+      //     _foodList.addAll(vendorList[i].food_model);
+      //     for (var j = 0; j < vendorList[i].food_model.length; j++)
+      //     {
+      //       _foodListIds.add(vendorList[i].vendorId!);
+      //     }
+      //   }
+
       _isLoaded = true;
       update(); // refresh app
     }else{

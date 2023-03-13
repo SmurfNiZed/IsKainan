@@ -133,7 +133,10 @@ class VendorDetail extends StatelessWidget {
                                         BigText(text: "₱" + vendorProfile.food_model[index].foodPrice.toString(), size: Dimensions.font16,),
                                         SizedBox(height: Dimensions.height10),
                                         Row(
+                                          mainAxisAlignment: MainAxisAlignment.start,
                                           children: [
+                                            RectangleIconWidget(text: "NEW", iconColor: Colors.yellow[600]!, isActivated: true),
+                                            SizedBox(width: Dimensions.width10/2,),
                                             vendorProfile.food_model[index].isSpicy!?RectangleIconWidget(text: "SPICY", iconColor: Colors.red[900]!, isActivated: vendorProfile.food_model[index].isSpicy!):SmallText(text: ""),
                                             vendorProfile.food_model[index].isSpicy!?SizedBox(width: Dimensions.width10,):SmallText(text: ""),
                                           ],

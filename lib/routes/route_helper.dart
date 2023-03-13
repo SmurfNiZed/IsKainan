@@ -9,6 +9,7 @@ import 'package:iskainan/pages/food/recommended_food_detail.dart';
 
 import '../pages/Home/address_page.dart';
 import '../pages/Home/budget_page.dart';
+import '../pages/Home/food_list.dart';
 import '../pages/Home/survey.dart';
 import '../pages/Home/vendor_list.dart';
 import '../pages/Home/vendor_page.dart';
@@ -26,6 +27,7 @@ class RouteHelper{
   static const String foodDetail = "/food-detail";  // food detail
   static const String vendorDetail = "/vendor-detail";  // vendor detail page
   static const String vendorList = "/vendor-list";
+  static const String foodList = "/food-list";
 
   static String getSplashPage()=>'$splashPage';
   static String getInitial()=>'$initial';
@@ -37,6 +39,7 @@ class RouteHelper{
   static String getVendorDetail(int pageId)=>'$vendorDetail?pageId=$pageId';
   static String getFoodDetail(int pageId, int foodId)=>'$foodDetail?pageId=$pageId&foodId=$foodId';
   static String getVendorList()=>'$vendorList';
+  static String getFoodList()=>'$foodList';
 
   static List<GetPage> routes=[
     GetPage(name: splashPage, page: ()=>SplashScreen()),
@@ -54,6 +57,8 @@ class RouteHelper{
     GetPage(name: vendorLoginPage, page: ()=>VendorLoginPage()),
 
     GetPage(name: vendorList, page: ()=>VendorList()),
+
+    GetPage(name: foodList, page: ()=>FoodList()),
 
     GetPage(name: vendorDetail, page:(){
       var pageId = Get.parameters['pageId'];

@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:iskainan/main.dart';
+import 'package:iskainan/pages/Home/food_list.dart';
 import 'package:iskainan/pages/Home/vendor_list.dart';
 import 'package:iskainan/widgets/big_text.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
@@ -83,7 +84,7 @@ class _HomePageState extends State<HomePage> {
     return [
       MainPage(),
       VendorList(),
-      Container(child: Center(child: BigText(text: "Food List in Lexicographical Order"))),
+      FoodList(),
       Container(child: Center(child: BigText(text: "About Us"))),
     ];
   }
