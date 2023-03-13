@@ -10,6 +10,7 @@ import 'package:iskainan/pages/food/recommended_food_detail.dart';
 import '../pages/Home/address_page.dart';
 import '../pages/Home/budget_page.dart';
 import '../pages/Home/food_list.dart';
+import '../pages/Home/sign_in_page.dart';
 import '../pages/Home/survey.dart';
 import '../pages/Home/vendor_list.dart';
 import '../pages/Home/vendor_page.dart';
@@ -23,7 +24,8 @@ class RouteHelper{
   static const String budgetPage = '/budget-page';  // budget page
   static const String addressPage = '/address-page'; // address page
   static const String allergiesPage = '/allergies-page'; // allergiespage
-  static const String vendorLoginPage = '/vendor-login-page'; //vendor login page
+  static const String vendorSignUpPage = '/vendor-signup-page'; //vendor login page
+  static const String vendorSignInPage = '/vendor-signin-page'; //vendor login page
   static const String foodDetail = "/food-detail";  // food detail
   static const String vendorDetail = "/vendor-detail";  // vendor detail page
   static const String vendorList = "/vendor-list";
@@ -35,7 +37,8 @@ class RouteHelper{
   static String getBudgetPage()=>'$budgetPage';
   static String getAddressPage()=>'$addressPage';
   static String getAllergiesPage()=>'$allergiesPage';
-  static String getVendorLoginPage()=>'$vendorLoginPage';
+  static String getVendorSignUpPage()=>'$vendorSignUpPage';
+  static String getVendorSignInPage()=>'$vendorSignInPage';
   static String getVendorDetail(int pageId)=>'$vendorDetail?pageId=$pageId';
   static String getFoodDetail(int pageId, int foodId)=>'$foodDetail?pageId=$pageId&foodId=$foodId';
   static String getVendorList()=>'$vendorList';
@@ -54,7 +57,9 @@ class RouteHelper{
 
     GetPage(name: allergiesPage, page: ()=>AllergiesPage()),
 
-    GetPage(name: vendorLoginPage, page: ()=>VendorLoginPage()),
+    GetPage(name: vendorSignUpPage, page: ()=>VendorSignUpPage()),
+
+    GetPage(name: vendorSignInPage, page: ()=>VendorSignInPage()),
 
     GetPage(name: vendorList, page: ()=>VendorList()),
 

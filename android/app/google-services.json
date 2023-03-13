@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "18880304485",
+    "firebase_url": "https://iskainan-default-rtdb.asia-southeast1.firebasedatabase.app",
     "project_id": "iskainan",
     "storage_bucket": "iskainan.appspot.com"
   },
@@ -29,6 +30,13 @@
             {
               "client_id": "18880304485-26034qguolt6tmkfp53ejdflu93e7pa1.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "18880304485-gm7s6iq50a9t8fe30jdkbv6e34m1umbc.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.iskainan"
+              }
             }
           ]
         }

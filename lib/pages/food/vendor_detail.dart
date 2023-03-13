@@ -72,7 +72,7 @@ class VendorDetail extends StatelessWidget {
             ),
             pinned: true,
             backgroundColor: AppColors.mainColor,
-            expandedHeight: Dimensions.screenHeight/3,
+            expandedHeight: Dimensions.screenHeight*2/5,
             flexibleSpace: FlexibleSpaceBar(
               background: Image.asset(
                   vendorProfile.vendorImg!,

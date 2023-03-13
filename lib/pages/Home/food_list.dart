@@ -92,12 +92,12 @@ class FoodList extends StatelessWidget {
                                                   SizedBox(height: Dimensions.height10/2,),
                                                   Row(
                                                     children: [
-                                                      RectangleIconWidget(text: "NEW", iconColor: Colors.yellow[700]!, isActivated: true),
+                                                      RectangleIconWidget(text: "NEW", iconColor: AppColors.isNew, isActivated: true),
                                                       SizedBox(width: Dimensions.width10/2,),
                                                       vendor.vendorList[vendorId].food_model[foodId].isSpicy!?RectangleIconWidget(text: "SPICY", iconColor: Colors.red[900]!, isActivated: vendor.vendorList[vendorId].food_model[foodId].isSpicy!):Text(""),
                                                     ],
                                                   ),
-                                                  SizedBox(height: Dimensions.height20,)
+                                                  SizedBox(height: Dimensions.height10/2,)
                                                 ],
                                               )
                                             ],

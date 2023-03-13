@@ -92,8 +92,8 @@ class VendorList extends StatelessWidget {
                                         children: [
                                           BigText(text: vendor.vendorList[index].price_range.length > 1?"₱"+((vendor.vendorList[index].price_range).reduce((a, b) => a < b ? a : b).toStringAsFixed(2) + " - ₱" + (vendor.vendorList[index].price_range).reduce((a, b) => a > b ? a : b).toStringAsFixed(2)):"₱"+(vendor.vendorList[index].price_range).reduce((a, b) => a < b ? a : b).toStringAsFixed(2), size: Dimensions.font16*.9),
                                           SizedBox(height: Dimensions.height10/2,),
-                                          RectangleIconWidget(text: "NEW", iconColor: Colors.yellow[700]!, isActivated: true),
-                                          SizedBox(height: Dimensions.height20,)
+                                          RectangleIconWidget(text: "NEW", iconColor: AppColors.isNew, isActivated: true),
+                                          SizedBox(height: Dimensions.height10/2,)
                                         ],
                                       )
                                     ],

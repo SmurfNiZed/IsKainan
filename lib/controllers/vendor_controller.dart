@@ -1,6 +1,8 @@
 
 import 'dart:convert';
 
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:get/get_connect/http/src/response/response.dart';
 import 'package:get/get_state_manager/src/simple/get_controllers.dart';
 
@@ -24,13 +26,15 @@ class VendorController extends GetxController{
 
   Future<void> getVendorList()async {
     Response response = await vendorRepo.getVendorList();
+    final databaseRef = FirebaseDatabase.instance.ref();
     // successful
 
-    if(/*response.statusCode == 200*/true){
+    if(response.statusCode == 200){
+
       _vendorList = [];
       // _foodList = [];
       // _foodListIds = [];
-      _vendorList.addAll(Vendors.fromJson(data).contents);
+      _vendorList.addAll(Vendors.fromJson(response.body).contents);
 
       // for (var i = 0; i < vendorList.length; i++)
       //   {
