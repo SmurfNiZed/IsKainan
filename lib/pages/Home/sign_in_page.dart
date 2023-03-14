@@ -33,7 +33,30 @@ class VendorSignInPage extends StatelessWidget {
               Container(
                   child: Center(child: Image.asset('assets/images/logo.png', width: Dimensions.splashImg,))
               ),
-              SizedBox(height: Dimensions.height45*2,),
+              SizedBox(height: Dimensions.height45*3/2,),
+
+              Row(
+                children: [
+                  SizedBox(width: Dimensions.width20,),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      BigText(text: "Hello", size: Dimensions.font20*3+Dimensions.font16,),
+                      RichText(text: TextSpan(
+                          text: "Sign into your account",
+                          style:
+                          TextStyle(
+                              color: Colors.grey[500],
+                              fontSize: Dimensions.font20
+                          )
+                      )
+                        ,),
+                    ],
+                  ),
+                ],
+              ),
+
+              SizedBox(height: Dimensions.height45,),
 
               // Email
               AppTextField(textController: emailController, hintText: "Email", icon: Icons.email_rounded),
@@ -42,7 +65,22 @@ class VendorSignInPage extends StatelessWidget {
               // Password
               AppTextField(textController: passwordController, hintText: "Password", icon: Icons.key_rounded),
               SizedBox(height: Dimensions.height20),
-
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  RichText(text: TextSpan(
+                      text: "Sign into your account",
+                      style:
+                      TextStyle(
+                          color: Colors.grey[500],
+                          fontSize: Dimensions.font20
+                      )
+                  )
+                    ,),
+                  SizedBox(width:Dimensions.width20)
+                ],
+              ),
+              SizedBox(height: Dimensions.height20*3,),
               Container(
                 width: Dimensions.screenWidth/2,
                 height: Dimensions.screenHeight/13,
@@ -58,8 +96,7 @@ class VendorSignInPage extends StatelessWidget {
                   ),
                 ),
               ),
-              SizedBox(height: Dimensions.height10,),
-              SizedBox(height: Dimensions.screenHeight*0.1),
+              SizedBox(height: Dimensions.screenHeight*0.08),
               RichText(text: TextSpan(
                   recognizer: TapGestureRecognizer()..onTap=()=>Get.toNamed(RouteHelper.vendorSignUpPage),
                   text: "Don't have an account?",

@@ -26,25 +26,12 @@ class VendorController extends GetxController{
 
   Future<void> getVendorList()async {
     Response response = await vendorRepo.getVendorList();
-    final databaseRef = FirebaseDatabase.instance.ref();
+
     // successful
 
     if(response.statusCode == 200){
-
       _vendorList = [];
-      // _foodList = [];
-      // _foodListIds = [];
       _vendorList.addAll(Vendors.fromJson(response.body).contents);
-
-      // for (var i = 0; i < vendorList.length; i++)
-      //   {
-      //     _foodList.addAll(vendorList[i].food_model);
-      //     for (var j = 0; j < vendorList[i].food_model.length; j++)
-      //     {
-      //       _foodListIds.add(vendorList[i].vendorId!);
-      //     }
-      //   }
-
       _isLoaded = true;
       update(); // refresh app
     }else{

@@ -1,4 +1,3 @@
-import 'package:firebase_database/firebase_database.dart';
 
 class AppConstants{
   static const String APP_NAME = "IsKainan: Campus Food Suggester";
