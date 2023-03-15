@@ -2,9 +2,11 @@ import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/src/routes/get_route.dart';
 import 'package:get/get_navigation/src/routes/transitions_type.dart';
+import 'package:iskainan/models/user_model.dart';
 import 'package:iskainan/pages/Home/allergies_page.dart';
 import 'package:iskainan/pages/Home/home_page.dart';
 import 'package:iskainan/pages/Home/main_page.dart';
+import 'package:iskainan/pages/account/general_information_page.dart';
 import 'package:iskainan/pages/food/food_detail.dart';
 
 import '../pages/Home/address_page.dart';
@@ -32,6 +34,8 @@ class RouteHelper{
   static const String vendorList = "/vendor-list";
   static const String foodList = "/food-list";
   static const String accountPage = '/account-page';
+  // static const String generalInformationPage = '/general-information-page';
+
 
   static String getSplashPage()=>'$splashPage';
   static String getInitial()=>'$initial';
@@ -46,6 +50,7 @@ class RouteHelper{
   static String getVendorList()=>'$vendorList';
   static String getFoodList()=>'$foodList';
   static String getAccountPage()=>'$accountPage';
+  // static String getGeneralInformationPage(UserModel user)=>'$generalInformationPage?user=$user';
 
   static List<GetPage> routes=[
     GetPage(name: splashPage, page: ()=>SplashScreen()),
@@ -69,6 +74,12 @@ class RouteHelper{
     GetPage(name: foodList, page: ()=>FoodList()),
 
     GetPage(name: accountPage, page: ()=>AccountPage()),
+
+    // GetPage(name: generalInformationPage, page: (){
+    //   UserModel user = Get.parameters['user'] as UserModel;
+    //   return GeneralInformationPage(user: user);
+    //   }
+    // ),
 
     GetPage(name: vendorDetail, page:(){
       var pageId = Get.parameters['pageId'];

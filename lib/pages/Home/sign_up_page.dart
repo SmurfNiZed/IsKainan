@@ -61,24 +61,6 @@ class VendorSignUpPage extends StatelessWidget {
         );
 
         AuthController.instance.register(user);
-
-        // SignUpController.instance.registerUser(email, password);
-        // SignUpController.instance.createUser(user);
-
-
-        // SignUpBody signUpBody = SignUpBody(
-        //   vendorname: vendorName,
-        //   phone: phone,
-        //   email: email,
-        //   password: password
-        // );
-        // authController.registration(signUpBody).then((status){
-        //   if(status.isSuccess){
-        //     print("Success registration");
-        //   }else{
-        //     showCustomerSnackBar(status.message);
-        //   }
-        // });
       }
     }
 

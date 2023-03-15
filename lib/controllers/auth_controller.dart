@@ -16,7 +16,7 @@ import '../routes/route_helper.dart';
 
 class AuthController extends GetxController{
   static AuthController instance = Get.find();
-  late Rx<User?> _user;
+  late Rx<User?> firebaseUser;
   FirebaseAuth auth = FirebaseAuth.instance;
 
   final userRepo = Get.put(UserRepository());
@@ -24,11 +24,11 @@ class AuthController extends GetxController{
   @override
   void onReady(){
     super.onReady();
-    _user = Rx<User?>(auth.currentUser);
+    firebaseUser = Rx<User?>(auth.currentUser);
 
     // notify changes
-    _user.bindStream(auth.userChanges());
-    ever(_user, _initialScreen);
+    firebaseUser.bindStream(auth.userChanges());
+    ever(firebaseUser, _initialScreen);
   }
 
   _initialScreen(User? user){
