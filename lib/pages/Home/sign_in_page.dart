@@ -98,7 +98,7 @@ class VendorSignInPage extends StatelessWidget {
               SizedBox(height: Dimensions.screenHeight*0.08),
               RichText(text: TextSpan(
                   recognizer: TapGestureRecognizer()..onTap=()=>Get.to(()=>VendorSignUpPage(), transition: Transition.fade),
-                  text: "Don't have an account? Create.",
+                  text: "Don't have an account? Create",
                   style:
                   TextStyle(
                       color: Colors.grey[500],

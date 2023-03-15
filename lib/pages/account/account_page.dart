@@ -17,7 +17,7 @@ class AccountPage extends StatelessWidget {
         automaticallyImplyLeading: false,
         backgroundColor: AppColors.mainColor,
         title: BigText(
-          text: "Dashboard",
+          text: "{vendorName} Dashboard",
           size: Dimensions.font26,
           color: Colors.white,
         ),
@@ -35,13 +35,13 @@ class AccountPage extends StatelessWidget {
             SizedBox(height: Dimensions.height30,),
             AccountWidget(
               appIcon: AppIcon(
-                icon: Icons.storefront,
+                icon: Icons.email,
                 backgroundColor: AppColors.mainColor,
                 iconColor: Colors.white,
                 iconSize: Dimensions.height10*5/2,
                 size: Dimensions.height10*5,
               ),
-              bigText: BigText(text: "Mang Larry's Isawan"),
+              bigText: BigText(text: "General Information"),
             ),
             SizedBox(height: Dimensions.height20,),
             AccountWidget(
@@ -52,7 +52,7 @@ class AccountPage extends StatelessWidget {
                 iconSize: Dimensions.height10*5/2,
                 size: Dimensions.height10*5,
               ),
-              bigText: BigText(text: "Mang Larry's Isawan"),
+              bigText: BigText(text: "Manage Menu"),
             ),
             SizedBox(height: Dimensions.height20,),
             AccountWidget(
@@ -63,7 +63,7 @@ class AccountPage extends StatelessWidget {
                 iconSize: Dimensions.height10*5/2,
                 size: Dimensions.height10*5,
               ),
-              bigText: BigText(text: "Mang Larry's Isawan"),
+              bigText: BigText(text: "Manage Location"),
             ),
             SizedBox(height: Dimensions.height20,),
             AccountWidget(
@@ -74,18 +74,7 @@ class AccountPage extends StatelessWidget {
                 iconSize: Dimensions.height10*5/2,
                 size: Dimensions.height10*5,
               ),
-              bigText: BigText(text: "Mang Larry's Isawan"),
-            ),
-            SizedBox(height: Dimensions.height20,),
-            AccountWidget(
-              appIcon: AppIcon(
-                icon: Icons.storefront,
-                backgroundColor: AppColors.mainColor,
-                iconColor: Colors.white,
-                iconSize: Dimensions.height10*5/2,
-                size: Dimensions.height10*5,
-              ),
-              bigText: BigText(text: "Mang Larry's Isawan"),
+              bigText: BigText(text: "Manage Account Details"),
             ),
             SizedBox(height: Dimensions.height20,),
           ],

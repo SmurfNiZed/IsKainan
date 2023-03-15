@@ -1,3 +1,6 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -61,7 +64,13 @@ class _MainPageState extends State<MainPage> {
                             height: Dimensions.height45,
                             child: ElevatedButton(
                               onPressed: () {
-                                Get.toNamed(RouteHelper.getAccountPage());
+                                FirebaseAuth.instance.authStateChanges().listen((User? user) {
+                                  if (user == null) {
+                                    Get.toNamed(RouteHelper.getVendorSignInPage());
+                                  } else {
+                                    Get.toNamed(RouteHelper.getAccountPage());
+                                  }
+                                });
                               },
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: AppColors.mainColor,

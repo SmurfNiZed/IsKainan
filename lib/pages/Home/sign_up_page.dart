@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:iskainan/base/show_custom_snackbar.dart';
 import 'package:iskainan/pages/Home/survey.dart';
+import 'package:iskainan/pages/account/account_page.dart';
 import 'package:iskainan/widgets/app_text_field.dart';
 import '../../controllers/auth_controller.dart';
 import '../../controllers/signup_controller.dart';
@@ -66,7 +67,7 @@ class VendorSignUpPage extends StatelessWidget {
         SignUpController.instance.registerUser(email, password);
         SignUpController.instance.createUser(user);
 
-        Get.to(() => ChoicePage());
+        Get.to(() => AccountPage());
 
         // SignUpBody signUpBody = SignUpBody(
         //   vendorname: vendorName,

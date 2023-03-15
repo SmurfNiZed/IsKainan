@@ -2,9 +2,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:iskainan/exceptions/signup_email_password_failure.dart';
+import 'package:iskainan/pages/Home/sign_in_page.dart';
+import 'package:iskainan/pages/splash/splash_page.dart';
 
 import '../../pages/Home/home_page.dart';
 import '../../pages/Home/survey.dart';
+import '../../pages/account/account_page.dart';
 import '../../routes/route_helper.dart';
 
 class AuthenticationRepository extends GetxController {
@@ -23,7 +26,8 @@ class AuthenticationRepository extends GetxController {
   }
 
   _setInitialScreen(User? user) {
-    user == null ? Get.to(() => HomePage()) : Get.to(() => ChoicePage());
+    Get.to(() => SplashScreen());
+    // user == null ? Get.to(() => HomePage()) : Get.to(() => VendorSignInPage());
   }
 
   Future<void> createUserWithEmailAndPassword(String email,
@@ -31,9 +35,7 @@ class AuthenticationRepository extends GetxController {
     try {
       await _auth.createUserWithEmailAndPassword(
           email: email, password: password);
-      firebaseUser.value != null
-          ? Get.offAll(() => RouteHelper.getChoicePage())
-          : Get.offAll(() => RouteHelper.getInitial());
+      firebaseUser.value != null? Get.offAll(() => RouteHelper.getChoicePage()) : Get.offAll(() => RouteHelper.getInitial());
     } on FirebaseAuthException catch (e) {
       final ex = SignUpWithEmailAndPasswordFailure.code(e.code);
       print('FIREBASE AUTH EXCEPTION - ${ex.message}');
