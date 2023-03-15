@@ -14,12 +14,8 @@ class VendorController extends GetxController{
   final VendorRepo vendorRepo;
   VendorController({required this.vendorRepo});
   List<VendorModel> _vendorList = [];
-  // List<FoodModel> _foodList = [];
-  // List<int> _foodListIds = [];
 
   List<VendorModel> get vendorList =>_vendorList;
-  // List<FoodModel> get foodList =>_foodList;
-  // List<int> get foodListIds =>_foodListIds;
 
   bool _isLoaded = false;
   bool get isLoaded => _isLoaded;

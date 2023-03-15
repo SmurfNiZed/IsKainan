@@ -8,13 +8,15 @@ import 'package:iskainan/controllers/vendor_controller.dart';
 import 'package:iskainan/firebase_options.dart';
 
 import 'package:iskainan/routes/route_helper.dart';
+import 'data/repository/authentication_repo.dart';
 import 'helper/dependencies.dart' as dep;
 
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await FlutterDisplayMode.setHighRefreshRate();
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform)
+      .then((value) => Get.put(AuthenticationRepository()));
   await Future.delayed(Duration(milliseconds: 1000));
   await dep.init();
 

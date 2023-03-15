@@ -5,7 +5,7 @@ import 'package:get/get_navigation/src/routes/transitions_type.dart';
 import 'package:iskainan/pages/Home/allergies_page.dart';
 import 'package:iskainan/pages/Home/home_page.dart';
 import 'package:iskainan/pages/Home/main_page.dart';
-import 'package:iskainan/pages/food/recommended_food_detail.dart';
+import 'package:iskainan/pages/food/food_detail.dart';
 
 import '../pages/Home/address_page.dart';
 import '../pages/Home/budget_page.dart';
@@ -13,7 +13,8 @@ import '../pages/Home/food_list.dart';
 import '../pages/Home/sign_in_page.dart';
 import '../pages/Home/survey.dart';
 import '../pages/Home/vendor_list.dart';
-import '../pages/Home/vendor_page.dart';
+import '../pages/Home/sign_up_page.dart';
+import '../pages/account/account_page.dart';
 import '../pages/food/vendor_detail.dart';
 import '../pages/splash/splash_page.dart';
 
@@ -30,6 +31,7 @@ class RouteHelper{
   static const String vendorDetail = "/vendor-detail";  // vendor detail page
   static const String vendorList = "/vendor-list";
   static const String foodList = "/food-list";
+  static const String accountPage = '/account-page';
 
   static String getSplashPage()=>'$splashPage';
   static String getInitial()=>'$initial';
@@ -43,6 +45,7 @@ class RouteHelper{
   static String getFoodDetail(int pageId, int foodId)=>'$foodDetail?pageId=$pageId&foodId=$foodId';
   static String getVendorList()=>'$vendorList';
   static String getFoodList()=>'$foodList';
+  static String getAccountPage()=>'$accountPage';
 
   static List<GetPage> routes=[
     GetPage(name: splashPage, page: ()=>SplashScreen()),
@@ -64,6 +67,8 @@ class RouteHelper{
     GetPage(name: vendorList, page: ()=>VendorList()),
 
     GetPage(name: foodList, page: ()=>FoodList()),
+
+    GetPage(name: accountPage, page: ()=>AccountPage()),
 
     GetPage(name: vendorDetail, page:(){
       var pageId = Get.parameters['pageId'];

@@ -48,7 +48,6 @@ class _FoodPageBodyState extends State<FoodPageBody> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.white,
       child: Column(
         children: [
           // Slider section
@@ -132,7 +131,6 @@ class _FoodPageBodyState extends State<FoodPageBody> {
                               height: Dimensions.listViewImgSize,
                               decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(Dimensions.radius20),
-                                  color: Colors.white38,
                                   image: DecorationImage(
                                     fit: BoxFit.cover,
                                     image: AssetImage(vendor.vendorList[index].food_model[vendor.vendorList[index].food_model.length-1].foodImg!),
@@ -147,24 +145,35 @@ class _FoodPageBodyState extends State<FoodPageBody> {
                                       topRight: Radius.circular(Dimensions.radius20),
                                       bottomRight: Radius.circular(Dimensions.radius20)
                                   ),
-                                  color: Colors.white,
+
                                 ),
                                 child:
                                 Padding(padding: EdgeInsets.only(left: Dimensions.width10, right: Dimensions.width10),
                                   child: Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
-                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                     children: [
-                                      BigText(text: vendor.vendorList[index].food_model[vendor.vendorList[index].food_model.length-1].foodName!,),
-                                      SizedBox(height: Dimensions.height10),
-                                      SmallText(text: (vendor.vendorList[index].vendorName! + ", " + vendor.vendorList[index].vendorLocation!), isOneLine: true),
-                                      SizedBox(height: Dimensions.height10),
-                                      Row(
-                                        mainAxisAlignment: MainAxisAlignment.start,
+                                      Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
-                                          IconAndTextWidget(icon: Icons.local_offer_rounded, text: "₱" + vendor.vendorList[index].food_model[vendor.vendorList[index].food_model.length-1].foodPrice.toString(), iconColor: AppColors.iconColor1,),
-                                          SizedBox(width: Dimensions.width10),
-                                          IconAndTextWidget(icon: Icons.location_on, text: "560 m", iconColor: AppColors.mainColor,),
+                                          BigText(text: vendor.vendorList[index].food_model[vendor.vendorList[index].food_model.length-1].foodName!, size: Dimensions.font20,),
+                                          SizedBox(height: Dimensions.height10/2,),
+                                          SmallText(text: vendor.vendorList[index].vendorName! + ", " + vendor.vendorList[index].vendorLocation!, size: Dimensions.font16*0.8, isOneLine: true,),
+                                        ],
+                                      ),
+                                      Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          BigText(text: "₱"+(vendor.vendorList[index].food_model[vendor.vendorList[index].food_model.length-1].foodPrice!), size: Dimensions.font16*.9),
+                                          SizedBox(height: Dimensions.height10/2,),
+                                          Row(
+                                            children: [
+                                              RectangleIconWidget(text: "NEW", iconColor: AppColors.isNew, isActivated: true),
+                                              SizedBox(width: Dimensions.width10/2,),
+                                              vendor.vendorList[index].food_model[vendor.vendorList[index].food_model.length-1].isSpicy!?RectangleIconWidget(text: "SPICY", iconColor: Colors.red[900]!, isActivated: vendor.vendorList[index].food_model[vendor.vendorList[index].food_model.length-1].isSpicy!):Text(""),
+                                            ],
+                                          ),
+                                          SizedBox(height: Dimensions.height10/2,)
                                         ],
                                       )
                                     ],

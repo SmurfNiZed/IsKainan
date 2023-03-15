@@ -61,7 +61,7 @@ class _MainPageState extends State<MainPage> {
                             height: Dimensions.height45,
                             child: ElevatedButton(
                               onPressed: () {
-                                Get.toNamed(RouteHelper.vendorSignInPage);
+                                Get.toNamed(RouteHelper.getAccountPage());
                               },
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: AppColors.mainColor,

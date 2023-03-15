@@ -3,6 +3,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
+import 'package:iskainan/pages/Home/sign_up_page.dart';
 import 'package:iskainan/widgets/app_text_field.dart';
 import '../../routes/route_helper.dart';
 import '../../utils/dimensions.dart';
@@ -16,8 +17,6 @@ class VendorSignInPage extends StatelessWidget {
   Widget build(BuildContext context) {
     var emailController = TextEditingController();
     var passwordController = TextEditingController();
-    var vendorNameController = TextEditingController();
-    var phoneController = TextEditingController();
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -98,8 +97,8 @@ class VendorSignInPage extends StatelessWidget {
               ),
               SizedBox(height: Dimensions.screenHeight*0.08),
               RichText(text: TextSpan(
-                  recognizer: TapGestureRecognizer()..onTap=()=>Get.toNamed(RouteHelper.vendorSignUpPage),
-                  text: "Don't have an account?",
+                  recognizer: TapGestureRecognizer()..onTap=()=>Get.to(()=>VendorSignUpPage(), transition: Transition.fade),
+                  text: "Don't have an account? Create.",
                   style:
                   TextStyle(
                       color: Colors.grey[500],
