@@ -101,8 +101,9 @@ class VendorSignInPage extends StatelessWidget {
                   text: "Don't have an account? Create",
                   style:
                   TextStyle(
-                      color: Colors.grey[500],
-                      fontSize: Dimensions.font16
+                      color: AppColors.mainColor,
+                      fontSize: Dimensions.font16,
+                      decoration: TextDecoration.underline,
                   )
               )
                 ,),

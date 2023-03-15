@@ -22,13 +22,13 @@ class AuthenticationRepository extends GetxController {
     Future.delayed(const Duration(seconds: 6));
     firebaseUser = Rx<User?>(_auth.currentUser);
     firebaseUser.bindStream(_auth.userChanges());
-    ever(firebaseUser, _setInitialScreen);
+    // ever(firebaseUser, _setInitialScreen);
   }
 
-  _setInitialScreen(User? user) {
-    Get.to(() => SplashScreen());
-    // user == null ? Get.to(() => HomePage()) : Get.to(() => VendorSignInPage());
-  }
+  // _setInitialScreen(User? user) {
+  //   Get.to(() => SplashScreen());
+  //   // user == null ? Get.to(() => HomePage()) : Get.to(() => VendorSignInPage());
+  // }
 
   Future<void> createUserWithEmailAndPassword(String email,
       String password) async {

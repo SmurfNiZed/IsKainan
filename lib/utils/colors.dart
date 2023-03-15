@@ -10,7 +10,7 @@ class AppColors{
   static final Color signColor = const Color(0xFFa9a29f);
   static final Color titleColor = const Color(0xFF5c524f);
   static final Color mainBlackColor = const Color(0xFF332d2b);
-  static final Color yellowColor = const Color(0xFFe6e8d2);
+  static final Color yellowColor = const Color(0xFFFFCB6A);
   static final Color unavailable = const Color(0xFFD2D2D2);
   static final Color isNew = const Color(0xFFF8C702);
 }
