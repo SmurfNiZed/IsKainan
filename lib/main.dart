@@ -4,6 +4,7 @@ import 'package:flutter_displaymode/flutter_displaymode.dart';
 import 'package:get/get.dart';
 
 import 'package:get/get_navigation/src/root/get_material_app.dart';
+import 'package:iskainan/controllers/auth_controller.dart';
 import 'package:iskainan/controllers/vendor_controller.dart';
 import 'package:iskainan/firebase_options.dart';
 
@@ -16,7 +17,7 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await FlutterDisplayMode.setHighRefreshRate();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform)
-      .then((value) => Get.put(AuthenticationRepository()));
+      .then((value) => Get.put(/*AuthenticationRepository()*/AuthController()));
   await Future.delayed(Duration(milliseconds: 1000));
   await dep.init();
 
@@ -35,7 +36,7 @@ class Home extends StatelessWidget {
         title: 'IsKainan: Campus Food App',
 
         // home: SplashScreen(),
-        initialRoute: RouteHelper.getSplashPage(),
+        initialRoute: RouteHelper.getInitial(),
         getPages: RouteHelper.routes,
       );
     });

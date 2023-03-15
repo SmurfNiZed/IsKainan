@@ -5,10 +5,14 @@ import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:iskainan/pages/Home/sign_up_page.dart';
 import 'package:iskainan/widgets/app_text_field.dart';
+// import '../../controllers/signin_controller.dart';
+import '../../controllers/auth_controller.dart';
 import '../../routes/route_helper.dart';
 import '../../utils/dimensions.dart';
+import '../../widgets/app_hidden_text_field.dart';
 import '../../widgets/big_text.dart';
 import '../../utils/colors.dart';
+import '../account/account_page.dart';
 
 class VendorSignInPage extends StatelessWidget {
   const VendorSignInPage({Key? key}) : super(key: key);
@@ -62,7 +66,7 @@ class VendorSignInPage extends StatelessWidget {
               SizedBox(height: Dimensions.height20),
 
               // Password
-              AppTextField(textController: passwordController, hintText: "Password", icon: Icons.key_rounded),
+              AppHiddenTextField(textController: passwordController, hintText: "Password", icon: Icons.key_rounded),
               SizedBox(height: Dimensions.height20),
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
@@ -80,33 +84,47 @@ class VendorSignInPage extends StatelessWidget {
                 ],
               ),
               SizedBox(height: Dimensions.height20*3,),
-              Container(
-                width: Dimensions.screenWidth/2,
-                height: Dimensions.screenHeight/13,
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(Dimensions.radius30),
-                    color: AppColors.mainColor
-                ),
-                child: Center(
-                  child: BigText(
-                    text: "Sign in",
-                    size: Dimensions.font26,
-                    color: Colors.white,
+              GestureDetector(
+                onTap: (){
+                  AuthController.instance.login(emailController.text.trim(), passwordController.text.trim());
+                },
+                child: Container(
+                  width: Dimensions.screenWidth/2,
+                  height: Dimensions.screenHeight/13,
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(Dimensions.radius30),
+                      color: AppColors.mainColor
+                  ),
+                  child: Center(
+                    child: BigText(
+                      text: "Sign in",
+                      size: Dimensions.font26,
+                      color: Colors.white,
+                    ),
                   ),
                 ),
               ),
               SizedBox(height: Dimensions.screenHeight*0.08),
               RichText(text: TextSpan(
-                  recognizer: TapGestureRecognizer()..onTap=()=>Get.to(()=>VendorSignUpPage(), transition: Transition.fade),
-                  text: "Don't have an account? Create",
+                  text: "Don't have an account? ",
                   style:
                   TextStyle(
-                      color: AppColors.mainColor,
+                      color: Colors.grey,
                       fontSize: Dimensions.font16,
-                      decoration: TextDecoration.underline,
-                  )
-              )
-                ,),
+                  ),
+                  children: [
+                    TextSpan(
+                      text: "Create",
+                      style: TextStyle(
+                        color: AppColors.mainColor,
+                        fontSize: Dimensions.font16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      recognizer: TapGestureRecognizer()..onTap=()=>Get.to(()=>VendorSignUpPage(), transition: Transition.fade),
+                    )
+                  ],
+              ),
+              ),
             ],
           ),
         ),

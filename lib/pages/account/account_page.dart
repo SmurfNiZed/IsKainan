@@ -1,6 +1,14 @@
+import 'dart:async';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
+// import 'package:iskainan/controllers/profile_controller.dart';
 
+import '../../controllers/auth_controller.dart';
+import '../../models/user_model.dart';
+import '../../routes/route_helper.dart';
 import '../../utils/colors.dart';
 import '../../utils/dimensions.dart';
 import '../../widgets/account_widget.dart';
@@ -14,25 +22,23 @@ class AccountPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        automaticallyImplyLeading: false,
         backgroundColor: AppColors.mainColor,
         title: BigText(
-          text: "{vendorName} Dashboard",
+          text: "Dashboard",
           size: Dimensions.font26,
           color: Colors.white,
         ),
       ),
       body: Container(
-        width: double.maxFinite,
-        margin: EdgeInsets.only(top: Dimensions.height20),
         child: Column(
           children: [
+            SizedBox(height: Dimensions.height45),
             AppIcon(icon: Icons.storefront,
-            backgroundColor: AppColors.mainColor,
-            iconColor: Colors.white,
-            iconSize: Dimensions.height30 + Dimensions.height45,
-            size: Dimensions.height15*10),
-            SizedBox(height: Dimensions.height30,),
+                backgroundColor: AppColors.mainColor,
+                iconColor: Colors.white,
+                iconSize: Dimensions.height30 + Dimensions.height45,
+                size: Dimensions.height15 * 10),
+            SizedBox(height: Dimensions.height45),
 
             // Can be scrolled if we add more options
             Expanded(
@@ -45,10 +51,11 @@ class AccountPage extends StatelessWidget {
                           icon: Icons.email,
                           backgroundColor: AppColors.mainColor,
                           iconColor: Colors.white,
-                          iconSize: Dimensions.height10*5/2,
-                          size: Dimensions.height10*5,
+                          iconSize: Dimensions.height10 * 5 / 2,
+                          size: Dimensions.height10 * 5,
                         ),
-                        bigText: BigText(text: "Manage General Information"),
+                        bigText: BigText(
+                            text: "Manage General Information"),
                       ),
                       SizedBox(height: Dimensions.height20,),
 
@@ -58,8 +65,8 @@ class AccountPage extends StatelessWidget {
                           icon: Icons.restaurant_menu,
                           backgroundColor: AppColors.iconColor1,
                           iconColor: Colors.white,
-                          iconSize: Dimensions.height10*5/2,
-                          size: Dimensions.height10*5,
+                          iconSize: Dimensions.height10 * 5 / 2,
+                          size: Dimensions.height10 * 5,
                         ),
                         bigText: BigText(text: "Manage Menu"),
                       ),
@@ -71,8 +78,8 @@ class AccountPage extends StatelessWidget {
                           icon: Icons.location_on,
                           backgroundColor: AppColors.iconColor1,
                           iconColor: Colors.white,
-                          iconSize: Dimensions.height10*5/2,
-                          size: Dimensions.height10*5,
+                          iconSize: Dimensions.height10 * 5 / 2,
+                          size: Dimensions.height10 * 5,
                         ),
                         bigText: BigText(text: "Manage Location"),
                       ),
@@ -84,13 +91,33 @@ class AccountPage extends StatelessWidget {
                           icon: Icons.settings,
                           backgroundColor: AppColors.paraColor,
                           iconColor: Colors.white,
-                          iconSize: Dimensions.height10*5/2,
-                          size: Dimensions.height10*5,
+                          iconSize: Dimensions.height10 * 5 / 2,
+                          size: Dimensions.height10 * 5,
                         ),
-                        bigText: BigText(text: "Manage Account Details"),
+                        bigText: BigText(
+                            text: "Manage Account Details"),
                       ),
-                      SizedBox(height: Dimensions.height20,),
-
+                      SizedBox(height: Dimensions.height45,),
+                      GestureDetector(
+                        onTap: (){
+                          AuthController.instance.logout();
+                        },
+                        child: Container(
+                          width: Dimensions.screenWidth/3,
+                          height: Dimensions.screenHeight/13,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(Dimensions.radius30),
+                              color: AppColors.mainColor
+                          ),
+                          child: Center(
+                            child: BigText(
+                              text: "Logout",
+                              size: Dimensions.font26,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      ),
                     ],
                   ),
                 ))

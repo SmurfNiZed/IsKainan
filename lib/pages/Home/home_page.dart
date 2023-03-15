@@ -21,59 +21,11 @@ class _HomePageState extends State<HomePage> {
   int _selectedIndex = 0;
   late PersistentTabController _controller;
 
-
-  // BACKUP IN CASE PLUGIN NAV BAR STOPS WORKING
-
-  // List pages = [
-  //   MainPage(),
-  //   Container(child: Center(child: BigText(text: "History?"))),
-  //   Container(child: Center(child: BigText(text: "Favorites?"))),
-  //   Container(child: Center(child: BigText(text: "Profile Page for Vendors?"))),
-  // ];
-
   void onTapNav(int index){
     setState(() {
       _selectedIndex = index;
     });
   }
-
-  // BACKUP IN CASE PLUGIN NAV BAR STOPS WORKING
-
-  // @override
-  // Widget build(BuildContext context) {
-  //   return Scaffold(
-  //     body: pages[_selectedIndex],
-  //     bottomNavigationBar: BottomNavigationBar(
-  //       elevation: 70,
-  //       selectedItemColor: AppColors.mainColor,
-  //       unselectedItemColor: Colors.grey,
-  //       showSelectedLabels: false,
-  //       showUnselectedLabels: false,
-  //       selectedFontSize: 0.0,
-  //       unselectedFontSize: 0.0,
-  //       currentIndex: _selectedIndex,
-  //       onTap: onTapNav,
-  //       items: const [
-  //         BottomNavigationBarItem(
-  //           icon: Icon(Icons.home,),
-  //           label: "Home"
-  //         ),
-  //         BottomNavigationBarItem(
-  //             icon: Icon(Icons.archive,),
-  //             label: "History"
-  //         ),
-  //         BottomNavigationBarItem(
-  //             icon: Icon(Icons.star,),
-  //             label: "Favorites"
-  //         ),
-  //         BottomNavigationBarItem(
-  //             icon: Icon(Icons.person_2_rounded,),
-  //             label: "Profile"
-  //         ),
-  //       ],
-  //     ),
-  //   );
-  // }
 
   @override initState(){
       super.initState();
@@ -85,7 +37,6 @@ class _HomePageState extends State<HomePage> {
       MainPage(),
       VendorList(),
       FoodList(),
-      Container(child: Center(child: BigText(text: "About Us"))),
     ];
   }
 
@@ -106,12 +57,6 @@ class _HomePageState extends State<HomePage> {
       PersistentBottomNavBarItem(
         icon: Icon(Icons.fastfood_rounded),
         title: ("All Food"),
-        activeColorPrimary: AppColors.mainColor,
-        inactiveColorPrimary: CupertinoColors.systemGrey,
-      ),
-      PersistentBottomNavBarItem(
-        icon: Icon(CupertinoIcons.person_3_fill),
-        title: ("Me"),
         activeColorPrimary: AppColors.mainColor,
         inactiveColorPrimary: CupertinoColors.systemGrey,
       ),

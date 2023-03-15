@@ -64,8 +64,9 @@ class _MainPageState extends State<MainPage> {
                             height: Dimensions.height45,
                             child: ElevatedButton(
                               onPressed: () {
+                                // Get.toNamed(RouteHelper.getVendorSignInPage());
                                 FirebaseAuth.instance.authStateChanges().listen((User? user) {
-                                  if (false) {
+                                  if (user == null) {
                                     Get.toNamed(RouteHelper.getVendorSignInPage());
                                   } else {
                                     Get.toNamed(RouteHelper.getAccountPage());

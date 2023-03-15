@@ -14,6 +14,7 @@ import '../../models/signup_body_model.dart';
 import '../../models/user_model.dart';
 import '../../routes/route_helper.dart';
 import '../../utils/dimensions.dart';
+import '../../widgets/app_hidden_text_field.dart';
 import '../../widgets/big_text.dart';
 import '../../utils/colors.dart';
 
@@ -22,25 +23,20 @@ class VendorSignUpPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final controller = Get.put(SignUpController());
-    // var emailController = TextEditingController();
-    // var passwordController = TextEditingController();
-    // var vendorNameController = TextEditingController();
-    // var phoneController = TextEditingController();
+    // final controller = Get.put(SignUpController());
+    var emailController = TextEditingController();
+    var passwordController = TextEditingController();
+    var vendorNameController = TextEditingController();
+    var phoneController = TextEditingController();
 
     var signUpImages = ["f.png", "g.png"];
 
     void _registration(){
-      String vendorName = controller.vendorName.text.trim();
-      String phone = controller.phone.text.trim();
-      String email = controller.email.text.trim();
-      String password = controller.password.text.trim();
 
-      // var authController = Get.find<AuthController>();
-      // String vendorName = vendorNameController.text.trim();
-      // String phone = phoneController.text.trim();
-      // String email = emailController.text.trim();
-      // String password = passwordController.text.trim();
+      String vendorName = vendorNameController.text.trim();
+      String phone = phoneController.text.trim();
+      String email = emailController.text.trim();
+      String password = passwordController.text.trim();
 
       if(email.isEmpty){
         showCustomerSnackBar("Type in your email address.", title: "Email address");
@@ -64,10 +60,11 @@ class VendorSignUpPage extends StatelessWidget {
           password: password
         );
 
-        SignUpController.instance.registerUser(email, password);
-        SignUpController.instance.createUser(user);
+        AuthController.instance.register(user);
 
-        Get.to(() => AccountPage());
+        // SignUpController.instance.registerUser(email, password);
+        // SignUpController.instance.createUser(user);
+
 
         // SignUpBody signUpBody = SignUpBody(
         //   vendorname: vendorName,
@@ -102,20 +99,21 @@ class VendorSignUpPage extends StatelessWidget {
                   SizedBox(height:Dimensions.height45*3/2),
 
                   // Email
-                  AppTextField(textController: controller.email, hintText: "Email", icon: Icons.email_rounded),
+                  AppTextField(textController: emailController, hintText: "Email", icon: Icons.email_rounded),
                   SizedBox(height: Dimensions.height20),
 
                   // Password
-                  AppTextField(textController: controller.password, hintText: "Password", icon: Icons.key_rounded),
+                  AppHiddenTextField(textController: passwordController, hintText: "Password", icon: Icons.key_rounded),
                   SizedBox(height: Dimensions.height20),
 
                   // Vendor Name
-                  AppTextField(textController: controller.vendorName, hintText: "Name of Establishment", icon: Icons.food_bank_rounded),
+                  AppTextField(textController: vendorNameController, hintText: "Name of Establishment", icon: Icons.food_bank_rounded),
                   SizedBox(height: Dimensions.height20),
 
                   // Contact Number
-                  AppTextField(textController: controller.phone, hintText: "Contact Number", icon: Icons.phone),
+                  AppTextField(textController: phoneController, hintText: "Contact Number", icon: Icons.phone),
                   SizedBox(height: Dimensions.height20*2),
+
 
                   GestureDetector(
                     onTap: (){
@@ -145,7 +143,7 @@ class VendorSignUpPage extends StatelessWidget {
                       TextStyle(
                         color: Colors.grey[500],
                         fontSize: Dimensions.font16
-                      )
+                      ),
                     )
                   ,),
                   SizedBox(height: Dimensions.screenHeight*0.05),
