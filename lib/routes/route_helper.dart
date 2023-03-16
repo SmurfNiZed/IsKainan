@@ -6,7 +6,7 @@ import 'package:iskainan/models/user_model.dart';
 import 'package:iskainan/pages/Home/allergies_page.dart';
 import 'package:iskainan/pages/Home/home_page.dart';
 import 'package:iskainan/pages/Home/main_page.dart';
-import 'package:iskainan/pages/account/general_information_page.dart';
+import 'package:iskainan/pages/account/account_details_page.dart';
 import 'package:iskainan/pages/food/food_detail.dart';
 
 import '../pages/Home/address_page.dart';

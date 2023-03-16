@@ -32,17 +32,6 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
     super.initState();
 
     _loadResource();
-    // controller = AnimationController(
-    //     vsync: this,
-    //     duration: const Duration(seconds: 2))..forward();
-  //   animation = CurvedAnimation(
-  //       parent: controller,
-  //       curve: Curves.linear);
-
-    // Timer(
-    //   const Duration(seconds: 3),
-    //     ()=>Get.offNamed(RouteHelper.getInitial())
-    // );
   }
 
   @override
@@ -66,14 +55,3 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
   }
 }
 
-// Scaffold(
-// backgroundColor: Colors.white,
-// body: Column(
-// mainAxisAlignment: MainAxisAlignment.center,
-// children: [
-// FadeTransition(
-// opacity: animation,
-// child: Center(child: Image.asset('assets/images/logo.png', width: Dimensions.splashImg,)))
-// ],
-// ),
-// );

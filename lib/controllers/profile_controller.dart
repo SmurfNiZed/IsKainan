@@ -9,6 +9,7 @@ import '../models/user_model.dart';
 class ProfileController extends GetxController {
   static ProfileController get instance => Get.find();
 
+
   final _authRepo = Get.put(AuthController());
   final _userRepo = Get.put(UserRepository());
 
@@ -22,7 +23,7 @@ class ProfileController extends GetxController {
   Future<List<UserModel>> getAllUsers() async => await _userRepo.allUser();
 
   updateRecord(UserModel user) async {
-    print("Profile Controller: " + user.id.toString());
     await _userRepo.updateGeneralInformation(user);
   }
+
 }
