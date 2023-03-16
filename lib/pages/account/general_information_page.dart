@@ -119,8 +119,8 @@ class _GeneralInformationPageState extends State<GeneralInformationPage> {
                             // Email
                             AppTextField(
                               textController: vendorNameController,
-                              hintText: "Email",
-                              icon: Icons.email_rounded,
+                              hintText: "Name of Establishment",
+                              icon: Icons.food_bank_rounded,
                               backgroundColor: AppColors.iconColor1,
                             ),
                             SizedBox(height: Dimensions.height20),
@@ -134,36 +134,76 @@ class _GeneralInformationPageState extends State<GeneralInformationPage> {
                             ),
                             SizedBox(height: Dimensions.height20),
 
-                            // Checkbox(value: _checkBox, onChanged: (val){
-                            //   setState(() { _checkBox = val;
-                            //   });
-                            // }),
+                              Container(
+                                  margin: EdgeInsets.only(left: Dimensions.height20, right: Dimensions.height20),
+                                  decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(Dimensions.radius30),
+                                      boxShadow: [
+                                        BoxShadow(
+                                            blurRadius: 10,
+                                            spreadRadius: 7,
+                                            offset: Offset(1, 10),
+                                            color: Colors.grey.withOpacity(0.2)
+                                        )
+                                      ]
+                                  ),
+                                  child: StatefulBuilder(
+                                    builder: (context, _setState) => CheckboxListTile(
+                                      value: _checkBoxGCash,
+                                      title: Transform.translate(
+                                        offset: const Offset(-15,0),
+                                        child: SmallText(text: "Gcash Available", size: Dimensions.font16,),
+                                      ),
+                                      onChanged: (val) {
+                                        _setState(() => _checkBoxGCash = val!);
+                                      },
+                                      controlAffinity: ListTileControlAffinity.leading,
+                                      checkColor: Colors.white,
+                                      activeColor: AppColors.iconColor1,
+                                      contentPadding: EdgeInsets.only(left: Dimensions.width10*2/3),
+                                    ),
+                                  ),
+                              ),
 
-                            StatefulBuilder(
-                              builder: (context, _setState) => CheckboxListTile(
-                                  value: _checkBoxGCash,
-                                  title: SmallText(text: "GCash Available", size: Dimensions.font16),
-                                  onChanged: (val) {
-                                    _setState(() => _checkBoxGCash = val!);
-                                  },
-                              controlAffinity: ListTileControlAffinity.leading,
-                              checkColor: Colors.white,
-                              activeColor: AppColors.iconColor1
-                                ,),
-                            ),
                             SizedBox(height: Dimensions.height20,),
-                            StatefulBuilder(
-                              builder: (context, _setState) => CheckboxListTile(
-                                value: _checkBoxOpen,
-                                title: SmallText(text: "Store is Open", size: Dimensions.font16,),
-                                onChanged: (val) {
-                                  _setState(() => _checkBoxOpen = val!);
-                                },
-                                controlAffinity: ListTileControlAffinity.leading,
-                                checkColor: Colors.white,
-                                activeColor: AppColors.iconColor1
-                                ,),
+
+                            Container(
+                              margin: EdgeInsets.only(left: Dimensions.height20, right: Dimensions.height20),
+                              decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(Dimensions.radius30),
+                                  boxShadow: [
+                                    BoxShadow(
+                                        blurRadius: 10,
+                                        spreadRadius: 7,
+                                        offset: Offset(1, 10),
+                                        color: Colors.grey.withOpacity(0.2)
+                                    )
+                                  ]
+                              ),
+                              child: StatefulBuilder(
+                                builder: (context, _setState) => CheckboxListTile(
+                                  subtitle: Transform.translate(
+                                    offset: const Offset(-15,0),
+                                    child: SmallText(text: "only select this when closed even during operation hours", color: AppColors.paraColor, size: Dimensions.font16-5),
+                                  ),
+                                  value: _checkBoxOpen,
+                                  title: Transform.translate(
+                                    offset: const Offset(-15,0),
+                                    child: SmallText(text: "Store is Open", size: Dimensions.font16,),
+                                  ),
+                                  onChanged: (val) {
+                                    _setState(() => _checkBoxOpen = val!);
+                                  },
+                                  controlAffinity: ListTileControlAffinity.leading,
+                                  checkColor: Colors.white,
+                                  activeColor: AppColors.iconColor1,
+                                  contentPadding: EdgeInsets.only(left: Dimensions.width10*2/3),
+                                  ),
+                              ),
                             ),
+
                             SizedBox(height: Dimensions.height20,),
                             AppTextField(
                               textController: operatingHoursController,
@@ -171,7 +211,7 @@ class _GeneralInformationPageState extends State<GeneralInformationPage> {
                               icon: Icons.email_rounded,
                               backgroundColor: AppColors.iconColor1,
                             ),
-                            SizedBox(height: Dimensions.height45),
+                            SizedBox(height: Dimensions.height20),
                             GestureDetector(
                               onTap: () {
                                 _updateGeneralInformation(
