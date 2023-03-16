@@ -8,11 +8,13 @@ class AppTextField extends StatelessWidget {
   final TextEditingController textController;
   final String hintText;
   final IconData icon;
-  const AppTextField({Key? key,
+  final Color backgroundColor;
+  AppTextField({Key? key,
 
   required this.textController,
   required this.hintText,
-  required this.icon}) : super(key: key);
+  required this.icon,
+  required this.backgroundColor}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +36,7 @@ class AppTextField extends StatelessWidget {
           controller: textController,
           decoration: InputDecoration(
               hintText: hintText,
-              prefixIcon: Icon(icon, color: AppColors.mainColor),
+              prefixIcon: Icon(icon, color: backgroundColor),
               focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(Dimensions.radius30),
                   borderSide: BorderSide(

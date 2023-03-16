@@ -81,19 +81,19 @@ class VendorSignUpPage extends StatelessWidget {
                   SizedBox(height:Dimensions.height45*3/2),
 
                   // Email
-                  AppTextField(textController: emailController, hintText: "Email", icon: Icons.email_rounded),
+                  AppTextField(textController: emailController, hintText: "Email", icon: Icons.email_rounded, backgroundColor: AppColors.mainColor,),
                   SizedBox(height: Dimensions.height20),
 
                   // Password
-                  AppHiddenTextField(textController: passwordController, hintText: "Password", icon: Icons.key_rounded),
+                  AppHiddenTextField(textController: passwordController, hintText: "Password", icon: Icons.key_rounded, backgroundColor: AppColors.mainColor,),
                   SizedBox(height: Dimensions.height20),
 
                   // Vendor Name
-                  AppTextField(textController: vendorNameController, hintText: "Name of Establishment", icon: Icons.food_bank_rounded),
+                  AppTextField(textController: vendorNameController, hintText: "Name of Establishment", icon: Icons.food_bank_rounded, backgroundColor: AppColors.mainColor,),
                   SizedBox(height: Dimensions.height20),
 
                   // Contact Number
-                  AppTextField(textController: phoneController, hintText: "Contact Number", icon: Icons.phone),
+                  AppTextField(textController: phoneController, hintText: "Contact Number", icon: Icons.phone, backgroundColor: AppColors.mainColor),
                   SizedBox(height: Dimensions.height20*2),
 
 

@@ -12,7 +12,8 @@ import '../../utils/dimensions.dart';
 import '../Home/home_page.dart';
 
 class SplashScreen extends StatefulWidget {
-  const SplashScreen({Key? key}) : super(key: key);
+  final int time;
+  SplashScreen({Key? key, this.time = 1000}) : super(key: key);
 
   @override
   State<SplashScreen> createState() => _SplashScreenState();
@@ -48,7 +49,7 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
           ),
         ),
       ),
-      duration: 1000,
+      duration: widget.time,
       nextScreen: HomePage(),
       splashTransition: SplashTransition.fadeTransition,
     );

@@ -62,11 +62,11 @@ class VendorSignInPage extends StatelessWidget {
               SizedBox(height: Dimensions.height45,),
 
               // Email
-              AppTextField(textController: emailController, hintText: "Email", icon: Icons.email_rounded),
+              AppTextField(textController: emailController, hintText: "Email", icon: Icons.email_rounded, backgroundColor: AppColors.mainColor,),
               SizedBox(height: Dimensions.height20),
 
               // Password
-              AppHiddenTextField(textController: passwordController, hintText: "Password", icon: Icons.key_rounded),
+              AppHiddenTextField(textController: passwordController, hintText: "Password", icon: Icons.key_rounded, backgroundColor: AppColors.mainColor,),
               SizedBox(height: Dimensions.height20),
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,

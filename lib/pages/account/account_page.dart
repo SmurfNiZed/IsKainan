@@ -16,6 +16,7 @@ import '../../utils/dimensions.dart';
 import '../../widgets/account_widget.dart';
 import '../../widgets/app_icon.dart';
 import '../../widgets/big_text.dart';
+import '../splash/splash_page.dart';
 import 'account_details_page.dart';
 
 class AccountPage extends StatelessWidget {
@@ -27,14 +28,16 @@ class AccountPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        backgroundColor: AppColors.mainColor,
-        title: BigText(
-          text: "Dashboard",
-          size: Dimensions.font26,
-          color: Colors.white,
-        ),
+        backgroundColor: Colors.white,
+        elevation: 0,
+        title: GestureDetector(
+            onTap: (){
+              Get.offAll(() => SplashScreen(time: 50,));
+            },
+            child: AppIcon(icon: Icons.clear, backgroundColor: AppColors.mainColor, iconColor: Colors.white,)),
       ),
       body: Container(
+        color: Colors.white,
         child: Column(
           children: [
             SizedBox(height: Dimensions.height45),
@@ -57,8 +60,8 @@ class AccountPage extends StatelessWidget {
                         },
                         child: AccountWidget(
                           appIcon: AppIcon(
-                            icon: Icons.email,
-                            backgroundColor: AppColors.mainColor,
+                            icon: Icons.settings,
+                            backgroundColor: AppColors.iconColor1,
                             iconColor: Colors.white,
                             iconSize: Dimensions.height10 * 5 / 2,
                             size: Dimensions.height10 * 5,
@@ -102,7 +105,7 @@ class AccountPage extends StatelessWidget {
                         },
                         child: AccountWidget(
                           appIcon: AppIcon(
-                            icon: Icons.settings,
+                            icon: Icons.email,
                             backgroundColor: AppColors.paraColor,
                             iconColor: Colors.white,
                             iconSize: Dimensions.height10 * 5 / 2,

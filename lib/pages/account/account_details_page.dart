@@ -101,7 +101,7 @@ class AccountDetailsPage extends StatelessWidget {
                     children: [
                       SizedBox(height: Dimensions.height45),
                       AppIcon(icon: Icons.email,
-                          backgroundColor: AppColors.mainColor,
+                          backgroundColor: AppColors.paraColor,
                           iconColor: Colors.white,
                           iconSize: Dimensions.height30 + Dimensions.height45,
                           size: Dimensions.height15 * 10),
@@ -113,19 +113,19 @@ class AccountDetailsPage extends StatelessWidget {
                             child: Column(
                               children: [
                                 // Email
-                                AppTextField(textController: emailController, hintText: "Email", icon: Icons.email_rounded),
+                                AppTextField(textController: emailController, hintText: "Email", icon: Icons.email_rounded, backgroundColor: AppColors.paraColor,),
                                 SizedBox(height: Dimensions.height20),
 
                                 // Password
-                                AppHiddenTextField(textController: passwordController, hintText: "Password", icon: Icons.key_rounded),
+                                AppHiddenTextField(textController: passwordController, hintText: "Password", icon: Icons.key_rounded, backgroundColor: AppColors.paraColor,),
                                 SizedBox(height: Dimensions.height20),
 
                                 // Vendor Name
-                                AppTextField(textController: vendorNameController, hintText: "Name of Establishment", icon: Icons.food_bank_rounded),
+                                AppTextField(textController: vendorNameController, hintText: "Name of Establishment", icon: Icons.food_bank_rounded, backgroundColor: AppColors.paraColor),
                                 SizedBox(height: Dimensions.height20),
 
                                 // Contact Number
-                                AppTextField(textController: phoneController, hintText: "Contact Number", icon: Icons.phone),
+                                AppTextField(textController: phoneController, hintText: "Contact Number", icon: Icons.phone, backgroundColor: AppColors.paraColor,),
                                 SizedBox(height: Dimensions.height20*2),
                                 GestureDetector(
                                   onTap: (){
@@ -136,7 +136,7 @@ class AccountDetailsPage extends StatelessWidget {
                                     height: Dimensions.screenHeight/13,
                                     decoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(Dimensions.radius30),
-                                        color: AppColors.mainColor
+                                        color: AppColors.paraColor
                                     ),
                                     child: Center(
                                       child: BigText(
@@ -158,7 +158,7 @@ class AccountDetailsPage extends StatelessWidget {
           } else {
             return Scaffold(
               backgroundColor: Colors.white,
-              body: Center(child: CircularProgressIndicator()));
+              body: Center(child: CircularProgressIndicator(color: AppColors.mainColor,)));
           }
         }
     );
