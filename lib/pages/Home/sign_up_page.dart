@@ -5,11 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:iskainan/base/show_custom_snackbar.dart';
+import 'package:iskainan/models/vendor_data_model.dart';
 import 'package:iskainan/pages/Home/survey.dart';
 import 'package:iskainan/pages/account/account_page.dart';
 import 'package:iskainan/widgets/app_text_field.dart';
 import '../../controllers/auth_controller.dart';
-import '../../controllers/signup_controller.dart';
 import '../../models/signup_body_model.dart';
 import '../../models/user_model.dart';
 import '../../routes/route_helper.dart';
@@ -53,11 +53,19 @@ class VendorSignUpPage extends StatelessWidget {
       }else if(phone.isEmpty){
         showCustomerSnackBar("Type in your phone number.", title: "Phone Number");
       }else{
-        final user = UserModel(
+
+        final user = VendorData(
           email: email,
           phone: phone,
           vendorName: vendorName,
-          password: password
+          password: password,
+          latitude: 14.654941990186154,
+          longitude: 121.0648511552033,   // Oble
+          vendorImg: "",
+          isGcash: false,
+          operatingHours: "",
+          isOpen: false,
+          accountCreated: DateTime.parse(Timestamp.now().toDate().toString()),
         );
 
         AuthController.instance.register(user);

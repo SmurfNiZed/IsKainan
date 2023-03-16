@@ -9,6 +9,7 @@ import 'package:iskainan/models/user_model.dart';
 import 'package:iskainan/pages/Home/sign_in_page.dart';
 
 import '../data/repository/user_repo.dart';
+import '../models/vendor_data_model.dart';
 import '../pages/Home/home_page.dart';
 import '../pages/account/account_page.dart';
 import '../pages/splash/splash_page.dart';
@@ -39,7 +40,7 @@ class AuthController extends GetxController{
     }
   }
 
-  void register(UserModel user) async {
+  void register(/*UserModel*/VendorData user) async {
     try{
       await auth.createUserWithEmailAndPassword(email: user.email, password: user.password);
       await userRepo.createUser(user);
