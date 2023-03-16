@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
+import 'package:iskainan/base/show_custom_snackbar.dart';
 // import 'package:iskainan/controllers/profile_controller.dart';
 
 import '../../controllers/auth_controller.dart';
@@ -114,6 +115,7 @@ class AccountPage extends StatelessWidget {
                               SizedBox(height: Dimensions.height45,),
                               GestureDetector(
                                 onTap: (){
+                                  showCustomerSnackBar("See you next time!", color: Colors.green, colorText: Colors.green, title: "Logged Out");
                                   AuthController.instance.logout();
                                 },
                                 child: Container(

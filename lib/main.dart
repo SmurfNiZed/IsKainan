@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_displaymode/flutter_displaymode.dart';
@@ -36,7 +37,9 @@ class Home extends StatelessWidget {
         title: 'IsKainan: Campus Food App',
 
         // home: SplashScreen(),
-        initialRoute: RouteHelper.getInitial(),
+        // initialRoute: FirebaseAuth.instance.currentUser == null
+        //               ? RouteHelper.getInitial()
+        //               : RouteHelper.getAccountPage(),
         getPages: RouteHelper.routes,
       );
     });
