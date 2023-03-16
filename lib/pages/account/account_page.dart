@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:iskainan/base/show_custom_snackbar.dart';
+import 'package:iskainan/pages/account/general_information_page.dart';
 // import 'package:iskainan/controllers/profile_controller.dart';
 
 import '../../controllers/auth_controller.dart';
@@ -56,7 +57,7 @@ class AccountPage extends StatelessWidget {
                       // Manage General Information
                       GestureDetector(
                         onTap: (){
-
+                          Get.to(() => GeneralInformationPage());
                         },
                         child: AccountWidget(
                           appIcon: AppIcon(

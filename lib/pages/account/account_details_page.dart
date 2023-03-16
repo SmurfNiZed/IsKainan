@@ -12,6 +12,7 @@ import 'package:iskainan/controllers/profile_controller.dart';
 import '../../base/show_custom_snackbar.dart';
 import '../../controllers/auth_controller.dart';
 import '../../models/user_model.dart';
+import '../../models/vendor_data_model.dart';
 import '../../routes/route_helper.dart';
 import '../../utils/colors.dart';
 import '../../utils/dimensions.dart';
@@ -31,13 +32,12 @@ class AccountDetailsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final controller = Get.put(ProfileController());
 
-    Future<void> _updateGeneralInformation(TextEditingController emailController,
-        TextEditingController phoneController,
-        TextEditingController vendorNameController,
+    Future<void> _updateAccountDetails(TextEditingController emailController,
+        // TextEditingController phoneController,
+        // TextEditingController vendorNameController,
         TextEditingController passwordController, String? id) async {
-      // final controller = Get.put(ProfileController());
-      String vendorName = vendorNameController.text.trim();
-      String phone = phoneController.text.trim();
+      // String vendorName = vendorNameController.text.trim();
+      // String phone = phoneController.text.trim();
       String email = emailController.text.trim();
       String password = passwordController.text.trim();
 
@@ -50,22 +50,13 @@ class AccountDetailsPage extends StatelessWidget {
         showCustomerSnackBar("Type in your password", title: "Password");
       }else if(password.length < 6){
         showCustomerSnackBar("Password can not be less than 6 characters.", title: "Password");
-      }else if(vendorName.isEmpty){
-        showCustomerSnackBar("Type in the name of your establishment.", title: "Name");
-      }else if(phone.isEmpty){
-        showCustomerSnackBar("Type in your phone number.", title: "Phone Number");
       }else{
-        final userData = UserModel(
-            id: id,
-            email: email,
-            phone: phone,
-            vendorName: vendorName,
-            password: password
-        );
+
         try{
           FirebaseAuth.instance.currentUser!.updateEmail(email);
-          await controller.updateRecord(userData);
-          showCustomerSnackBar("Account details updated.", title: "Success", color: Colors.green);
+          FirebaseAuth.instance.currentUser!.updatePassword(password);
+          FirebaseFirestore.instance.collection('vendors').doc(id).update({'email': email, 'password': password});
+          showCustomerSnackBar("Account details updated. Logging you out.", title: "Success", color: Colors.green);
           Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => AccountPage()));
           // Get.offAll(() => AccountPage());
         }catch(e){
@@ -79,11 +70,11 @@ class AccountDetailsPage extends StatelessWidget {
         future: controller.getUserData(),
         builder: (context, snapshot){
           if(snapshot.connectionState == ConnectionState.done){
-            UserModel user = snapshot.data as UserModel;
+            print(snapshot.data);
+            VendorData user = snapshot.data as VendorData;
+            print("Accoutn Details Page:" + user.email!);
             late TextEditingController emailController = TextEditingController(text: user.email.toString());
             late TextEditingController passwordController = TextEditingController(text: user.password.toString());
-            late TextEditingController vendorNameController = TextEditingController(text: user.vendorName.toString());
-            late TextEditingController phoneController = TextEditingController(text: user.phone.toString());
             return Scaffold(
                 appBar: AppBar(
                   automaticallyImplyLeading: false,
@@ -120,16 +111,9 @@ class AccountDetailsPage extends StatelessWidget {
                                 AppHiddenTextField(textController: passwordController, hintText: "Password", icon: Icons.key_rounded, backgroundColor: AppColors.paraColor,),
                                 SizedBox(height: Dimensions.height20),
 
-                                // Vendor Name
-                                AppTextField(textController: vendorNameController, hintText: "Name of Establishment", icon: Icons.food_bank_rounded, backgroundColor: AppColors.paraColor),
-                                SizedBox(height: Dimensions.height20),
-
-                                // Contact Number
-                                AppTextField(textController: phoneController, hintText: "Contact Number", icon: Icons.phone, backgroundColor: AppColors.paraColor,),
-                                SizedBox(height: Dimensions.height20*2),
                                 GestureDetector(
                                   onTap: (){
-                                    _updateGeneralInformation(emailController, phoneController, vendorNameController, passwordController, user.id);
+                                    _updateAccountDetails(emailController, passwordController, user.vendor_id);
                                   },
                                   child: Container(
                                     width: Dimensions.screenWidth/3,

@@ -42,7 +42,7 @@ class AuthController extends GetxController{
 
   void register(/*UserModel*/VendorData user) async {
     try{
-      await auth.createUserWithEmailAndPassword(email: user.email, password: user.password);
+      await auth.createUserWithEmailAndPassword(email: user.email!, password: user.password!);
       await userRepo.createUser(user);
     }catch(e){
       showCustomerSnackBar(e.toString());

@@ -1,66 +1,79 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class VendorData {
-  String? vendorId;
-  String email;
-  String vendorName;
-  String password;
-  String phone;
-  GeoPoint? vendorLocation;
-  String? vendorImg;
-  bool? isGcash;
-  String? operatingHours;
-  bool? isOpen;
-  DateTime? accountCreated;
+  String? vendor_id;
+  String? email;
+  String? vendor_name;
+  String? password;
+  String? phone;
+  GeoPoint? vendor_location;
+  String? vendor_img;
+  String? is_gcash;
+  String? operating_hours;
+  String? is_open;
+  String? account_created;
   // VendorMenu? vendorMenu;
 
   VendorData(
-      {this.vendorId,
-        required this.email,
-        required this.vendorName,
-        required this.password,
-        required this.phone,
+      {this.vendor_id,
+        this.email,
+        this.vendor_name,
+        this.password,
+        this.phone,
         double? latitude,
         double? longitude,
-        this.vendorImg,
-        this.isGcash,
-        this.operatingHours,
-        this.isOpen,
-        this.accountCreated,
-        /*this.vendorMenu*/}): vendorLocation = latitude != null && longitude != null ? GeoPoint(latitude, longitude) : null;
+        this.vendor_img,
+        this.is_gcash,
+        this.operating_hours,
+        this.is_open,
+        this.account_created,
+        /*this.vendorMenu*/}): vendor_location = latitude != null && longitude != null ? GeoPoint(latitude, longitude) : null;
 
   toJson(){
     return {
       'email': email,
-      'vendor_name': vendorName,
+      'vendor_name': vendor_name,
       'password': password,
       'phone': phone,
-      'vendor_location': vendorLocation,
+      'vendor_location': vendor_location,
       // 'vendor_menu': vendorMenu?.toJson(),
-      'accountCreated': accountCreated,
-      'isOpen': isOpen,
-      'operatingHours': operatingHours,
-      'isGcash': isGcash,
-      'vendorImg': vendorImg
+      'account_created': account_created,
+      'is_open': is_open,
+      'operating_hours': operating_hours,
+      'is_gcash': is_gcash,
+      'vendor_img': vendor_img
     };
   }
 
   factory VendorData.fromSnapshot(DocumentSnapshot<Map<String, dynamic>> document) {
+    print("VendorDataModel");
     final data = document.data()!;
+    GeoPoint geoPoint = data['vendor_location'];
+
+    // print("vendorId:"+document.id);
+    // print("email:" + data['email']);
+    // print("vendor_name:" +data['vendor_name']);
+    // print("password:" +data['password']);
+    // print("phone:" +data['phone']);
+    // print("vendorImg:" +data['vendor_img']);
+    // print("operatingHours:" +data['operating_hours']);
+    // print("accountCreated:" +data['account_created']);
+    // print("isOpen:" +data['is_open']);
+    // print("isGcash:" +data['is_gcash']);
 
     return VendorData(
-      vendorId: document.id,
+      vendor_id: document.id,
       email: data['email'],
       password: data['password'],
-      vendorName: data['vendorName'],
+      vendor_name: data['vendor_name'],
       phone: data['phone'],
-      latitude: data['latitude'],
-      longitude: data['longitude'],
-      vendorImg: data['vendorImg'],
-      isGcash: data['isGcash'],
-      operatingHours: data['operatingHours'],
-      isOpen: data['isOpen'],
-      accountCreated: data['accountCreated'],
+      latitude: geoPoint.latitude,
+      longitude: geoPoint.latitude,
+      vendor_img: data['vendor_img'],
+      is_gcash: data['is_gcash'].toString(),
+      operating_hours: data['operating_hours'],
+      is_open: data['is_open'].toString(),
+      account_created: data['account_created'].toString(),
       // vendorMenu: VendorMenu.fromSnapshot(data['vendorMenu'])
     );
   }

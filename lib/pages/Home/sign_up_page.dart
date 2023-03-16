@@ -42,8 +42,6 @@ class VendorSignUpPage extends StatelessWidget {
         showCustomerSnackBar("Type in your email address.", title: "Email address");
       }else if(!GetUtils.isEmail(email)){
         showCustomerSnackBar("Type in a valid email address.", title: "Valid email address");
-      }else if(!GetUtils.isEmail(email)){
-        showCustomerSnackBar("Type in a valid email address.", title: "Valid email address");
       }else if(password.isEmpty){
         showCustomerSnackBar("Type in your password", title: "Password");
       }else if(password.length < 6){
@@ -53,19 +51,18 @@ class VendorSignUpPage extends StatelessWidget {
       }else if(phone.isEmpty){
         showCustomerSnackBar("Type in your phone number.", title: "Phone Number");
       }else{
-
         final user = VendorData(
           email: email,
           phone: phone,
-          vendorName: vendorName,
+          vendor_name: vendorName,
           password: password,
           latitude: 14.654941990186154,
           longitude: 121.0648511552033,   // Oble
-          vendorImg: "",
-          isGcash: false,
-          operatingHours: "",
-          isOpen: false,
-          accountCreated: DateTime.parse(Timestamp.now().toDate().toString()),
+          vendor_img: "",
+          is_gcash: "false",
+          operating_hours: "",
+          is_open: "false",
+          account_created: Timestamp.now().toDate().toString(),
         );
 
         AuthController.instance.register(user);

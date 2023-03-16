@@ -24,26 +24,35 @@ class UserRepository extends GetxController {
   //   );
   // }
 
-  createUser(/*UserModel*/VendorData user) async {
-    DocumentReference vendorId = await _db.collection('vendors').add(user.toJson());
-    await _db.collection('vendors').doc(vendorId.id).collection('foodList').add({'initialization': true});
+
+
+  createUser(VendorData user) async {
+    await _db.collection('vendors').add(user.toJson()).whenComplete(
+                () => Get.snackbar("Success", "Your account has been created.",
+                snackPosition: SnackPosition.TOP,
+                backgroundColor: Colors.green.withOpacity(0.1),
+                colorText: Colors.green),
+          );
+    // await _db.collection('vendors').doc(vendorId.id).collection('foodList').add({'initialization': true});
   }
 
-  Future<UserModel> getUserDetails(String email) async {
-    print(email);
+  Future<VendorData> getUserDetails(String email) async {
     final snapshot = await _db.collection("vendors").where("email", isEqualTo: email).get();
-    final userData = snapshot.docs.map((e) => UserModel.fromSnapshot(e)).single;
+    print("getUserDetails: " + snapshot.toString());
+    final userData = snapshot.docs.map((e) => VendorData.fromSnapshot(e)).single;
+
+
     return userData;
   }
 
-  Future<List<UserModel>> allUser() async {
-    final snapshot = await _db.collection("vendors").get();
-    final userData = snapshot.docs.map((e) => UserModel.fromSnapshot(e)).toList();
-    return userData;
-  }
+  // Future<List<VendorData>> allUser() async {
+  //   final snapshot = await _db.collection("vendors").get();
+  //   final userData = snapshot.docs.map((e) => VendorData.fromSnapshot(e)).toList();
+  //   return userData;
+  // }
 
-  Future<void> updateGeneralInformation(UserModel user) async{
-    await _db.collection("vendors").doc(user.id).update(user.toJson());
+  Future<void> updateGeneralInformation(VendorData user) async{
+    await _db.collection("vendors").doc(user.vendor_id).update(user.toJson());
   }
 
 }

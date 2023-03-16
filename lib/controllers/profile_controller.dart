@@ -5,11 +5,10 @@ import 'package:iskainan/controllers/auth_controller.dart';
 
 import '../data/repository/user_repo.dart';
 import '../models/user_model.dart';
+import '../models/vendor_data_model.dart';
 
 class ProfileController extends GetxController {
   static ProfileController get instance => Get.find();
-
-
   final _authRepo = Get.put(AuthController());
   final _userRepo = Get.put(UserRepository());
 
@@ -20,10 +19,10 @@ class ProfileController extends GetxController {
     }
   }
 
-  Future<List<UserModel>> getAllUsers() async => await _userRepo.allUser();
+  // Future<List<VendorData>> getAllUsers() async => await _userRepo.allUser();
 
-  updateRecord(UserModel user) async {
-    await _userRepo.updateGeneralInformation(user);
-  }
+  // updateRecord(VendorData user) async {
+  //   await _userRepo.updateGeneralInformation(user);
+  // }
 
 }
