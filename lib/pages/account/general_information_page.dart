@@ -193,7 +193,7 @@ class _GeneralInformationPageState extends State<GeneralInformationPage> {
                                         crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
                                           SmallText(text: "Store is Open", size: Dimensions.font16,),
-                                          SmallText(text: "only select this when temporarily unavailable", color: AppColors.paraColor, size: Dimensions.font16-5),
+                                          SmallText(text: "only uncheck this when temporarily unavailable", color: AppColors.paraColor, size: Dimensions.font16-5),
                                         ],
                                       ),
                                     ),

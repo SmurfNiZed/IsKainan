@@ -54,11 +54,13 @@ class AccountDetailsPage extends StatelessWidget {
       }else{
 
         try{
-          FirebaseAuth.instance.currentUser!.updateEmail(email);
-          FirebaseAuth.instance.currentUser!.updatePassword(password);
-          FirebaseFirestore.instance.collection('vendors').doc(id).update({'email': email, 'password': password});
-          showCustomerSnackBar("Account details updated. Logging you out.", title: "Success", color: Colors.green);
-          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => AccountPage()));
+
+          await FirebaseAuth.instance.currentUser!.updateEmail(email);                                                    // Updates email in Firebase Authentication
+          await FirebaseAuth.instance.currentUser!.updatePassword(password);                                              // Updates password in Firebase Authentication
+          await FirebaseFirestore.instance.collection('vendors').doc(id).update({'email': email, 'password': password});  // Updates Email and Password in Firebase Firestore
+          showCustomerSnackBar("Account details updated. Logging you out", title: "Success", color: Colors.green);
+          AuthController.instance.logout();
+          // Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => AccountPage()));
           // Get.offAll(() => AccountPage());
         }catch(e){
           showCustomerSnackBar(e.toString());
