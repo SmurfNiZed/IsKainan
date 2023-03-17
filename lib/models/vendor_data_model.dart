@@ -71,7 +71,7 @@ class VendorData {
       vendor_name: data['vendor_name'],
       phone: data['phone'],
       latitude: geoPoint.latitude,
-      longitude: geoPoint.latitude,
+      longitude: geoPoint.longitude,
       vendor_img: data['vendor_img'],
       is_gcash: data['is_gcash'].toString(),
       operating_hours: data['operating_hours'],

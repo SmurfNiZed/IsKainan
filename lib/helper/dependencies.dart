@@ -5,6 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../controllers/auth_controller.dart';
 import '../data/api/api_client.dart';
 import '../data/repository/auth_repo.dart';
+import '../data/repository/location_repo.dart';
 import '../data/repository/vendors_repo.dart';
 import '../utils/app_constants.dart';
 
@@ -18,8 +19,10 @@ Future<void> init()async { // init() method
 
   // repository
   Get.lazyPut(()=>VendorRepo(apiClient:Get.find()));
+  Get.lazyPut(()=>LocationRepo(apiClient: Get.find(), sharedPreferences: Get.find()));
 
   // controllers
   Get.lazyPut(()=>VendorController(vendorRepo: Get.find()));
+  // Get.lazyPut(() => LocationController(locationRep: Get.find()))
   // Get.lazyPut(() => AuthController(authRepo: Get.find()));
 }

@@ -73,9 +73,7 @@ class AccountDetailsPage extends StatelessWidget {
         future: controller.getUserData(),
         builder: (context, snapshot){
           if(snapshot.connectionState == ConnectionState.done){
-            print(snapshot.data);
             VendorData user = snapshot.data as VendorData;
-            print("Accoutn Details Page:" + user.email!);
             late TextEditingController emailController = TextEditingController(text: user.email.toString());
             late TextEditingController passwordController = TextEditingController(text: user.password.toString());
             return Scaffold(

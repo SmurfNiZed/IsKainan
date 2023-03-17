@@ -19,6 +19,7 @@ import '../../widgets/app_icon.dart';
 import '../../widgets/big_text.dart';
 import '../splash/splash_page.dart';
 import 'account_details_page.dart';
+import 'manage_location_page.dart';
 
 class AccountPage extends StatelessWidget {
   const AccountPage({Key? key}) : super(key: key);
@@ -87,15 +88,20 @@ class AccountPage extends StatelessWidget {
                       SizedBox(height: Dimensions.height20,),
 
                       // Manage Location
-                      AccountWidget(
-                        appIcon: AppIcon(
-                          icon: Icons.location_on,
-                          backgroundColor: AppColors.iconColor1,
-                          iconColor: Colors.white,
-                          iconSize: Dimensions.height10 * 5 / 2,
-                          size: Dimensions.height10 * 5,
+                      GestureDetector(
+                        onTap: (){
+                          Get.to(() => ManageLocationPage());
+                        },
+                        child: AccountWidget(
+                          appIcon: AppIcon(
+                            icon: Icons.location_on,
+                            backgroundColor: AppColors.iconColor1,
+                            iconColor: Colors.white,
+                            iconSize: Dimensions.height10 * 5 / 2,
+                            size: Dimensions.height10 * 5,
+                          ),
+                          bigText: BigText(text: "Manage Location"),
                         ),
-                        bigText: BigText(text: "Manage Location"),
                       ),
                       SizedBox(height: Dimensions.height20,),
 
