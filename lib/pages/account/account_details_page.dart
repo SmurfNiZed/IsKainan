@@ -42,7 +42,6 @@ class AccountDetailsPage extends StatelessWidget {
       String email = emailController.text.trim();
       String password = passwordController.text.trim();
 
-      print(email);
       if(email.isEmpty){
         showCustomerSnackBar("Type in your email address.", title: "Email address");
       }else if(!GetUtils.isEmail(email)){
