@@ -35,7 +35,7 @@ class AccountPage extends StatelessWidget {
             onTap: (){
               Get.offAll(() => SplashScreen(time: 50,));
             },
-            child: AppIcon(icon: Icons.clear, backgroundColor: AppColors.mainColor, iconColor: Colors.white,)),
+            child: AppIcon(icon: Icons.arrow_back, backgroundColor: AppColors.mainColor, iconColor: Colors.white,)),
       ),
       body: Container(
         color: Colors.white,
@@ -116,26 +116,22 @@ class AccountPage extends StatelessWidget {
                               text: "Manage Account Details"),
                         ),
                       ),
-                      SizedBox(height: Dimensions.height45,),
+                      SizedBox(height: Dimensions.height20,),
                       GestureDetector(
                         onTap: (){
                           showCustomerSnackBar("See you next time!", color: Colors.green, title: "Logged Out");
                           AuthController.instance.logout();
                         },
-                        child: Container(
-                          width: Dimensions.screenWidth/3,
-                          height: Dimensions.screenHeight/13,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(Dimensions.radius30),
-                              color: AppColors.mainColor
+                        child: AccountWidget(
+                          appIcon: AppIcon(
+                            icon: Icons.logout,
+                            backgroundColor: Colors.red[900]!,
+                            iconColor: Colors.white,
+                            iconSize: Dimensions.height10 * 5 / 2,
+                            size: Dimensions.height10 * 5,
                           ),
-                          child: Center(
-                            child: BigText(
-                              text: "Logout",
-                              size: Dimensions.font26,
-                              color: Colors.white,
-                            ),
-                          ),
+                          bigText: BigText(
+                              text: "Logout"),
                         ),
                       ),
                     ],

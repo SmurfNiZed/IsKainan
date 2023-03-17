@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:iskainan/controllers/profile_controller.dart';
+import 'package:iskainan/widgets/small_text.dart';
 // import 'package:iskainan/controllers/profile_controller.dart';
 
 import '../../base/show_custom_snackbar.dart';
@@ -90,44 +91,53 @@ class AccountDetailsPage extends StatelessWidget {
                   color: Colors.white,
                   child: Column(
                     children: [
-                      SizedBox(height: Dimensions.height45),
-                      AppIcon(icon: Icons.email,
-                          backgroundColor: AppColors.paraColor,
-                          iconColor: Colors.white,
-                          iconSize: Dimensions.height30 + Dimensions.height45,
-                          size: Dimensions.height15 * 10),
-                      SizedBox(height: Dimensions.height45),
-
                       // Can be scrolled if we add more options
                       Expanded(
                           child: SingleChildScrollView(
                             child: Column(
                               children: [
+                                SizedBox(height: Dimensions.height45),
+                                AppIcon(icon: Icons.email,
+                                    backgroundColor: AppColors.paraColor,
+                                    iconColor: Colors.white,
+                                    iconSize: Dimensions.height30 + Dimensions.height45,
+                                    size: Dimensions.height15 * 10),
+                                SizedBox(height: Dimensions.height45),
+
                                 // Email
                                 AppTextField(textController: emailController, hintText: "Email", icon: Icons.email_rounded, backgroundColor: AppColors.paraColor,),
                                 SizedBox(height: Dimensions.height20),
 
                                 // Password
                                 AppHiddenTextField(textController: passwordController, hintText: "Password", icon: Icons.key_rounded, backgroundColor: AppColors.paraColor,),
-                                SizedBox(height: Dimensions.height20),
+                                SizedBox(height: Dimensions.height30),
 
                                 GestureDetector(
                                   onTap: (){
                                     _updateAccountDetails(emailController, passwordController, user.vendor_id);
                                   },
                                   child: Container(
-                                    width: Dimensions.screenWidth/3,
-                                    height: Dimensions.screenHeight/13,
+                                    margin: EdgeInsets.only(left: Dimensions.height20, right: Dimensions.height20),
+                                    height: 50,
+                                    width: Dimensions.screenWidth,
                                     decoration: BoxDecoration(
+                                        color: AppColors.paraColor,
                                         borderRadius: BorderRadius.circular(Dimensions.radius30),
-                                        color: AppColors.paraColor
+                                        boxShadow: [
+                                          BoxShadow(
+                                              blurRadius: 10,
+                                              spreadRadius: 7,
+                                              offset: Offset(1, 10),
+                                              color: Colors.grey.withOpacity(0.2)
+                                          )
+                                        ]
                                     ),
-                                    child: Center(
-                                      child: BigText(
-                                        text: "Save",
-                                        size: Dimensions.font26,
-                                        color: Colors.white,
-                                      ),
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                      children: [
+                                        BigText(text: "Save Changes", color: Colors.white,),
+                                      ],
                                     ),
                                   ),
                                 ),

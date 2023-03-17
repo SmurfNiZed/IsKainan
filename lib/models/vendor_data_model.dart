@@ -12,6 +12,7 @@ class VendorData {
   String? operating_hours;
   String? is_open;
   String? account_created;
+  String? approved;
   // VendorMenu? vendorMenu;
 
   VendorData(
@@ -27,6 +28,7 @@ class VendorData {
         this.operating_hours,
         this.is_open,
         this.account_created,
+        this.approved,
         /*this.vendorMenu*/}): vendor_location = latitude != null && longitude != null ? GeoPoint(latitude, longitude) : null;
 
   toJson(){
@@ -41,7 +43,8 @@ class VendorData {
       'is_open': is_open,
       'operating_hours': operating_hours,
       'is_gcash': is_gcash,
-      'vendor_img': vendor_img
+      'vendor_img': vendor_img,
+      'approved': approved,
     };
   }
 
@@ -74,6 +77,7 @@ class VendorData {
       operating_hours: data['operating_hours'],
       is_open: data['is_open'].toString(),
       account_created: data['account_created'].toString(),
+      approved: data['approved'] ?? "false",
       // vendorMenu: VendorMenu.fromSnapshot(data['vendorMenu'])
     );
   }

@@ -63,6 +63,7 @@ class VendorSignUpPage extends StatelessWidget {
           operating_hours: "",
           is_open: "false",
           account_created: Timestamp.now().toDate().toString(),
+          approved: "false",
         );
 
         AuthController.instance.register(user);

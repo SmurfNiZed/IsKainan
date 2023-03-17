@@ -102,21 +102,20 @@ class _GeneralInformationPageState extends State<GeneralInformationPage> {
                   color: Colors.white,
                   child: Column(
                     children: [
-                      SizedBox(height: Dimensions.height45),
-                      AppIcon(
-                          icon: Icons.settings,
-                          backgroundColor: AppColors.iconColor1,
-                          iconColor: Colors.white,
-                          iconSize: Dimensions.height30 + Dimensions.height45,
-                          size: Dimensions.height15 * 10),
-                      SizedBox(height: Dimensions.height45),
-
                       // Can be scrolled if we add more options
                       Expanded(
                           child: SingleChildScrollView(
                         child: Column(
                           children: [
-                            // Email
+                            SizedBox(height: Dimensions.height45),
+                            AppIcon(
+                                icon: Icons.settings,
+                                backgroundColor: AppColors.iconColor1,
+                                iconColor: Colors.white,
+                                iconSize: Dimensions.height30 + Dimensions.height45,
+                                size: Dimensions.height15 * 10),
+                            SizedBox(height: Dimensions.height45),
+
                             AppTextField(
                               textController: vendorNameController,
                               hintText: "Name of Establishment",
@@ -170,6 +169,7 @@ class _GeneralInformationPageState extends State<GeneralInformationPage> {
 
                             Container(
                               margin: EdgeInsets.only(left: Dimensions.height20, right: Dimensions.height20),
+                              height: 60,
                               decoration: BoxDecoration(
                                   color: Colors.white,
                                   borderRadius: BorderRadius.circular(Dimensions.radius30),
@@ -184,14 +184,19 @@ class _GeneralInformationPageState extends State<GeneralInformationPage> {
                               ),
                               child: StatefulBuilder(
                                 builder: (context, _setState) => CheckboxListTile(
-                                  subtitle: Transform.translate(
-                                    offset: const Offset(-15,0),
-                                    child: SmallText(text: "only select this when closed even during operation hours", color: AppColors.paraColor, size: Dimensions.font16-5),
-                                  ),
                                   value: _checkBoxOpen,
                                   title: Transform.translate(
-                                    offset: const Offset(-15,0),
-                                    child: SmallText(text: "Store is Open", size: Dimensions.font16,),
+                                    offset: Offset(0, -4),
+                                    child: Transform.translate(
+                                      offset: const Offset(-15,15),
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          SmallText(text: "Store is Open", size: Dimensions.font16,),
+                                          SmallText(text: "only select this when temporarily unavailable", color: AppColors.paraColor, size: Dimensions.font16-5),
+                                        ],
+                                      ),
+                                    ),
                                   ),
                                   onChanged: (val) {
                                     _setState(() => _checkBoxOpen = val!);
@@ -208,10 +213,12 @@ class _GeneralInformationPageState extends State<GeneralInformationPage> {
                             AppTextField(
                               textController: operatingHoursController,
                               hintText: "Operating Hours",
-                              icon: Icons.email_rounded,
+                              icon: Icons.timer,
                               backgroundColor: AppColors.iconColor1,
                             ),
                             SizedBox(height: Dimensions.height20),
+                            user.approved == "true"?SmallText(text: "This vendor is approved."):SmallText(text: "This vendor is not yet approved."),
+                            SizedBox(height: Dimensions.height30),
                             GestureDetector(
                               onTap: () {
                                 _updateGeneralInformation(
@@ -223,21 +230,31 @@ class _GeneralInformationPageState extends State<GeneralInformationPage> {
                                     user.vendor_id);
                               },
                               child: Container(
-                                width: Dimensions.screenWidth / 3,
-                                height: Dimensions.screenHeight / 13,
+                                margin: EdgeInsets.only(left: Dimensions.height20, right: Dimensions.height20),
+                                height: 50,
+                                width: Dimensions.screenWidth,
                                 decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(
-                                        Dimensions.radius30),
-                                    color: AppColors.iconColor1),
-                                child: Center(
-                                  child: BigText(
-                                    text: "Save",
-                                    size: Dimensions.font26,
-                                    color: Colors.white,
-                                  ),
+                                    color: AppColors.iconColor1,
+                                    borderRadius: BorderRadius.circular(Dimensions.radius30),
+                                    boxShadow: [
+                                      BoxShadow(
+                                          blurRadius: 10,
+                                          spreadRadius: 7,
+                                          offset: Offset(1, 10),
+                                          color: Colors.grey.withOpacity(0.2)
+                                      )
+                                    ]
+                                ),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    BigText(text: "Save Changes", color: Colors.white,),
+                                  ],
                                 ),
                               ),
                             ),
+                            SizedBox(height: Dimensions.height45),
                           ],
                         ),
                       ))
