@@ -86,7 +86,7 @@ class AccountPage extends StatelessWidget {
                               // Manage Menu
                               GestureDetector(
                                 onTap: (){
-                                  Get.to(() => MenuManagementPage());
+                                  Get.to(() => MenuManagementPage(email: user.email, vendor_id: user.vendor_id,));
                                 },
                                 child: AccountWidget(
                                   appIcon: AppIcon(

@@ -131,7 +131,8 @@ class VendorMenu {
   String? foodPrice;
   String? foodImg;
   String? isAvailable;
-  // String? isSpicy;
+  String? isSpicy;
+  String? food_created;
   // String? isShellfish;
   // String? isPeanut;
   // String? isMilk;
@@ -143,8 +144,9 @@ class VendorMenu {
     this.foodPrice,
     this.foodImg,
     this.isAvailable,
-    /*this.isSpicy,
-    this.isShellfish,
+    this.isSpicy,
+    this.food_created,
+    /*this.isShellfish,
     this.isPeanut,
     this.isMilk,
     this.isFish,
@@ -157,7 +159,8 @@ class VendorMenu {
         foodPrice: data["foodPrice"],
         foodImg: data["foodImg"],
         isAvailable: data["isAvailable"],
-        // isSpicy: data["isSpicy"],
+        isSpicy: data["isSpicy"],
+        food_created: data["food_created"],
         // isShellfish: data["isShellfish"],
         // isPeanut: data["isPeanut"],
         // isMilk: data["isMilk"],
@@ -172,7 +175,8 @@ class VendorMenu {
       'food_price': foodPrice,
       'food_img': foodImg,
       'is_available': isAvailable,
-      // 'is_spicy': isSpicy,
+      'is_spicy': isSpicy,
+      'food_created': food_created,
       // 'is_shellfish': isShellfish,
       // 'is_peanut': isPeanut,
       // 'is_milk': isMilk,

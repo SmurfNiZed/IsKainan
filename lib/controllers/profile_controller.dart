@@ -19,12 +19,12 @@ class ProfileController extends GetxController {
     }
   }
 
-  // getMenuData() {
-  //   final email = _authRepo.firebaseUser.value?.email;
-  //   if(email != null){
-  //     return _userRepo.getMenuDetails(email);
-  //   }
-  // }
+  getMenuData(String vendorId) {
+    final email = _authRepo.firebaseUser.value?.email;
+    if(email != null){
+      return _userRepo.getVendorMenu(email, vendorId);
+    }
+  }
 
   // Future<List<VendorData>> getAllUsers() async => await _userRepo.allUser();
 

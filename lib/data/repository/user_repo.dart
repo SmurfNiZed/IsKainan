@@ -21,7 +21,11 @@ class UserRepository extends GetxController {
     );
   }
 
-
+  getVendorMenu(String email, String vendorId) async {
+    final vendorSnapshot = await _db.collection('vendors').doc(vendorId).collection('foodList').get();
+    final foodList = vendorSnapshot.docs.map((e) => VendorMenu.fromSnapshot(e)).toList();
+    return foodList;
+  }
 
   createUser(VendorData user) async {
     await _db.collection('vendors').add(user.toJson()).whenComplete(
@@ -30,7 +34,6 @@ class UserRepository extends GetxController {
                 backgroundColor: Colors.green.withOpacity(0.1),
                 colorText: Colors.green),
           );
-    // await _db.collection('vendors').doc(vendorId.id).collection('foodList').add({'initialization': true});
   }
 
   Future<VendorData> getUserDetails(String email) async {
@@ -51,11 +54,13 @@ class UserRepository extends GetxController {
   //   return menuData;
   // }
 
-  // Future<List<VendorData>> allUser() async {
-  //   final snapshot = await _db.collection("vendors").get();
-  //   final userData = snapshot.docs.map((e) => VendorData.fromSnapshot(e)).toList();
-  //   return userData;
-  // }
+
+
+  Future<List<VendorData>> allUser() async {
+    final snapshot = await _db.collection("vendors").get();
+    final userData = snapshot.docs.map((e) => VendorData.fromSnapshot(e)).toList();
+    return userData;
+  }
 
   Future<void> updateGeneralInformation(VendorData user) async{
     await _db.collection("vendors").doc(user.vendor_id).update(user.toJson());
