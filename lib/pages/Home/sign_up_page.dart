@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:iskainan/base/show_custom_snackbar.dart';
+import 'package:iskainan/controllers/address_name_controller.dart';
 import 'package:iskainan/models/vendor_data_model.dart';
 import 'package:iskainan/pages/Home/survey.dart';
 import 'package:iskainan/pages/account/account_page.dart';
@@ -63,7 +64,7 @@ class VendorSignUpPage extends StatelessWidget {
           operating_hours: "",
           is_open: "false",
           account_created: Timestamp.now().toDate().toString(),
-          approved: "false",
+          approved: "false"
         );
 
         AuthController.instance.register(user);

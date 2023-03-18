@@ -249,7 +249,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:geocode/geocode.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:iskainan/controllers/address_name_controller.dart';
+import 'package:iskainan/controllers/profile_controller.dart';
 
 import '../../base/show_custom_snackbar.dart';
 import '../../utils/colors.dart';
@@ -268,29 +272,10 @@ class ManageLocationPage extends StatefulWidget {
   _ManageLocationPage createState() => _ManageLocationPage();
 }
 
+
 class _ManageLocationPage extends State<ManageLocationPage> {
   final List<Marker> _markers = [];
   late GeoPoint chosenLocation;
-  late Address address;
-
-
-  getAddress(GeoPoint currentLocation) {
-    GeoCode geoCode = GeoCode();
-
-    return geoCode.reverseGeocoding(latitude: currentLocation.latitude, longitude: currentLocation.longitude);
-  }
-
-  Future<void> _updateVendorLocation(GeoPoint vendor_location, String? id) async {
-    try{
-      await FirebaseFirestore.instance.collection('vendors').doc(id).update({'vendor_location': vendor_location}); 
-      showCustomerSnackBar("Vendor Location updated.", title: "Success", color: Colors.green);
-      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => AccountPage()));
-    }catch(e){
-      showCustomerSnackBar(e.toString());
-    }
-  }
-
-
 
   @override
   void initState(){
@@ -298,8 +283,25 @@ class _ManageLocationPage extends State<ManageLocationPage> {
     chosenLocation = widget.startSpot;
   }
 
-  @override
+
+
   Widget build(BuildContext context) {
+    // Future<dynamic> getAddress(GeoPoint currentLocation) async {
+    //   GeoCode geoCode = GeoCode();
+    //
+    //   return await geoCode.reverseGeocoding(latitude: currentLocation.latitude, longitude: currentLocation.longitude);
+    // }
+
+    Future<void> _updateVendorLocation(GeoPoint vendor_location, String? id) async {
+      try{
+        await FirebaseFirestore.instance.collection('vendors').doc(id).update({'vendor_location': vendor_location});
+        showCustomerSnackBar("Vendor Location updated.", title: "Success", color: Colors.green);
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => AccountPage()));
+      }catch(e){
+        showCustomerSnackBar(e.toString());
+      }
+    }
+
     return Stack(
       alignment: Alignment.center,
       children: [
@@ -308,7 +310,7 @@ class _ManageLocationPage extends State<ManageLocationPage> {
               target: LatLng(
                   widget.startSpot.latitude, widget.startSpot.longitude),
               zoom: 18),
-          markers: _markers.toSet(),
+          // markers: _markers.toSet(),
           zoomControlsEnabled: false,
           compassEnabled: false,
           indoorViewEnabled: true,
@@ -320,12 +322,11 @@ class _ManageLocationPage extends State<ManageLocationPage> {
                   widget.startSpot.latitude, widget.startSpot.longitude),
 
             );
-
             _markers.add(marker);
           },
           onCameraMove: (position) {
             chosenLocation = GeoPoint(position.target.latitude, position.target.longitude);
-            // address = getAddress(chosenLocation);
+            // address = getAddressFromLatLng(chosenLocation) as String?;
             setState(() {
               _markers.first =
                   _markers.first.copyWith(positionParam: position.target);
@@ -333,32 +334,32 @@ class _ManageLocationPage extends State<ManageLocationPage> {
           },
         ),
         Positioned(
-            top: Dimensions.height45 + Dimensions.height10,
-            left: Dimensions.width20,
-            right: Dimensions.width20,
-            child: Container(
-              padding: EdgeInsets.symmetric(horizontal: Dimensions.width10),
-              height: 50,
-              decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(Dimensions.radius20/2),
-                  boxShadow: [
-                    BoxShadow(
-                        blurRadius: 10,
-                        spreadRadius: 7,
-                        offset: Offset(1, 10),
-                        color: Colors.grey.withOpacity(0.2)
-                    )
-                  ]
-              ),
-              child: Row(
-                children: [
-                  Icon(Icons.storefront, size: 25, color: AppColors.iconColor1),
-                  SizedBox(width: Dimensions.width10,),
-                  Expanded(child: SmallText(text: chosenLocation.latitude.toString(),)),
-                ],
-              ),
+          top: Dimensions.height45 + Dimensions.height10,
+          left: Dimensions.width20,
+          right: Dimensions.width20,
+          child: Container(
+            padding: EdgeInsets.symmetric(horizontal: Dimensions.width10),
+            height: 50,
+            decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(Dimensions.radius20/2),
+                boxShadow: [
+                  BoxShadow(
+                      blurRadius: 10,
+                      spreadRadius: 7,
+                      offset: Offset(1, 10),
+                      color: Colors.grey.withOpacity(0.2)
+                  )
+                ]
             ),
+            child: Row(
+              children: [
+                Icon(Icons.storefront, size: 25, color: AppColors.iconColor1),
+                SizedBox(width: Dimensions.width10,),
+                Expanded(child: SmallText(text: chosenLocation.latitude.toString()+ ", " + chosenLocation.longitude.toString(),)),
+              ],
+            ),
+          ),
         ),
         Column(
           mainAxisAlignment: MainAxisAlignment.end,
@@ -390,6 +391,19 @@ class _ManageLocationPage extends State<ManageLocationPage> {
                     BigText(text: "Save Changes", color: Colors.white,),
                   ],
                 ),
+              ),
+            ),
+          ],
+        ),
+        Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(bottom: 42),
+              child: Icon(
+                Icons.location_on,
+                color: AppColors.mainColor,
+                size: 50,
               ),
             ),
           ],

@@ -1,4 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:geocode/geocode.dart';
+
+import '../controllers/address_name_controller.dart';
 
 class VendorData {
   String? vendor_id;
@@ -29,7 +32,9 @@ class VendorData {
         this.is_open,
         this.account_created,
         this.approved,
-        /*this.vendorMenu*/}): vendor_location = latitude != null && longitude != null ? GeoPoint(latitude, longitude) : null;
+        /*this.vendorMenu*/}) {
+    vendor_location = latitude != null && longitude != null ? GeoPoint(latitude, longitude) : null;
+  }
 
   toJson(){
     return {
