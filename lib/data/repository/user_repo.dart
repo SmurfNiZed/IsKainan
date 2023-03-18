@@ -12,17 +12,14 @@ class UserRepository extends GetxController {
 
   final _db = FirebaseFirestore.instance;
 
-  // createVendorMenu(VendorData user) async {
-  //   final collection = _db.collection('vendors');
-  //   final document = collection.doc();
-  //
-  //   await document.collection('vendorMenu').add(menu.toJson()).whenComplete(
-  //         () => Get.snackbar("Success", "Your account has been created.",
-  //         snackPosition: SnackPosition.TOP,
-  //         backgroundColor: Colors.green.withOpacity(0.1),
-  //         colorText: Colors.green),
-  //   );
-  // }
+  addVendorMenu(VendorMenu menu, String vendorId) async {
+    await _db.collection('vendors').doc(vendorId).collection('foodList').add(menu.toJson()).whenComplete(
+          () => Get.snackbar("Success", "New Entry has been created.",
+          snackPosition: SnackPosition.TOP,
+          backgroundColor: Colors.green.withOpacity(0.1),
+          colorText: Colors.green),
+    );
+  }
 
 
 
@@ -40,10 +37,19 @@ class UserRepository extends GetxController {
     final snapshot = await _db.collection("vendors").where("email", isEqualTo: email).get();
 
     final userData = snapshot.docs.map((e) => VendorData.fromSnapshot(e)).single;
-
-
     return userData;
   }
+
+  // Future<VendorMenu> getMenuDetails(String email) async {
+  //   final vendorSnapshot = await _db.collection("vendors").where("email", isEqualTo: email).get();
+  //
+  //   final vendorItems = vendorSnapshot.docs.first;
+  //   final vendorDocRef = vendorItems.reference;
+  //   final menuSnapshot = vendorDocRef.collection('menu').get();
+  //
+  //   final menuData = menuSnapshot.docs.map((e) => VendorMenu.fromSnapshot(e)).toList());
+  //   return menuData;
+  // }
 
   // Future<List<VendorData>> allUser() async {
   //   final snapshot = await _db.collection("vendors").get();

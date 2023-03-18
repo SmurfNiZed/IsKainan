@@ -34,11 +34,7 @@ class AccountDetailsPage extends StatelessWidget {
     final controller = Get.put(ProfileController());
 
     Future<void> _updateAccountDetails(TextEditingController emailController,
-        // TextEditingController phoneController,
-        // TextEditingController vendorNameController,
         TextEditingController passwordController, String? id) async {
-      // String vendorName = vendorNameController.text.trim();
-      // String phone = phoneController.text.trim();
       String email = emailController.text.trim();
       String password = passwordController.text.trim();
 

@@ -21,6 +21,7 @@ import '../../widgets/big_text.dart';
 import '../splash/splash_page.dart';
 import 'account_details_page.dart';
 import 'manage_location_page.dart';
+import 'menu_management_page.dart';
 
 class AccountPage extends StatelessWidget {
   const AccountPage({Key? key}) : super(key: key);
@@ -83,15 +84,20 @@ class AccountPage extends StatelessWidget {
                               SizedBox(height: Dimensions.height20,),
 
                               // Manage Menu
-                              AccountWidget(
-                                appIcon: AppIcon(
-                                  icon: Icons.restaurant_menu,
-                                  backgroundColor: AppColors.iconColor1,
-                                  iconColor: Colors.white,
-                                  iconSize: Dimensions.height10 * 5 / 2,
-                                  size: Dimensions.height10 * 5,
+                              GestureDetector(
+                                onTap: (){
+                                  Get.to(() => MenuManagementPage());
+                                },
+                                child: AccountWidget(
+                                  appIcon: AppIcon(
+                                    icon: Icons.restaurant_menu,
+                                    backgroundColor: AppColors.iconColor1,
+                                    iconColor: Colors.white,
+                                    iconSize: Dimensions.height10 * 5 / 2,
+                                    size: Dimensions.height10 * 5,
+                                  ),
+                                  bigText: BigText(text: "Manage Menu"),
                                 ),
-                                bigText: BigText(text: "Manage Menu"),
                               ),
                               SizedBox(height: Dimensions.height20,),
 

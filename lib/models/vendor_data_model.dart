@@ -126,58 +126,58 @@ class VendorData {
   // }
 }
 
-// class VendorMenu {
-//   String? foodName;
-//   String? foodPrice;
-//   String? foodImg;
-//   bool? isAvailable;
-//   bool? isSpicy;
-//   bool? isShellfish;
-//   bool? isPeanut;
-//   bool? isMilk;
-//   bool? isFish;
-//   bool? isSoy;
-//
-//   VendorMenu({
-//     this.foodName,
-//     this.foodPrice,
-//     this.foodImg,
-//     this.isAvailable,
-//     this.isSpicy,
-//     this.isShellfish,
-//     this.isPeanut,
-//     this.isMilk,
-//     this.isFish,
-//     this.isSoy});
-//
-//   factory VendorMenu.fromSnapshot(DocumentSnapshot<Map<String, dynamic>> document){
-//     final data = document.data()!;
-//     return VendorMenu(
-//         foodName: data["foodName"],
-//         foodPrice: data["foodPrice"],
-//         foodImg: data["foodImg"],
-//         isAvailable: data["isAvailable"],
-//         isSpicy: data["isSpicy"],
-//         isShellfish: data["isShellfish"],
-//         isPeanut: data["isPeanut"],
-//         isMilk: data["isMilk"],
-//         isFish: data["isFish"],
-//         isSoy: data["isSoy"]
-//     );
-//   }
-//
-//   toJson() {
-//     return {
-//       'food_name': foodName,
-//       'food_price': foodPrice,
-//       'food_img': foodImg,
-//       'is_available': isAvailable,
-//       'is_spicy': isSpicy,
-//       'is_shellfish': isShellfish,
-//       'is_peanut': isPeanut,
-//       'is_milk': isMilk,
-//       'is_fish': isFish,
-//       'is_soy': isSoy,
-//     };
-//   }
-// }
+class VendorMenu {
+  String? foodName;
+  String? foodPrice;
+  String? foodImg;
+  String? isAvailable;
+  // String? isSpicy;
+  // String? isShellfish;
+  // String? isPeanut;
+  // String? isMilk;
+  // String? isFish;
+  // String? isSoy;
+
+  VendorMenu({
+    this.foodName,
+    this.foodPrice,
+    this.foodImg,
+    this.isAvailable,
+    /*this.isSpicy,
+    this.isShellfish,
+    this.isPeanut,
+    this.isMilk,
+    this.isFish,
+    this.isSoy*/});
+
+  factory VendorMenu.fromSnapshot(DocumentSnapshot<Map<String, dynamic>> document){
+    final data = document.data()!;
+    return VendorMenu(
+        foodName: data["foodName"],
+        foodPrice: data["foodPrice"],
+        foodImg: data["foodImg"],
+        isAvailable: data["isAvailable"],
+        // isSpicy: data["isSpicy"],
+        // isShellfish: data["isShellfish"],
+        // isPeanut: data["isPeanut"],
+        // isMilk: data["isMilk"],
+        // isFish: data["isFish"],
+        // isSoy: data["isSoy"]
+    );
+  }
+
+  toJson() {
+    return {
+      'food_name': foodName,
+      'food_price': foodPrice,
+      'food_img': foodImg,
+      'is_available': isAvailable,
+      // 'is_spicy': isSpicy,
+      // 'is_shellfish': isShellfish,
+      // 'is_peanut': isPeanut,
+      // 'is_milk': isMilk,
+      // 'is_fish': isFish,
+      // 'is_soy': isSoy,
+    };
+  }
+}

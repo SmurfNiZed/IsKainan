@@ -116,19 +116,7 @@ class FoodList extends StatelessWidget {
                   );
                 },
               ),
-            ):Container(
-              width: Dimensions.screenWidth,
-              height: Dimensions.screenWidth/2,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  CircularProgressIndicator(
-                    color: AppColors.mainColor,
-                  ),
-                ],
-              ),
-            );
+            ):Center(child: CircularProgressIndicator(),);
           })
         ],
       ),

@@ -89,7 +89,7 @@ class _FoodPageBodyState extends State<FoodPageBody> {
           // Popular Text
           SizedBox(height: Dimensions.height30,),
           Container(
-            margin: EdgeInsets.only(left: Dimensions.width30),
+            margin: EdgeInsets.only(left: Dimensions.width20),
             child: Row(
               crossAxisAlignment:CrossAxisAlignment.end ,
               children: [
