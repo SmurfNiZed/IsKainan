@@ -63,8 +63,6 @@ class _GeneralInformationPageState extends State<GeneralInformationPage> {
           });
           showCustomerSnackBar("Account details updated.",
               title: "Success", color: Colors.green);
-          Navigator.pushReplacement(
-              context, MaterialPageRoute(builder: (context) => AccountPage()));
         } catch (e) {
           showCustomerSnackBar(e.toString());
         }

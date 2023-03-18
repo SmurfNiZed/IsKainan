@@ -1,10 +1,8 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:geocode/geocode.dart';
+import 'package:geocoding/geocoding.dart';
 
-Future<Address> getAddressFromLatLng(GeoPoint latLng) async {
-
-  GeoCode geoCode = GeoCode();
-  Address address = await geoCode.reverseGeocoding(latitude: latLng.latitude, longitude: latLng.longitude);
-  return address;
-
+Future<String?> getAddressFromLatLng(double latitude, double longitude) async {
+  List<Placemark> placemarks = await placemarkFromCoordinates(latitude, longitude);
+  Placemark placemark = placemarks.first;
+  String? street = placemark.street;
+  return street;
 }
