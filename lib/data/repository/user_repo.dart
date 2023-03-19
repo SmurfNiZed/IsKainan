@@ -17,7 +17,8 @@ class UserRepository extends GetxController {
   }
 
   getVendorMenu(String email, String vendorId) async {
-    final vendorSnapshot = await _db.collection('vendors').doc(vendorId).collection('foodList').get();
+    final vendorSnapshot = await _db.collection('vendors').doc(vendorId).collection("foodList")
+        .orderBy("food_created", descending: true).get();
     final foodList = vendorSnapshot.docs.map((e) => VendorMenu.fromSnapshot(e)).toList();
     return foodList;
   }

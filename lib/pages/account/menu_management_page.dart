@@ -71,7 +71,7 @@ class _MenuManagementPageState extends State<MenuManagementPage> {
         foodImg: entry.foodImg,
         isAvailable: entry.isAvailable,
         isSpicy: entry.isSpicy,
-        food_created: Timestamp.now().toDate().toString(),
+        food_created: Timestamp.now().toDate(),
       );
 
       await userRepo.addVendorMenu(menuInitial, vendorId);
@@ -86,7 +86,6 @@ class _MenuManagementPageState extends State<MenuManagementPage> {
         foodImg: entry.foodImg,
         isAvailable: entry.isAvailable,
         isSpicy: entry.isSpicy,
-        food_created: Timestamp.now().toDate().toString(),
       );
 
       await userRepo.updateVendorMenu(vendorId, entry.foodId!, newMenu);
@@ -118,7 +117,7 @@ class _MenuManagementPageState extends State<MenuManagementPage> {
                             )
                           );
                         } else if (snapshot.hasData) {
-                          final Stream<QuerySnapshot> postStream = FirebaseFirestore.instance.collection('vendors').doc(widget.vendor_id).collection('foodList').snapshots();
+                          final Stream<QuerySnapshot> postStream = FirebaseFirestore.instance.collection('vendors').doc(widget.vendor_id).collection('foodList').orderBy("food_created", descending: false).snapshots();
                           return StreamBuilder<QuerySnapshot>(
                             stream: postStream,
                             builder: (context, snapshot) {
@@ -144,7 +143,7 @@ class _MenuManagementPageState extends State<MenuManagementPage> {
                                   return ListView.builder(
                                       shrinkWrap: true,
                                       physics: NeverScrollableScrollPhysics(),
-                                      itemCount: food!.size,
+                                      itemCount: food.size,
                                       itemBuilder: (BuildContext context, int index) {
                                         final foodItem = food!.docs[index];
                                         final foodId = foodItem.id;
@@ -184,7 +183,6 @@ class _MenuManagementPageState extends State<MenuManagementPage> {
                                                   foodImg: " ",
                                                   isAvailable: is_available,
                                                   isSpicy: is_spicy,
-                                                  food_created: Timestamp.now().toString(),
                                                 );
                                                 _updateMenu(vendorId, updatedEntry);
 
@@ -423,7 +421,7 @@ class _MenuManagementPageState extends State<MenuManagementPage> {
                               foodImg: " ",
                               isAvailable: is_available,
                               isSpicy: is_spicy,
-                              food_created: Timestamp.now().toString(),
+                              food_created: Timestamp.now().toDate(),
                             );
                             _addMenu(widget.vendor_id!, entry);
                           },

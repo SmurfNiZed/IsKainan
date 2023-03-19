@@ -131,7 +131,7 @@ class VendorMenu {
   String? foodImg;
   String? isAvailable;
   String? isSpicy;
-  String? food_created;
+  DateTime? food_created;
   // String? isShellfish;
   // String? isPeanut;
   // String? isMilk;
