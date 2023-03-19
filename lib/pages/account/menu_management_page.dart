@@ -1,3 +1,4 @@
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -12,6 +13,7 @@ import '../../models/vendor_data_model.dart';
 import '../../utils/colors.dart';
 import '../../utils/dimensions.dart';
 import '../../widgets/app_icon.dart';
+import '../../widgets/app_text_field.dart';
 import '../../widgets/big_text.dart';
 import '../../widgets/rectangle_icon_widget.dart';
 import '../../widgets/small_text.dart';
@@ -27,23 +29,67 @@ class MenuManagementPage extends StatefulWidget {
 }
 
 class _MenuManagementPageState extends State<MenuManagementPage> {
+
+  // Future MenuEditor() => showDialog(
+  //     context: context,
+  //     builder: (context) => AlertDialog(
+  //       title: Text('Menu Editor'),
+  //       content: TextField(
+  //         decoration: InputDecoration(
+  //           hintText: "Enter your name",
+  //         ),
+  //       ),
+  //       actions: [
+  //         TextButton(
+  //           child: Text('Save Changes',
+  //             style:
+  //               TextStyle(
+  //                 color: Colors.white
+  //               ),
+  //             ),
+  //           style: ButtonStyle(
+  //             backgroundColor: MaterialStateProperty.all<Color>(AppColors.iconColor1),
+  //           ),
+  //           onPressed: (){
+  //
+  //           },
+  //         ),
+  //       ],
+  //     ),
+  // );
+
   @override
   Widget build(BuildContext context) {
     final controller = Get.put(ProfileController());
 
-    Future<void> _addMenu(String vendorId) async {
+    Future<void> _addMenu(String vendorId, VendorMenu entry) async {
       final userRepo = Get.put(UserRepository());
 
       final menuInitial = VendorMenu(
-        foodName: "Spicy Buttered Chicken",
-        foodPrice: "89.00",
-        foodImg: " ",
-        isAvailable: "true",
-        isSpicy: "true",
+        foodName: entry.foodName,
+        foodPrice: entry.foodPrice,
+        foodImg: entry.foodImg,
+        isAvailable: entry.isAvailable,
+        isSpicy: entry.isSpicy,
         food_created: Timestamp.now().toDate().toString(),
       );
 
       await userRepo.addVendorMenu(menuInitial, vendorId);
+    }
+
+    Future<void> _updateMenu(String vendorId, VendorMenu entry) async {
+      final userRepo = Get.put(UserRepository());
+
+      final newMenu = VendorMenu(
+        foodName: entry.foodName,
+        foodPrice: entry.foodPrice,
+        foodImg: entry.foodImg,
+        isAvailable: entry.isAvailable,
+        isSpicy: entry.isSpicy,
+        food_created: Timestamp.now().toDate().toString(),
+      );
+
+      await userRepo.updateVendorMenu(vendorId, entry.foodId!, newMenu);
     }
 
     return Scaffold(
@@ -101,75 +147,236 @@ class _MenuManagementPageState extends State<MenuManagementPage> {
                                       itemCount: food!.size,
                                       itemBuilder: (BuildContext context, int index) {
                                         final foodItem = food!.docs[index];
+                                        final foodId = foodItem.id;
                                         final foodName = foodItem['food_name'];
                                         final foodPrice = foodItem['food_price'];
                                         final foodImg = foodItem['food_img'];
-                                        final is_available = foodItem['is_available'];
-                                        final is_spicy = foodItem['is_spicy'];
+                                        var is_available = foodItem['is_available'];
+                                        var is_spicy = foodItem['is_spicy'];
                                         final food_created = foodItem['food_created'];
-                                        return Opacity(
-                                          opacity: is_available=="true"?1:0.2,
-                                          child: Container(
-                                            margin: EdgeInsets.only(left: Dimensions.width20, right: Dimensions.width20, bottom: Dimensions.height20),
-                                            child: Row(
-                                              children: [
-                                                // image section
-                                                Container(
-                                                  width: Dimensions.listViewImgSize,
-                                                  height: Dimensions.listViewImgSize,
-                                                  decoration: BoxDecoration(
-                                                      borderRadius: BorderRadius.circular(Dimensions.radius20),
-                                                      color: Colors.white38,
-                                                      image: DecorationImage(
-                                                        fit: BoxFit.cover,
-                                                        image: AssetImage('assets/images/food2.jpg'),
-                                                      )
-                                                  ),
-                                                ),
-                                                Expanded(
-                                                  child: Container(
+
+                                        late TextEditingController foodNameController =
+                                        TextEditingController(text: foodName.toString());
+                                        late TextEditingController foodPriceController =
+                                        TextEditingController(text: foodPrice.toString());
+
+                                        late String vendorId;
+
+                                        return GestureDetector(
+                                          onTap: (){
+                                            AwesomeDialog(
+                                              context: context,
+                                              dialogType: DialogType.noHeader,
+                                              animType: AnimType.topSlide,
+                                              title: "Test",
+                                              // desc: "Test Description",
+                                              dismissOnTouchOutside: true,
+                                              dismissOnBackKeyPress: true,
+                                              btnCancelOnPress: (){
+
+                                              },
+                                              btnCancelColor: AppColors.mainColor,
+                                              btnOkOnPress: (){
+                                                final updatedEntry = VendorMenu(
+                                                  foodId: foodId,
+                                                  foodName: foodNameController.text.trim(),
+                                                  foodPrice: foodPriceController.text.trim(),
+                                                  foodImg: " ",
+                                                  isAvailable: is_available,
+                                                  isSpicy: is_spicy,
+                                                  food_created: Timestamp.now().toString(),
+                                                );
+                                                _updateMenu(vendorId, updatedEntry);
+
+                                              },
+                                              btnOkColor: AppColors.iconColor1,
+                                              btnOkText: 'Save',
+                                              body: FutureBuilder(
+                                                  future: controller.getUserData(),
+                                                  builder: (context, snapshot) {
+                                                    if (snapshot.connectionState == ConnectionState.done) {
+                                                      VendorData user = snapshot.data as VendorData;
+                                                      vendorId = user.vendor_id!;
+                                                      return Container(
+                                                        color: Colors.white,
+                                                        child: Column(
+                                                          children: [
+                                                            Column(
+                                                              children: [
+                                                                Container(
+                                                                  width: Dimensions.listViewImgSize,
+                                                                  height: Dimensions.listViewImgSize,
+                                                                  decoration: BoxDecoration(
+                                                                      borderRadius: BorderRadius.circular(Dimensions.radius20),
+                                                                      color: Colors.white38,
+                                                                      image: DecorationImage(
+                                                                        fit: BoxFit.cover,
+                                                                        image: AssetImage('assets/images/food2.jpg'),
+                                                                      )
+                                                                  ),
+                                                                ),
+                                                                AppTextField(
+                                                                  textController: foodNameController,
+                                                                  hintText: "Product Name",
+                                                                  icon: Icons.restaurant_menu,
+                                                                  backgroundColor: AppColors.iconColor1,
+                                                                ),
+                                                                SizedBox(height: Dimensions.height20),
+
+// Contact Number
+                                                                AppTextField(
+                                                                  textController: foodPriceController,
+                                                                  hintText: "Price",
+                                                                  icon: Icons.attach_money_rounded,
+                                                                  backgroundColor: AppColors.iconColor1,
+                                                                ),
+                                                                SizedBox(height: Dimensions.height20),
+
+                                                                Container(
+                                                                  margin: EdgeInsets.only(left: Dimensions.height20, right: Dimensions.height20),
+                                                                  decoration: BoxDecoration(
+                                                                      color: Colors.white,
+                                                                      borderRadius: BorderRadius.circular(Dimensions.radius30),
+                                                                      boxShadow: [
+                                                                        BoxShadow(
+                                                                            blurRadius: 10,
+                                                                            spreadRadius: 7,
+                                                                            offset: Offset(1, 10),
+                                                                            color: Colors.grey.withOpacity(0.2)
+                                                                        )
+                                                                      ]
+                                                                  ),
+                                                                  child: StatefulBuilder(
+                                                                    builder: (context, _setState) => CheckboxListTile(
+                                                                      value: is_available=="true"?true:false,
+                                                                      title: Transform.translate(
+                                                                        offset: const Offset(-15,0),
+                                                                        child: SmallText(text: "Available", size: Dimensions.font16,),
+                                                                      ),
+                                                                      onChanged: (val) {
+                                                                        _setState(() => val!?is_available="true":is_available="false");
+                                                                      },
+                                                                      controlAffinity: ListTileControlAffinity.leading,
+                                                                      checkColor: Colors.white,
+                                                                      activeColor: AppColors.iconColor1,
+                                                                      contentPadding: EdgeInsets.only(left: Dimensions.width10*2/3),
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                                SizedBox(height: Dimensions.height20,),
+                                                                Container(
+                                                                  margin: EdgeInsets.only(left: Dimensions.height20, right: Dimensions.height20),
+                                                                  height: 60,
+                                                                  decoration: BoxDecoration(
+                                                                      color: Colors.white,
+                                                                      borderRadius: BorderRadius.circular(Dimensions.radius30),
+                                                                      boxShadow: [
+                                                                        BoxShadow(
+                                                                            blurRadius: 10,
+                                                                            spreadRadius: 7,
+                                                                            offset: Offset(1, 10),
+                                                                            color: Colors.grey.withOpacity(0.2)
+                                                                        )
+                                                                      ]
+                                                                  ),
+                                                                  child: StatefulBuilder(
+                                                                    builder: (context, _setState) => CheckboxListTile(
+                                                                      value: is_spicy=="true"?true:false,
+                                                                      title: Transform.translate(
+                                                                        offset: const Offset(-15,0),
+                                                                        child: SmallText(text: "Spicy", size: Dimensions.font16,),
+                                                                      ),
+                                                                      onChanged: (val) {
+                                                                        _setState(() => val!?is_spicy="true":is_spicy="false");
+                                                                      },
+                                                                      controlAffinity: ListTileControlAffinity.leading,
+                                                                      checkColor: Colors.white,
+                                                                      activeColor: AppColors.iconColor1,
+                                                                      contentPadding: EdgeInsets.only(left: Dimensions.width10*2/3),
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      );
+                                                    } else {
+                                                      return Container(
+                                                        color: Colors.white,
+                                                        child: Center(
+                                                            child: CircularProgressIndicator(
+                                                              color: AppColors.mainColor,
+                                                            )),
+                                                      );
+                                                    }
+                                                  })
+                                            ).show();
+                                          },
+                                          child: Opacity(
+                                            opacity: is_available=="true"?1:0.2,
+                                            child: Container(
+                                              margin: EdgeInsets.only(left: Dimensions.width20, right: Dimensions.width20, bottom: Dimensions.height20),
+                                              child: Row(
+                                                children: [
+                                                  // image section
+                                                  Container(
+                                                    width: Dimensions.listViewImgSize,
                                                     height: Dimensions.listViewImgSize,
                                                     decoration: BoxDecoration(
-                                                      borderRadius: BorderRadius.only(
-                                                          topRight: Radius.circular(Dimensions.radius20),
-                                                          bottomRight: Radius.circular(Dimensions.radius20)
-                                                      ),
-                                                      color: Colors.white,
+                                                        borderRadius: BorderRadius.circular(Dimensions.radius20),
+                                                        color: Colors.white38,
+                                                        image: DecorationImage(
+                                                          fit: BoxFit.cover,
+                                                          image: AssetImage('assets/images/food2.jpg'),
+                                                        )
                                                     ),
-                                                    child:
-                                                    Padding(padding: EdgeInsets.only(left: Dimensions.width10, right: Dimensions.width10, bottom: Dimensions.height10),
-                                                      child: Column(
-                                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                        children: [
-                                                          Column(
-                                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                                            children: [
-                                                              BigText(text: foodName, size: Dimensions.font20,),
-                                                            ],
-                                                          ),
-                                                          Column(
-                                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                                            children: [
-                                                              BigText(text: foodPrice==" "?"":"₱"+ foodPrice, size: Dimensions.font16*.9),
-                                                              SizedBox(height: Dimensions.height10/2,),
-                                                              Row(
-                                                                children: [
-                                                                  RectangleIconWidget(text: "NEW", iconColor: AppColors.isNew, isActivated: true),
-                                                                  SizedBox(width: Dimensions.width10/2,),
-                                                                  is_spicy=="true"?RectangleIconWidget(text: "SPICY", iconColor: Colors.red[900]!, isActivated: true):Text(""),
-                                                                  food_created=="true"?RectangleIconWidget(text: "NEW", iconColor: AppColors.isNew, isActivated: true):Text(""),
-                                                                ],
-                                                              ),
-                                                              SizedBox(height: Dimensions.height10/2,)
-                                                            ],
-                                                          )
-                                                        ],
+                                                  ),
+                                                  Expanded(
+                                                    child: Container(
+                                                      height: Dimensions.listViewImgSize,
+                                                      decoration: BoxDecoration(
+                                                        borderRadius: BorderRadius.only(
+                                                            topRight: Radius.circular(Dimensions.radius20),
+                                                            bottomRight: Radius.circular(Dimensions.radius20)
+                                                        ),
+                                                        color: Colors.white,
+                                                      ),
+                                                      child:
+                                                      Padding(padding: EdgeInsets.only(left: Dimensions.width10, right: Dimensions.width10, bottom: Dimensions.height10),
+                                                        child: Column(
+                                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                          children: [
+                                                            Column(
+                                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                                              children: [
+                                                                BigText(text: foodName, size: Dimensions.font20,),
+                                                              ],
+                                                            ),
+                                                            Column(
+                                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                                              children: [
+                                                                BigText(text: foodPrice==" "?"":"₱"+ foodPrice, size: Dimensions.font16*.9),
+                                                                SizedBox(height: Dimensions.height10/2,),
+                                                                Row(
+                                                                  children: [
+                                                                    RectangleIconWidget(text: "NEW", iconColor: AppColors.isNew, isActivated: true),
+                                                                    SizedBox(width: Dimensions.width10/2,),
+                                                                    is_spicy=="true"?RectangleIconWidget(text: "SPICY", iconColor: Colors.red[900]!, isActivated: true):Text(""),
+                                                                    food_created=="true"?RectangleIconWidget(text: "NEW", iconColor: AppColors.isNew, isActivated: true):Text(""),
+                                                                  ],
+                                                                ),
+                                                                SizedBox(height: Dimensions.height10/2,)
+                                                              ],
+                                                            )
+                                                          ],
+                                                        ),
                                                       ),
                                                     ),
                                                   ),
-                                                ),
-                                              ],
+                                                ],
+                                              ),
                                             ),
                                           ),
                                         );
@@ -192,7 +399,142 @@ class _MenuManagementPageState extends State<MenuManagementPage> {
                   ),
                   GestureDetector(
                     onTap: (){
-                      _addMenu(widget.vendor_id!);
+                      late TextEditingController foodNameController = TextEditingController();
+                      late TextEditingController foodPriceController = TextEditingController();
+                      late String food_img;
+                      late String is_available = "false";
+                      late String is_spicy = "false";
+
+                      AwesomeDialog(
+                          context: context,
+                          dialogType: DialogType.noHeader,
+                          animType: AnimType.topSlide,
+                          title: "Add a Product",
+
+                          dismissOnTouchOutside: true,
+                          dismissOnBackKeyPress: true,
+                          btnCancelOnPress: (){
+                          },
+                          btnCancelColor: AppColors.mainColor,
+                          btnOkOnPress: (){
+                            final entry = VendorMenu(
+                              foodName: foodNameController.text.trim(),
+                              foodPrice: foodPriceController.text.trim(),
+                              foodImg: " ",
+                              isAvailable: is_available,
+                              isSpicy: is_spicy,
+                              food_created: Timestamp.now().toString(),
+                            );
+                            _addMenu(widget.vendor_id!, entry);
+                          },
+                          btnOkColor: AppColors.iconColor1,
+                          btnOkText: 'Save',
+                          body: Container(
+                            color: Colors.white,
+                            child: Column(
+                              children: [
+                                Column(
+                                  children: [
+                                    Container(
+                                      width: Dimensions.listViewImgSize,
+                                      height: Dimensions.listViewImgSize,
+                                      decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(Dimensions.radius20),
+                                          color: Colors.white38,
+                                          image: DecorationImage(
+                                            fit: BoxFit.cover,
+                                            image: AssetImage('assets/images/food2.jpg'),
+                                          )
+                                      ),
+                                    ),
+                                    AppTextField(
+                                      textController: foodNameController,
+                                      hintText: "Product Name",
+                                      icon: Icons.restaurant_menu,
+                                      backgroundColor: AppColors.iconColor1,
+                                    ),
+                                    SizedBox(height: Dimensions.height20),
+
+                                    AppTextField(
+                                      textController: foodPriceController,
+                                      hintText: "Price",
+                                      icon: Icons.attach_money_rounded,
+                                      backgroundColor: AppColors.iconColor1,
+                                    ),
+                                    SizedBox(height: Dimensions.height20),
+
+                                    Container(
+                                      margin: EdgeInsets.only(left: Dimensions.height20, right: Dimensions.height20),
+                                      decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          borderRadius: BorderRadius.circular(Dimensions.radius30),
+                                          boxShadow: [
+                                            BoxShadow(
+                                                blurRadius: 10,
+                                                spreadRadius: 7,
+                                                offset: Offset(1, 10),
+                                                color: Colors.grey.withOpacity(0.2)
+                                            )
+                                          ]
+                                      ),
+                                      child: StatefulBuilder(
+                                        builder: (context, _setState) => CheckboxListTile(
+                                          value: is_available=="true"?true:false,
+                                          title: Transform.translate(
+                                            offset: const Offset(-15,0),
+                                            child: SmallText(text: "Available", size: Dimensions.font16,),
+                                          ),
+                                          onChanged: (val) {
+                                            _setState(() => val!?is_available="true":is_available="false");
+                                          },
+                                          controlAffinity: ListTileControlAffinity.leading,
+                                          checkColor: Colors.white,
+                                          activeColor: AppColors.iconColor1,
+                                          contentPadding: EdgeInsets.only(left: Dimensions.width10*2/3),
+                                        ),
+                                      ),
+                                    ),
+
+                                    SizedBox(height: Dimensions.height20,),
+
+                                    Container(
+                                      margin: EdgeInsets.only(left: Dimensions.height20, right: Dimensions.height20),
+                                      height: 60,
+                                      decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          borderRadius: BorderRadius.circular(Dimensions.radius30),
+                                          boxShadow: [
+                                            BoxShadow(
+                                                blurRadius: 10,
+                                                spreadRadius: 7,
+                                                offset: Offset(1, 10),
+                                                color: Colors.grey.withOpacity(0.2)
+                                            )
+                                          ]
+                                      ),
+                                      child: StatefulBuilder(
+                                        builder: (context, _setState) => CheckboxListTile(
+                                          value: is_spicy=="true"?true:false,
+                                          title: Transform.translate(
+                                            offset: const Offset(-15,0),
+                                            child: SmallText(text: "Spicy", size: Dimensions.font16,),
+                                          ),
+                                          onChanged: (val) {
+                                            _setState(() => val!?is_spicy="true":is_spicy="false");
+                                          },
+                                          controlAffinity: ListTileControlAffinity.leading,
+                                          checkColor: Colors.white,
+                                          activeColor: AppColors.iconColor1,
+                                          contentPadding: EdgeInsets.only(left: Dimensions.width10*2/3),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          )
+                      ).show();
                     },
                     child: Container(
                       height: Dimensions.height30*4,
@@ -227,14 +569,4 @@ class _MenuManagementPageState extends State<MenuManagementPage> {
 }
 
 
-// ListView(
-// children: snapshot.data!.docs.map((document) {
-// return Center(
-// child: Container(
-// width: MediaQuery.of(context).size.width/1.2,
-// height: 300,
-// child: Text("Title " + document['food_name']),
-// ),
-// );
-// }).toList(),
-// );
+

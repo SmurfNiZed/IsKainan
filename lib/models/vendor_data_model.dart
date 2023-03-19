@@ -43,7 +43,6 @@ class VendorData {
       'password': password,
       'phone': phone,
       'vendor_location': vendor_location,
-      // 'vendor_menu': vendorMenu?.toJson(),
       'account_created': account_created,
       'is_open': is_open,
       'operating_hours': operating_hours,
@@ -54,7 +53,6 @@ class VendorData {
   }
 
   factory VendorData.fromSnapshot(DocumentSnapshot<Map<String, dynamic>> document) {
-    print("VendorDataModel");
     final data = document.data()!;
     GeoPoint geoPoint = data['vendor_location'];
 
@@ -127,6 +125,7 @@ class VendorData {
 }
 
 class VendorMenu {
+  String? foodId;
   String? foodName;
   String? foodPrice;
   String? foodImg;
@@ -140,6 +139,7 @@ class VendorMenu {
   // String? isSoy;
 
   VendorMenu({
+    this.foodId,
     this.foodName,
     this.foodPrice,
     this.foodImg,
@@ -155,6 +155,7 @@ class VendorMenu {
   factory VendorMenu.fromSnapshot(DocumentSnapshot<Map<String, dynamic>> document){
     final data = document.data()!;
     return VendorMenu(
+        foodId: document.id,
         foodName: data["foodName"],
         foodPrice: data["foodPrice"],
         foodImg: data["foodImg"],

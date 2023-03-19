@@ -22,6 +22,10 @@ class UserRepository extends GetxController {
     return foodList;
   }
 
+  Future<void> updateVendorMenu(String vendorId, String foodId, VendorMenu vendorMenu) async{
+    await _db.collection('vendors').doc(vendorId).collection('foodList').doc(foodId).update(vendorMenu.toJson());
+  }
+
   createUser(VendorData user) async {
     await _db.collection('vendors').add(user.toJson()).whenComplete(
                 () => Get.snackbar("Success", "Your account has been created.",
@@ -60,5 +64,6 @@ class UserRepository extends GetxController {
   Future<void> updateGeneralInformation(VendorData user) async{
     await _db.collection("vendors").doc(user.vendor_id).update(user.toJson());
   }
+
 
 }
