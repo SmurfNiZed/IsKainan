@@ -19,6 +19,7 @@ import '../../controllers/profile_controller.dart';
 import '../../models/user_model.dart';
 import '../../models/vendor_data_model.dart';
 import '../../routes/route_helper.dart';
+import '../../utils/app_constants.dart';
 import '../../utils/colors.dart';
 import '../../utils/dimensions.dart';
 import '../../widgets/account_widget.dart';
@@ -80,7 +81,13 @@ class _AccountPageState extends State<AccountPage> {
                           SizedBox(height: Dimensions.height45),
                           Stack(
                               children: [
-                                GestureDetector(
+                                imgUrl['vendor_img']==AppConstants.DEFAULT_VENDOR_PIC?AppIcon(
+                                    icon: Icons.storefront,
+                                    backgroundColor: AppColors.mainColor,
+                                    iconColor: Colors.white,
+                                    iconSize: Dimensions.height30 + Dimensions.height45,
+                                    size: Dimensions.height15 * 10)
+                                : GestureDetector(
                                     onTap: (){
 
                                     },
