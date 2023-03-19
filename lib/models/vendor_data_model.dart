@@ -14,7 +14,7 @@ class VendorData {
   String? is_gcash;
   String? operating_hours;
   String? is_open;
-  String? account_created;
+  Timestamp? account_created;
   String? approved;
   // VendorMenu? vendorMenu;
 
@@ -79,7 +79,7 @@ class VendorData {
       is_gcash: data['is_gcash'].toString(),
       operating_hours: data['operating_hours'],
       is_open: data['is_open'].toString(),
-      account_created: data['account_created'].toString(),
+      account_created: data['account_created'],
       approved: data['approved'] ?? "false",
       // vendorMenu: VendorMenu.fromSnapshot(data['vendorMenu'])
     );
@@ -131,7 +131,7 @@ class VendorMenu {
   String? foodImg;
   String? isAvailable;
   String? isSpicy;
-  DateTime? food_created;
+  Timestamp? food_created;
   // String? isShellfish;
   // String? isPeanut;
   // String? isMilk;

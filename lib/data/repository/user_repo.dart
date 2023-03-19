@@ -27,6 +27,10 @@ class UserRepository extends GetxController {
     await _db.collection('vendors').doc(vendorId).collection('foodList').doc(foodId).update(vendorMenu.toJson());
   }
 
+  deleteVendorMenu(String vendorId, String foodId) async {
+    await _db.collection('vendors').doc(vendorId).collection('foodList').doc(foodId).delete();
+  }
+
   createUser(VendorData user) async {
     await _db.collection('vendors').add(user.toJson()).whenComplete(
                 () => Get.snackbar("Success", "Your account has been created.",

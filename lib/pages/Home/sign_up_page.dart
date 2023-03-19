@@ -9,6 +9,7 @@ import 'package:iskainan/controllers/address_name_controller.dart';
 import 'package:iskainan/models/vendor_data_model.dart';
 import 'package:iskainan/pages/Home/survey.dart';
 import 'package:iskainan/pages/account/account_page.dart';
+import 'package:iskainan/utils/app_constants.dart';
 import 'package:iskainan/widgets/app_text_field.dart';
 import '../../controllers/auth_controller.dart';
 import '../../models/signup_body_model.dart';
@@ -59,11 +60,11 @@ class VendorSignUpPage extends StatelessWidget {
           password: password,
           latitude: 14.654941990186154,
           longitude: 121.0648511552033,   // Oble
-          vendor_img: "",
+          vendor_img: AppConstants.DEFAULT_VENDOR_PIC,
           is_gcash: "false",
           operating_hours: "",
           is_open: "false",
-          account_created: Timestamp.now().toDate().toString(),
+          account_created: Timestamp.now(),
           approved: "false",
         );
 

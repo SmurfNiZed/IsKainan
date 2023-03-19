@@ -51,6 +51,8 @@ dependencies:
   geocoding: ^2.1.0
   progress_indicators: ^1.0.0
   awesome_dialog: ^3.0.2
+  image_picker: ^0.8.7
+  firebase_storage: ^11.0.16
 
 dev_dependencies:
   flutter_test:

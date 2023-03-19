@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
@@ -30,34 +32,6 @@ class MenuManagementPage extends StatefulWidget {
 
 class _MenuManagementPageState extends State<MenuManagementPage> {
 
-  // Future MenuEditor() => showDialog(
-  //     context: context,
-  //     builder: (context) => AlertDialog(
-  //       title: Text('Menu Editor'),
-  //       content: TextField(
-  //         decoration: InputDecoration(
-  //           hintText: "Enter your name",
-  //         ),
-  //       ),
-  //       actions: [
-  //         TextButton(
-  //           child: Text('Save Changes',
-  //             style:
-  //               TextStyle(
-  //                 color: Colors.white
-  //               ),
-  //             ),
-  //           style: ButtonStyle(
-  //             backgroundColor: MaterialStateProperty.all<Color>(AppColors.iconColor1),
-  //           ),
-  //           onPressed: (){
-  //
-  //           },
-  //         ),
-  //       ],
-  //     ),
-  // );
-
   @override
   Widget build(BuildContext context) {
     final controller = Get.put(ProfileController());
@@ -71,7 +45,7 @@ class _MenuManagementPageState extends State<MenuManagementPage> {
         foodImg: entry.foodImg,
         isAvailable: entry.isAvailable,
         isSpicy: entry.isSpicy,
-        food_created: Timestamp.now().toDate(),
+        food_created: Timestamp.now(),
       );
 
       await userRepo.addVendorMenu(menuInitial, vendorId);
@@ -86,12 +60,19 @@ class _MenuManagementPageState extends State<MenuManagementPage> {
         foodImg: entry.foodImg,
         isAvailable: entry.isAvailable,
         isSpicy: entry.isSpicy,
+        food_created: entry.food_created
       );
 
       await userRepo.updateVendorMenu(vendorId, entry.foodId!, newMenu);
     }
 
+    Future<void> _deleteMenu(String vendorId, String foodId) async {
+      final userRepo = Get.put(UserRepository());
+      await userRepo.deleteVendorMenu(vendorId, foodId);
+    }
+
     return Scaffold(
+      backgroundColor: Colors.white,
       body: Stack(
         alignment: Alignment.center,
         children: [
@@ -108,6 +89,156 @@ class _MenuManagementPageState extends State<MenuManagementPage> {
                       iconSize: Dimensions.height30 + Dimensions.height45,
                       size: Dimensions.height15 * 10),
                   SizedBox(height: Dimensions.height45),
+                  GestureDetector(
+                    onTap: (){
+                      late TextEditingController foodNameController = TextEditingController();
+                      late TextEditingController foodPriceController = TextEditingController();
+                      late String food_img;
+                      late String is_available = "false";
+                      late String is_spicy = "false";
+
+                      AwesomeDialog(
+                          context: context,
+                          dialogType: DialogType.noHeader,
+                          animType: AnimType.topSlide,
+                          dismissOnTouchOutside: true,
+                          dismissOnBackKeyPress: true,
+                          showCloseIcon: true,
+                          btnOkOnPress: (){
+                            final entry = VendorMenu(
+                              foodName: foodNameController.text.trim(),
+                              foodPrice: foodPriceController.text.trim(),
+                              foodImg: " ",
+                              isAvailable: is_available,
+                              isSpicy: is_spicy,
+                              food_created: Timestamp.now(),
+                            );
+                            _addMenu(widget.vendor_id!, entry);
+                          },
+                          btnOkColor: AppColors.iconColor1,
+                          btnOkText: 'Create',
+                          body: Container(
+                            color: Colors.white,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Padding(
+                                  padding: EdgeInsets.only(left: Dimensions.width10),
+                                  child: BigText(text: "Add a Product"),
+                                ),
+                                Column(
+                                  children: [
+                                    SizedBox(height: Dimensions.height10,),
+                                    Container(
+                                      margin: EdgeInsets.symmetric(horizontal: Dimensions.width10),
+                                      height: Dimensions.listViewImgSize,
+                                      decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(Dimensions.radius20/2),
+                                          color: Colors.white38,
+                                          image: DecorationImage(
+                                            fit: BoxFit.cover,
+                                            image: AssetImage('assets/images/food2.jpg'),
+                                          )
+                                      ),
+                                    ),
+                                    SizedBox(height: Dimensions.height20,),
+                                    AppTextField(
+                                      textController: foodNameController,
+                                      hintText: "Product Name",
+                                      icon: Icons.restaurant_menu,
+                                      backgroundColor: AppColors.iconColor1,
+                                    ),
+                                    SizedBox(height: Dimensions.height20),
+
+                                    AppTextField(
+                                      textController: foodPriceController,
+                                      hintText: "Price",
+                                      icon: Icons.attach_money_rounded,
+                                      backgroundColor: AppColors.iconColor1,
+                                    ),
+                                    SizedBox(height: Dimensions.height20),
+                                    Container(
+                                      margin: EdgeInsets.only(left: Dimensions.height20, right: Dimensions.height20),
+                                      decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          borderRadius: BorderRadius.circular(Dimensions.radius30),
+                                          boxShadow: [
+                                            BoxShadow(
+                                                blurRadius: 10,
+                                                spreadRadius: 7,
+                                                offset: Offset(1, 10),
+                                                color: Colors.grey.withOpacity(0.2)
+                                            )
+                                          ]
+                                      ),
+                                      child: StatefulBuilder(
+                                        builder: (context, _setState) => CheckboxListTile(
+                                          value: is_available=="true"?true:false,
+                                          title: Transform.translate(
+                                            offset: const Offset(-15,0),
+                                            child: SmallText(text: "Available", size: Dimensions.font16,),
+                                          ),
+                                          onChanged: (val) {
+                                            _setState(() => val!?is_available="true":is_available="false");
+                                          },
+                                          controlAffinity: ListTileControlAffinity.leading,
+                                          checkColor: Colors.white,
+                                          activeColor: AppColors.iconColor1,
+                                          contentPadding: EdgeInsets.only(left: Dimensions.width10*2/3),
+                                        ),
+                                      ),
+                                    ),
+                                    SizedBox(height: Dimensions.height20,),
+                                    Container(
+                                      margin: EdgeInsets.only(left: Dimensions.height20, right: Dimensions.height20),
+                                      height: 60,
+                                      decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          borderRadius: BorderRadius.circular(Dimensions.radius30),
+                                          boxShadow: [
+                                            BoxShadow(
+                                                blurRadius: 10,
+                                                spreadRadius: 7,
+                                                offset: Offset(1, 10),
+                                                color: Colors.grey.withOpacity(0.2)
+                                            )
+                                          ]
+                                      ),
+                                      child: StatefulBuilder(
+                                        builder: (context, _setState) => CheckboxListTile(
+                                          value: is_spicy=="true"?true:false,
+                                          title: Transform.translate(
+                                            offset: const Offset(-15,0),
+                                            child: SmallText(text: "Spicy", size: Dimensions.font16,),
+                                          ),
+                                          onChanged: (val) {
+                                            _setState(() => val!?is_spicy="true":is_spicy="false");
+                                          },
+                                          controlAffinity: ListTileControlAffinity.leading,
+                                          checkColor: Colors.white,
+                                          activeColor: AppColors.iconColor1,
+                                          contentPadding: EdgeInsets.only(left: Dimensions.width10*2/3),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          )
+                      ).show();
+                    },
+                    child: Container(
+                      height: Dimensions.height30*4,
+                      width: double.maxFinite,
+                      margin: EdgeInsets.only(left: Dimensions.width20, right: Dimensions.width20),
+                      child: Icon(Icons.add, size: 50, color: Colors.grey,),
+                      decoration: BoxDecoration(
+                        color: Colors.grey.withOpacity(0.15),
+                        borderRadius: BorderRadius.circular(Dimensions.radius20/2),
+                      ),
+                    ),
+                  ),
                   FutureBuilder(
                       future: FirebaseFirestore.instance.collection('vendors').where("email", isEqualTo: widget.email).get(),
                       builder: (context, snapshot) {
@@ -167,12 +298,12 @@ class _MenuManagementPageState extends State<MenuManagementPage> {
                                               context: context,
                                               dialogType: DialogType.noHeader,
                                               animType: AnimType.topSlide,
-                                              title: "Test",
-                                              // desc: "Test Description",
+                                              showCloseIcon: true,
                                               dismissOnTouchOutside: true,
                                               dismissOnBackKeyPress: true,
+                                              btnCancelText: "Delete",
                                               btnCancelOnPress: (){
-
+                                                _deleteMenu(vendorId, foodId);
                                               },
                                               btnCancelColor: AppColors.mainColor,
                                               btnOkOnPress: (){
@@ -183,6 +314,7 @@ class _MenuManagementPageState extends State<MenuManagementPage> {
                                                   foodImg: " ",
                                                   isAvailable: is_available,
                                                   isSpicy: is_spicy,
+                                                  food_created: food_created,
                                                 );
                                                 _updateMenu(vendorId, updatedEntry);
 
@@ -198,14 +330,21 @@ class _MenuManagementPageState extends State<MenuManagementPage> {
                                                       return Container(
                                                         color: Colors.white,
                                                         child: Column(
+                                                          crossAxisAlignment: CrossAxisAlignment.start,
                                                           children: [
+                                                            Padding(
+                                                              padding: EdgeInsets.only(left: Dimensions.width10),
+                                                              child: BigText(text: "Edit a Product"),
+                                                            ),
                                                             Column(
                                                               children: [
+
+                                                                SizedBox(height: Dimensions.height10,),
                                                                 Container(
-                                                                  width: Dimensions.listViewImgSize,
+                                                                  margin: EdgeInsets.symmetric(horizontal: Dimensions.width10),
                                                                   height: Dimensions.listViewImgSize,
                                                                   decoration: BoxDecoration(
-                                                                      borderRadius: BorderRadius.circular(Dimensions.radius20),
+                                                                      borderRadius: BorderRadius.circular(Dimensions.radius20/2),
                                                                       color: Colors.white38,
                                                                       image: DecorationImage(
                                                                         fit: BoxFit.cover,
@@ -213,6 +352,8 @@ class _MenuManagementPageState extends State<MenuManagementPage> {
                                                                       )
                                                                   ),
                                                                 ),
+                                                                SizedBox(height: Dimensions.height20,),
+
                                                                 AppTextField(
                                                                   textController: foodNameController,
                                                                   hintText: "Product Name",
@@ -394,156 +535,6 @@ class _MenuManagementPageState extends State<MenuManagementPage> {
                           );
                         }
                       }
-                  ),
-                  GestureDetector(
-                    onTap: (){
-                      late TextEditingController foodNameController = TextEditingController();
-                      late TextEditingController foodPriceController = TextEditingController();
-                      late String food_img;
-                      late String is_available = "false";
-                      late String is_spicy = "false";
-
-                      AwesomeDialog(
-                          context: context,
-                          dialogType: DialogType.noHeader,
-                          animType: AnimType.topSlide,
-                          title: "Add a Product",
-
-                          dismissOnTouchOutside: true,
-                          dismissOnBackKeyPress: true,
-                          btnCancelOnPress: (){
-                          },
-                          btnCancelColor: AppColors.mainColor,
-                          btnOkOnPress: (){
-                            final entry = VendorMenu(
-                              foodName: foodNameController.text.trim(),
-                              foodPrice: foodPriceController.text.trim(),
-                              foodImg: " ",
-                              isAvailable: is_available,
-                              isSpicy: is_spicy,
-                              food_created: Timestamp.now().toDate(),
-                            );
-                            _addMenu(widget.vendor_id!, entry);
-                          },
-                          btnOkColor: AppColors.iconColor1,
-                          btnOkText: 'Save',
-                          body: Container(
-                            color: Colors.white,
-                            child: Column(
-                              children: [
-                                Column(
-                                  children: [
-                                    Container(
-                                      width: Dimensions.listViewImgSize,
-                                      height: Dimensions.listViewImgSize,
-                                      decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(Dimensions.radius20),
-                                          color: Colors.white38,
-                                          image: DecorationImage(
-                                            fit: BoxFit.cover,
-                                            image: AssetImage('assets/images/food2.jpg'),
-                                          )
-                                      ),
-                                    ),
-                                    AppTextField(
-                                      textController: foodNameController,
-                                      hintText: "Product Name",
-                                      icon: Icons.restaurant_menu,
-                                      backgroundColor: AppColors.iconColor1,
-                                    ),
-                                    SizedBox(height: Dimensions.height20),
-
-                                    AppTextField(
-                                      textController: foodPriceController,
-                                      hintText: "Price",
-                                      icon: Icons.attach_money_rounded,
-                                      backgroundColor: AppColors.iconColor1,
-                                    ),
-                                    SizedBox(height: Dimensions.height20),
-
-                                    Container(
-                                      margin: EdgeInsets.only(left: Dimensions.height20, right: Dimensions.height20),
-                                      decoration: BoxDecoration(
-                                          color: Colors.white,
-                                          borderRadius: BorderRadius.circular(Dimensions.radius30),
-                                          boxShadow: [
-                                            BoxShadow(
-                                                blurRadius: 10,
-                                                spreadRadius: 7,
-                                                offset: Offset(1, 10),
-                                                color: Colors.grey.withOpacity(0.2)
-                                            )
-                                          ]
-                                      ),
-                                      child: StatefulBuilder(
-                                        builder: (context, _setState) => CheckboxListTile(
-                                          value: is_available=="true"?true:false,
-                                          title: Transform.translate(
-                                            offset: const Offset(-15,0),
-                                            child: SmallText(text: "Available", size: Dimensions.font16,),
-                                          ),
-                                          onChanged: (val) {
-                                            _setState(() => val!?is_available="true":is_available="false");
-                                          },
-                                          controlAffinity: ListTileControlAffinity.leading,
-                                          checkColor: Colors.white,
-                                          activeColor: AppColors.iconColor1,
-                                          contentPadding: EdgeInsets.only(left: Dimensions.width10*2/3),
-                                        ),
-                                      ),
-                                    ),
-
-                                    SizedBox(height: Dimensions.height20,),
-
-                                    Container(
-                                      margin: EdgeInsets.only(left: Dimensions.height20, right: Dimensions.height20),
-                                      height: 60,
-                                      decoration: BoxDecoration(
-                                          color: Colors.white,
-                                          borderRadius: BorderRadius.circular(Dimensions.radius30),
-                                          boxShadow: [
-                                            BoxShadow(
-                                                blurRadius: 10,
-                                                spreadRadius: 7,
-                                                offset: Offset(1, 10),
-                                                color: Colors.grey.withOpacity(0.2)
-                                            )
-                                          ]
-                                      ),
-                                      child: StatefulBuilder(
-                                        builder: (context, _setState) => CheckboxListTile(
-                                          value: is_spicy=="true"?true:false,
-                                          title: Transform.translate(
-                                            offset: const Offset(-15,0),
-                                            child: SmallText(text: "Spicy", size: Dimensions.font16,),
-                                          ),
-                                          onChanged: (val) {
-                                            _setState(() => val!?is_spicy="true":is_spicy="false");
-                                          },
-                                          controlAffinity: ListTileControlAffinity.leading,
-                                          checkColor: Colors.white,
-                                          activeColor: AppColors.iconColor1,
-                                          contentPadding: EdgeInsets.only(left: Dimensions.width10*2/3),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          )
-                      ).show();
-                    },
-                    child: Container(
-                      height: Dimensions.height30*4,
-                      width: double.maxFinite,
-                      margin: EdgeInsets.only(left: Dimensions.width20, right: Dimensions.width20, bottom: Dimensions.height20),
-                      child: Icon(Icons.add, size: 50, color: Colors.grey,),
-                      decoration: BoxDecoration(
-                        color: Colors.grey.withOpacity(0.15),
-                        borderRadius: BorderRadius.circular(Dimensions.radius20/2),
-                      ),
-                    ),
                   ),
                 ],
               ),
