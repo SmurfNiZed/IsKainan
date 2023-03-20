@@ -53,6 +53,7 @@ dependencies:
   awesome_dialog: ^3.0.2
   image_picker: ^0.8.7
   firebase_storage: ^11.0.16
+  cached_network_image: ^3.2.3
 
 dev_dependencies:
   flutter_test:

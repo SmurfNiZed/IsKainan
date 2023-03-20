@@ -40,7 +40,6 @@ class _ManageLocationPage extends State<ManageLocationPage> {
       try{
         await FirebaseFirestore.instance.collection('vendors').doc(id).update({'vendor_location': vendor_location});
         showCustomerSnackBar("Vendor Location updated.", title: "Success", color: Colors.green);
-        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ManageLocationPage(startSpot: vendor_location, Id: id!)));
       }catch(e){
         showCustomerSnackBar(e.toString());
       }
@@ -107,21 +106,25 @@ class _ManageLocationPage extends State<ManageLocationPage> {
                     if(snapshot.connectionState == ConnectionState.done) {
                       if(snapshot.hasData){
                         String? add = snapshot.data!;
-                        return Row(
-                          children: [
-                            Icon(Icons.storefront, size: 25, color: AppColors.iconColor1),
-                            SizedBox(width: Dimensions.width10,),
-                            Expanded(child: Text(
-                                add,
-                                maxLines: 1,
-                                style: TextStyle(
-                                  fontFamily: 'Roboto',
-                                  fontWeight: FontWeight.normal,
-                                  color: Colors.black,
-                                  fontSize: 18,
-                                  overflow: TextOverflow.ellipsis,
-                                )/*, size: Dimensions.font20,*/)),
-                          ],
+                        return Builder(
+                          builder: (context) {
+                            return Row(
+                              children: [
+                                Icon(Icons.storefront, size: 25, color: AppColors.iconColor1),
+                                SizedBox(width: Dimensions.width10,),
+                                Expanded(child: Text(
+                                    add,
+                                    maxLines: 1,
+                                    style: TextStyle(
+                                      fontFamily: 'Roboto',
+                                      fontWeight: FontWeight.normal,
+                                      color: Colors.black,
+                                      fontSize: 18,
+                                      overflow: TextOverflow.ellipsis,
+                                    )/*, size: Dimensions.font20,*/)),
+                              ],
+                            );
+                          }
                         );
                       } else {
                         return Center(

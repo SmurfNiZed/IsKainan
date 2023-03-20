@@ -60,7 +60,7 @@ class VendorSignUpPage extends StatelessWidget {
           password: password,
           latitude: 14.654941990186154,
           longitude: 121.0648511552033,   // Oble
-          vendor_img: AppConstants.DEFAULT_VENDOR_PIC,
+          vendor_img: "",
           is_gcash: "false",
           operating_hours: "",
           is_open: "false",
