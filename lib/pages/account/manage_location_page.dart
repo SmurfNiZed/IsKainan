@@ -1,3 +1,4 @@
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -39,7 +40,25 @@ class _ManageLocationPage extends State<ManageLocationPage> {
     Future<void> _updateVendorLocation(GeoPoint vendor_location, String? id) async {
       try{
         await FirebaseFirestore.instance.collection('vendors').doc(id).update({'vendor_location': vendor_location});
-        showCustomerSnackBar("Vendor Location updated.", title: "Success", color: Colors.green);
+        AwesomeDialog(
+          context: context,
+          title: "All Set!",
+          titleTextStyle: TextStyle(
+              fontFamily: 'Roboto',
+              fontSize: Dimensions.font26,
+              fontWeight: FontWeight.bold
+          ),
+          desc: "Location updated.",
+          descTextStyle: TextStyle(
+              fontFamily: 'Roboto',
+              fontSize: Dimensions.font20,
+              fontWeight: FontWeight.normal
+          ),
+          dialogType: DialogType.success,
+          animType: AnimType.topSlide,
+          autoDismiss: true,
+          autoHide: Duration(seconds: 3),
+        ).show();
       }catch(e){
         showCustomerSnackBar(e.toString());
       }
