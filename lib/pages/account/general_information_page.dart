@@ -210,17 +210,8 @@ class _GeneralInformationPageState extends State<GeneralInformationPage> {
                                 builder: (context, _setState) => CheckboxListTile(
                                   value: _checkBoxOpen,
                                   title: Transform.translate(
-                                    offset: Offset(0, -4),
-                                    child: Transform.translate(
-                                      offset: const Offset(-15,15),
-                                      child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          SmallText(text: "Store is Open", size: Dimensions.font16,),
-                                          SmallText(text: "only uncheck this when temporarily unavailable", color: AppColors.paraColor, size: Dimensions.font16-5),
-                                        ],
-                                      ),
-                                    ),
+                                    offset: const Offset(-15,0),
+                                    child: SmallText(text: "Store is Open", size: Dimensions.font16,),
                                   ),
                                   onChanged: (val) {
                                     _setState(() => _checkBoxOpen = val!);
@@ -229,7 +220,7 @@ class _GeneralInformationPageState extends State<GeneralInformationPage> {
                                   checkColor: Colors.white,
                                   activeColor: AppColors.iconColor1,
                                   contentPadding: EdgeInsets.only(left: Dimensions.width10*2/3),
-                                  ),
+                                ),
                               ),
                             ),
 
