@@ -12,7 +12,7 @@ class VendorData {
   GeoPoint? vendor_location;
   String? vendor_img;
   String? is_gcash;
-  String? operating_hours;
+  List<int>? operating_hours;
   String? is_open;
   Timestamp? account_created;
   String? approved;
@@ -77,7 +77,7 @@ class VendorData {
       longitude: geoPoint.longitude,
       vendor_img: data['vendor_img'],
       is_gcash: data['is_gcash'].toString(),
-      operating_hours: data['operating_hours'],
+      operating_hours: List<int>.from(data['operating_hours'] ?? []),
       is_open: data['is_open'].toString(),
       account_created: data['account_created'],
       approved: data['approved'] ?? "false",

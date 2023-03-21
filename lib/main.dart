@@ -10,6 +10,7 @@ import 'package:iskainan/controllers/vendor_controller.dart';
 import 'package:iskainan/firebase_options.dart';
 
 import 'package:iskainan/routes/route_helper.dart';
+import 'package:iskainan/utils/colors.dart';
 import 'data/repository/authentication_repo.dart';
 import 'helper/dependencies.dart' as dep;
 
@@ -33,6 +34,12 @@ class Home extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetBuilder<VendorController>(builder: (_){
       return GetMaterialApp(
+        theme: ThemeData(
+          primaryColor: AppColors.mainColor,
+          accentColor: AppColors.mainColor,
+
+          fontFamily: 'Roboto'
+        ),
         debugShowCheckedModeBanner: false,
         title: 'IsKainan: Campus Food App',
 

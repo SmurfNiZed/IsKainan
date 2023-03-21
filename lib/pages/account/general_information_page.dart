@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -6,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:iskainan/controllers/profile_controller.dart';
+import 'package:time_range_picker/time_range_picker.dart';
 
 import '../../base/show_custom_snackbar.dart';
 import '../../models/user_model.dart';
@@ -30,6 +32,11 @@ class _GeneralInformationPageState extends State<GeneralInformationPage> {
   late bool? _checkBoxGCash = false;
   late bool? _checkBoxOpen = false;
 
+  late StreamController<String> _streamController;
+  late String startTime;
+  late String endTime;
+
+
   @override
   Widget build(BuildContext context) {
     final controller = Get.put(ProfileController());
@@ -39,12 +46,10 @@ class _GeneralInformationPageState extends State<GeneralInformationPage> {
         TextEditingController phoneController,
         bool isGcash,
         bool isOpen,
-        TextEditingController operatingHoursController,
+        List<int> operatingHours,
         String? id) async {
-      // final controller = Get.put(ProfileController());
       String vendorName = vendorNameController.text.trim();
       String phone = phoneController.text.trim();
-      String operatingHours = operatingHoursController.text.trim();
 
       if (vendorName.isEmpty) {
         showCustomerSnackBar("Type in the name of your establishment.",
@@ -60,9 +65,25 @@ class _GeneralInformationPageState extends State<GeneralInformationPage> {
             'is_gcash': (isGcash ? "true" : "false"),
             'is_open': (isOpen ? "true" : "false"),
             'operating_hours': operatingHours,
-          });
-          showCustomerSnackBar("Account details updated.",
-              title: "Success", color: Colors.green);
+          }).whenComplete(() => AwesomeDialog(
+            context: context,
+            title: "All Set!",
+            titleTextStyle: TextStyle(
+                fontFamily: 'Roboto',
+                fontSize: Dimensions.font26,
+                fontWeight: FontWeight.bold
+            ),
+            desc: "Information updated.",
+            descTextStyle: TextStyle(
+                fontFamily: 'Roboto',
+                fontSize: Dimensions.font20,
+                fontWeight: FontWeight.normal
+            ),
+            dialogType: DialogType.success,
+            animType: AnimType.topSlide,
+            autoDismiss: true,
+            autoHide: Duration(seconds: 3),
+          ).show());
         } catch (e) {
           showCustomerSnackBar(e.toString());
         }
@@ -74,6 +95,11 @@ class _GeneralInformationPageState extends State<GeneralInformationPage> {
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
             VendorData user = snapshot.data as VendorData;
+            _streamController = StreamController<String>.broadcast();
+           startTime = '${(user.operating_hours![0]~/60)%12}:${((user.operating_hours![0]%60)).toString().padLeft(2, '0')} ${(user.operating_hours![0]~/60) < 12 ? 'AM' : 'PM'}';
+           endTime = '${(user.operating_hours![1]~/60)%12}:${((user.operating_hours![1]%60)).toString().padLeft(2, '0')} ${(user.operating_hours![1]~/60) < 12 ? 'AM' : 'PM'}';
+           String op_hours = startTime + " - " + endTime;
+
             _checkBoxGCash = user.is_gcash == "true" ? true : false;
             _checkBoxOpen = user.is_open == "true" ? true : false;
             late TextEditingController vendorNameController =
@@ -208,14 +234,88 @@ class _GeneralInformationPageState extends State<GeneralInformationPage> {
                             ),
 
                             SizedBox(height: Dimensions.height20,),
-                            AppTextFieldTime(
-                              textController: operatingHoursController,
-                              hintText: "Operating Hours",
-                              icon: Icons.timer,
-                              backgroundColor: AppColors.iconColor1,
+
+
+                            GestureDetector(
+                              onTap: () async {
+                                TimeRange result = await showTimeRangePicker(
+                                  context: context,
+                                  start: TimeOfDay(hour: user.operating_hours![0]~/60, minute: user.operating_hours![0]%60),
+                                  clockRotation: 180,
+                                  end: TimeOfDay(hour: user.operating_hours![1]~/60, minute: user.operating_hours![1]%60),
+                                  fromText: "Open",
+                                  toText: "Closed",
+                                  strokeColor: AppColors.mainColor,
+                                  handlerColor: AppColors.mainColor,
+                                  use24HourFormat: false,
+                                  selectedColor: AppColors.mainColor,
+                                  ticks: 24,
+                                  snap: true,
+                                  interval: Duration(minutes: 30),
+                                  builder: (context, child) {
+                                    return Theme(
+                                      data: Theme.of(context).copyWith(
+                                      textButtonTheme: TextButtonThemeData(
+                                        style: TextButton.styleFrom(
+                                          primary: AppColors.mainColor
+                                        )
+                                      )
+                                    ),
+                                   child: child!,
+                                  );
+                                });
+
+                                user.operating_hours![0] = (result.startTime.hour * 60) + result.startTime.minute;
+                                user.operating_hours![1] = (result.endTime.hour * 60) + result.endTime.minute;
+
+                                startTime = '${result.startTime.hour%12}:${(result.startTime.minute).toString().padLeft(2, '0')} ${result.startTime.hour < 12 ? 'AM' : 'PM'}';
+                                endTime = '${result.endTime.hour%12}:${(result.endTime.minute).toString().padLeft(2, '0')} ${result.endTime.hour < 12 ? 'AM' : 'PM'}';
+                                op_hours = startTime + " - " + endTime;
+                                _streamController.sink.add(op_hours);
+                                // });
+
+                              },
+                              child: Container(
+                                padding: EdgeInsets.symmetric(horizontal: Dimensions.width10),
+                                margin: EdgeInsets.only(left: Dimensions.height20, right: Dimensions.height20),
+                                height: 50,
+                                width: Dimensions.screenWidth,
+                                decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(Dimensions.radius30),
+                                    boxShadow: [
+                                      BoxShadow(
+                                          blurRadius: 10,
+                                          spreadRadius: 7,
+                                          offset: Offset(1, 10),
+                                          color: Colors.grey.withOpacity(0.2)
+                                      )
+                                    ]
+                                ),
+                                child: StreamBuilder<String>(
+                                  stream: _streamController.stream,
+                                  initialData: op_hours,
+                                  builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
+                                    return Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                      children: [
+                                        Row(
+                                          children: [
+                                            Icon(Icons.timer, color: AppColors.iconColor1,),
+                                            SizedBox(width: Dimensions.width10,),
+                                            SmallText(text: "Operating Hours: ${snapshot.data}", size: Dimensions.font16,),
+                                          ],
+                                        ),
+                                        Icon(Icons.edit, color: AppColors.iconColor1,),
+                                      ],
+                                    );
+                                  },
+                                ),
+                              ),
                             ),
 
-                            SizedBox(height: Dimensions.height20),
+                            SizedBox(height: Dimensions.height30),
                             user.approved == "true"?SmallText(text: "This vendor is approved."):SmallText(text: "This vendor is not yet approved."),
                             SizedBox(height: Dimensions.height30),
                             GestureDetector(
@@ -225,7 +325,7 @@ class _GeneralInformationPageState extends State<GeneralInformationPage> {
                                     phoneController,
                                     _checkBoxGCash!,
                                     _checkBoxOpen!,
-                                    operatingHoursController,
+                                    user.operating_hours!,
                                     user.vendor_id);
                               },
                               child: Container(

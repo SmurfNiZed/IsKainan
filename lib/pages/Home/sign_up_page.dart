@@ -62,7 +62,7 @@ class VendorSignUpPage extends StatelessWidget {
           longitude: 121.0648511552033,   // Oble
           vendor_img: "",
           is_gcash: "false",
-          operating_hours: "",
+          operating_hours: [480, 1200],   // 8:00 AM - 8:00 PM default
           is_open: "false",
           account_created: Timestamp.now(),
           approved: "false",
