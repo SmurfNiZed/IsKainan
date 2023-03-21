@@ -208,12 +208,13 @@ class _GeneralInformationPageState extends State<GeneralInformationPage> {
                             ),
 
                             SizedBox(height: Dimensions.height20,),
-                            AppTextField(
+                            AppTextFieldTime(
                               textController: operatingHoursController,
                               hintText: "Operating Hours",
                               icon: Icons.timer,
                               backgroundColor: AppColors.iconColor1,
                             ),
+
                             SizedBox(height: Dimensions.height20),
                             user.approved == "true"?SmallText(text: "This vendor is approved."):SmallText(text: "This vendor is not yet approved."),
                             SizedBox(height: Dimensions.height30),
