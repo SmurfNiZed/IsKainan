@@ -33,6 +33,7 @@ class _CircleImageState extends State<CircleImage> {
           errorWidget: (context, url, error) => Icon(
             Icons.error,
             size: widget.size/2,
+            color: Colors.white,
           ),
           imageBuilder: (context, imageProvider) => Container(
             decoration: BoxDecoration(
@@ -44,35 +45,7 @@ class _CircleImageState extends State<CircleImage> {
             ),
           ),
         )
-        // CachedNetworkImage(
-        //   imageUrl: widget.imgUrl,
-        //   placeholder: (context, url) => Container(
-        //     width: widget.size/2,
-        //     height: widget.size/2,
-        //     child: const CircularProgressIndicator(
-        //       color: Colors.white,
-        //     ),
-        //   ),
-        //   errorWidget: (context, url, error) => Icon(Icons.error),
-        // ),
-        // child:  Image.network(
-        //  widget.imgUrl,
-        //   fit: BoxFit.cover,
-        //   loadingBuilder: (BuildContext context, Widget child,
-        //       ImageChunkEvent? loadingProgress) {
-        //     if (loadingProgress == null) return child;
-        //     return const Center(
-        //       child: CircularProgressIndicator(
-        //         color: Colors.white,
-        //       ),
-        //     );
-        //   },
-        // ),
+
     );
   }
 }
-
-// image: DecorationImage(
-// fit: BoxFit.cover,
-// image: NetworkImage(imgUrl)),
-// ),

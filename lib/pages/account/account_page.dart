@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:awesome_dialog/awesome_dialog.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
@@ -86,7 +87,74 @@ class _AccountPageState extends State<AccountPage> {
                                       size: Dimensions.height15 * 10)
                                       : GestureDetector(
                                     onTap: (){
+                                      AwesomeDialog(
+                                        context: context,
+                                        dialogType: DialogType.noHeader,
+                                        animType: AnimType.topSlide,
+                                        showCloseIcon: true,
+                                        dismissOnTouchOutside: true,
+                                        dismissOnBackKeyPress: true,
+                                        btnCancelIcon: Icons.delete,
+                                        btnCancelText: "Delete",
+                                        btnCancelOnPress: () async {
+                                          try{
+                                            await FirebaseStorage.instance.ref('vendors/${user.vendor_name}(${user.vendor_id})/vendorImage')
+                                                .listAll().then((value) {
+                                              FirebaseStorage.instance.ref(value.items.first.fullPath).delete().whenComplete(() => AwesomeDialog(
+                                                context: context,
+                                                title: "All Set!",
+                                                titleTextStyle: TextStyle(
+                                                    fontFamily: 'Roboto',
+                                                    fontSize: Dimensions.font26,
+                                                    fontWeight: FontWeight.bold
+                                                ),
+                                                desc: "Photo updated.",
+                                                descTextStyle: TextStyle(
+                                                    fontFamily: 'Roboto',
+                                                    fontSize: Dimensions.font20,
+                                                    fontWeight: FontWeight.normal
+                                                ),
+                                                dialogType: DialogType.success,
+                                                animType: AnimType.topSlide,
+                                                autoDismiss: true,
+                                                autoHide: Duration(seconds: 3),
+                                              ).show());
+                                            });
+                                            FirebaseFirestore.instance.collection('vendors').doc(user.vendor_id).update({'vendor_img': ""});
+                                          }catch(e){
 
+                                          }
+
+                                        },
+                                        btnCancelColor: AppColors.mainColor,
+                                        body: Container(
+                                            padding: EdgeInsets.only(left: Dimensions.width20, right: Dimensions.width20, top: Dimensions.height30),
+                                            height: Dimensions.height45*5,
+                                            width: double.maxFinite,
+                                            decoration: BoxDecoration(
+                                              borderRadius: BorderRadius.circular(Dimensions.radius15),
+                                              color: Colors.white,
+                                            ),
+                                            child: CachedNetworkImage(
+                                              imageUrl: imgUrl['vendor_img'],
+                                              errorWidget: (context, url, error) => Icon(
+                                                Icons.error,
+                                                size: Dimensions.iconSize24/2,
+                                                color: Colors.white,
+                                              ),
+                                              imageBuilder: (context, imageProvider) => Container(
+                                                decoration: BoxDecoration(
+                                                  borderRadius: BorderRadius.circular(Dimensions.radius15),
+                                                  image: DecorationImage(
+                                                    image: imageProvider,
+                                                    fit: BoxFit.cover,
+                                                  ),
+                                                ),
+                                              ),
+                                            )
+
+                                        )
+                                      ).show();
                                     },
                                     child: CircleImage(
                                         imgUrl: imgUrl['vendor_img'],
@@ -99,7 +167,7 @@ class _AccountPageState extends State<AccountPage> {
                                     height: Dimensions.height15 * 10,
                                     child: Center(child: CircularProgressIndicator(
                                       color: Colors.white,
-                                    )
+                                      ),
                                     ),
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(Dimensions.height15 * 10/2),
@@ -151,7 +219,7 @@ class _AccountPageState extends State<AccountPage> {
                                   String uniqueFileName = DateTime.now().millisecondsSinceEpoch.toString();
 
                                   Reference referenceRoot = FirebaseStorage.instance.ref();
-                                  Reference referenceDirImages = referenceRoot.child("vendors/${user.vendor_name} (${user.vendor_id})");
+                                  Reference referenceDirImages = referenceRoot.child("vendors/${user.vendor_name}(${user.vendor_id})/vendorImage");
 
                                   Reference referenceImageToUpload = referenceDirImages.child(uniqueFileName);
 
@@ -190,7 +258,7 @@ class _AccountPageState extends State<AccountPage> {
                                   String uniqueFileName = DateTime.now().millisecondsSinceEpoch.toString();
 
                                   Reference referenceRoot = FirebaseStorage.instance.ref();
-                                  Reference referenceDirImages = referenceRoot.child("vendors/${user.vendor_name} (${user.vendor_id})");
+                                  Reference referenceDirImages = referenceRoot.child("vendors/${user.vendor_name}(${user.vendor_id})/vendorImage");
 
                                   Reference referenceImageToUpload = referenceDirImages.child(uniqueFileName);
 
@@ -226,7 +294,7 @@ class _AccountPageState extends State<AccountPage> {
                               ).show();
                             },
                             child: AppIcon(
-                              icon: Icons.add,
+                              icon: Icons.edit,
                               backgroundColor: AppColors.iconColor1,
                               iconSize: 20,
                               iconColor: Colors.white,
