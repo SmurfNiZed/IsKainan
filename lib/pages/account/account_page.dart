@@ -216,7 +216,7 @@ class _AccountPageState extends State<AccountPage> {
                                   XFile? file = await imagePicker.pickImage(source: ImageSource.camera);
 
                                   if(file==null) return;
-                                  String uniqueFileName = DateTime.now().millisecondsSinceEpoch.toString();
+                                  String uniqueFileName = "VendorProfilePic";
 
                                   Reference referenceRoot = FirebaseStorage.instance.ref();
                                   Reference referenceDirImages = referenceRoot.child("vendors/${user.vendor_name}(${user.vendor_id})/vendorImage");
@@ -255,7 +255,7 @@ class _AccountPageState extends State<AccountPage> {
                                   ImagePicker imagePicker = ImagePicker();
                                   XFile? file = await imagePicker.pickImage(source: ImageSource.gallery);
 
-                                  String uniqueFileName = DateTime.now().millisecondsSinceEpoch.toString();
+                                  String uniqueFileName = "VendorProfilePic";
 
                                   Reference referenceRoot = FirebaseStorage.instance.ref();
                                   Reference referenceDirImages = referenceRoot.child("vendors/${user.vendor_name}(${user.vendor_id})/vendorImage");

@@ -46,7 +46,7 @@ class VendorSignInPage extends StatelessWidget {
                     children: [
                       BigText(text: "Hello", size: Dimensions.font20*3+Dimensions.font16,),
                       RichText(text: TextSpan(
-                          text: "Sign into your account",
+                          text: "Manage your Shop",
                           style:
                           TextStyle(
                               color: Colors.grey[500],
@@ -72,7 +72,7 @@ class VendorSignInPage extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   RichText(text: TextSpan(
-                      text: "Sign into your account",
+                      text: "Manage your Shop",
                       style:
                       TextStyle(
                           color: Colors.grey[500],

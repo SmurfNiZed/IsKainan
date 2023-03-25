@@ -208,7 +208,7 @@ class _ManageLocationPage extends State<ManageLocationPage> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      BigText(text: "Save Changes", color: Colors.white,),
+                      BigText(text: "Set Location", color: Colors.white,),
                     ],
                   ),
                 ),
