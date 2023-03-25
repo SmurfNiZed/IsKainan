@@ -41,7 +41,7 @@ class _MenuManagementPageState extends State<MenuManagementPage> {
   Widget build(BuildContext context) {
     final controller = Get.put(ProfileController());
 
-    Future<void> _addMenu(String vendorId, VendorMenu entry) async {
+    Future<String> _addMenu(String vendorId, VendorMenu entry) async {
       final userRepo = Get.put(UserRepository());
       final menuInitial = VendorMenu(
         foodName: entry.foodName,
@@ -52,7 +52,9 @@ class _MenuManagementPageState extends State<MenuManagementPage> {
         food_created: Timestamp.now(),
       );
 
-      await userRepo.addVendorMenu(menuInitial, vendorId);
+      String result = await userRepo.addVendorMenu(menuInitial, vendorId);
+
+      return result.toString();
     }
 
     Future<void> _updateMenu(String vendorId, VendorMenu entry) async {
@@ -70,11 +72,11 @@ class _MenuManagementPageState extends State<MenuManagementPage> {
       await userRepo.updateVendorMenu(vendorId, entry.foodId!, newMenu);
     }
 
-    Future<void> _deleteMenu(String vendorId, String foodId, String vendorName, String foodName) async {
+    Future<void> _deleteMenu(String vendorId, String foodId, String vendorName) async {
       final userRepo = Get.put(UserRepository());
       await userRepo.deleteVendorMenu(vendorId, foodId);
       final FirebaseStorage storage = FirebaseStorage.instance;
-      final Reference reference = storage.ref().child('vendors/${vendorName}(${vendorId})/FoodList/${foodName}');
+      final Reference reference = storage.ref().child('vendors/${vendorName}(${vendorId})/FoodList/${foodId}');
       reference.delete().whenComplete(() => AwesomeDialog(
         context: context,
         title: "Okay!",
@@ -132,17 +134,24 @@ class _MenuManagementPageState extends State<MenuManagementPage> {
                           dismissOnBackKeyPress: true,
                           showCloseIcon: true,
                           btnOkOnPress: () async {
-                            String uniqueFileName = foodNameController.text.trim();
+                            final entry = VendorMenu(
+                              foodName: foodNameController.text.trim(),
+                              foodPrice: foodPriceController.text.trim(),
+                              foodImg: "",
+                              isAvailable: is_available,
+                              isSpicy: is_spicy,
+                              food_created: Timestamp.now(),
+                            );
 
-                            Reference referenceRoot = FirebaseStorage.instance.ref();
-                            Reference referenceDirImages = referenceRoot.child("vendors/${widget.user.vendor_name}(${widget.user.vendor_id})/FoodList");
+                              String uniqueFileName = await _addMenu(widget.user.vendor_id!, entry);
 
-                            Reference referenceImageToUpload = referenceDirImages.child(uniqueFileName);
+                              Reference referenceRoot = FirebaseStorage.instance.ref();
+                              Reference referenceDirImages = referenceRoot.child("vendors/${widget.user.vendor_name}(${widget.user.vendor_id})/FoodList");
 
-                            try{
+                              Reference referenceImageToUpload = referenceDirImages.child(uniqueFileName);
                               await referenceImageToUpload.putFile(File(_imageFile!.path));
                               String imageUrl = await referenceImageToUpload.getDownloadURL();
-                              final entry = VendorMenu(
+                              final entry2 = VendorMenu(
                                 foodName: foodNameController.text.trim(),
                                 foodPrice: foodPriceController.text.trim(),
                                 foodImg: imageUrl,
@@ -150,10 +159,10 @@ class _MenuManagementPageState extends State<MenuManagementPage> {
                                 isSpicy: is_spicy,
                                 food_created: Timestamp.now(),
                               );
-                              _addMenu(widget.user.vendor_id!, entry);
-                            }catch(error){
+                              print(uniqueFileName);
+                              await FirebaseFirestore.instance.collection('vendors').doc(widget.user.vendor_id).collection('foodList').doc(uniqueFileName).update(entry2.toJson());
 
-                            }
+
                           },
                           btnOkColor: AppColors.iconColor1,
                           btnOkText: 'Create',
@@ -212,7 +221,7 @@ class _MenuManagementPageState extends State<MenuManagementPage> {
                                           if(!snapshot.hasData){
                                             return Container(
                                                 margin: EdgeInsets.symmetric(horizontal: Dimensions.width10),
-                                                height: Dimensions.listViewImgSize,
+                                                height: Dimensions.listViewImgSize*2,
                                                 width: double.maxFinite,
                                                 decoration: BoxDecoration(
                                                     borderRadius: BorderRadius.circular(Dimensions.radius20/2),
@@ -224,7 +233,7 @@ class _MenuManagementPageState extends State<MenuManagementPage> {
                                           else{
                                             return Container(
                                               margin: EdgeInsets.symmetric(horizontal: Dimensions.width10),
-                                              height: Dimensions.listViewImgSize,
+                                              height: Dimensions.listViewImgSize*2,
                                               decoration: BoxDecoration(
                                                   borderRadius: BorderRadius.circular(Dimensions.radius20/2),
                                                   color: Colors.grey[100],
@@ -392,6 +401,8 @@ class _MenuManagementPageState extends State<MenuManagementPage> {
 
                                         return GestureDetector(
                                           onTap: (){
+                                            XFile? _imageFile;
+                                            StreamController<File> _imageController = StreamController<File>();
 
                                             AwesomeDialog(
                                               context: context,
@@ -402,21 +413,33 @@ class _MenuManagementPageState extends State<MenuManagementPage> {
                                               dismissOnBackKeyPress: true,
                                               btnCancelText: "Delete",
                                               btnCancelOnPress: (){
-                                                _deleteMenu(vendorId, foodId, vendorName, foodName);
+                                                _deleteMenu(vendorId, foodId, vendorName);
                                               },
                                               btnCancelColor: AppColors.mainColor,
-                                              btnOkOnPress: (){
-                                                final updatedEntry = VendorMenu(
-                                                  foodId: foodId,
-                                                  foodName: foodNameController.text.trim(),
-                                                  foodPrice: foodPriceController.text.trim(),
-                                                  foodImg: " ",
-                                                  isAvailable: is_available,
-                                                  isSpicy: is_spicy,
-                                                  food_created: food_created,
-                                                );
-                                                _updateMenu(vendorId, updatedEntry);
+                                              btnOkOnPress: () async {
+                                                String uniqueFileName = foodId;
 
+                                                Reference referenceRoot = FirebaseStorage.instance.ref();
+                                                Reference referenceDirImages = referenceRoot.child("vendors/${widget.user.vendor_name}(${widget.user.vendor_id})/FoodList");
+
+                                                Reference referenceImageToUpload = referenceDirImages.child(uniqueFileName);
+
+                                                try{
+                                                  await referenceImageToUpload.putFile(File(_imageFile!.path));
+                                                  String imageUrl = await referenceImageToUpload.getDownloadURL();
+                                                  final updatedEntry = VendorMenu(
+                                                    foodId: foodId,
+                                                    foodName: foodNameController.text.trim(),
+                                                    foodPrice: foodPriceController.text.trim(),
+                                                    foodImg: imageUrl,
+                                                    isAvailable: is_available,
+                                                    isSpicy: is_spicy,
+                                                    food_created: food_created,
+                                                  );
+                                                  _updateMenu(vendorId, updatedEntry);
+                                                }catch(error){
+
+                                                }
                                               },
                                               btnOkColor: AppColors.iconColor1,
                                               btnOkText: 'Save',
@@ -440,16 +463,85 @@ class _MenuManagementPageState extends State<MenuManagementPage> {
                                                               children: [
 
                                                                 SizedBox(height: Dimensions.height10,),
-                                                                Container(
-                                                                  margin: EdgeInsets.symmetric(horizontal: Dimensions.width10),
-                                                                  height: Dimensions.listViewImgSize,
-                                                                  decoration: BoxDecoration(
-                                                                      borderRadius: BorderRadius.circular(Dimensions.radius20/2),
-                                                                      color: Colors.white38,
-                                                                      image: DecorationImage(
-                                                                        fit: BoxFit.cover,
-                                                                        image: AssetImage('assets/images/food2.jpg'),
-                                                                      )
+                                                                GestureDetector(
+                                                                  onTap: (){
+                                                                    AwesomeDialog(
+                                                                      context: context,
+                                                                      title: "Edit Food Photo",
+                                                                      titleTextStyle: TextStyle(
+                                                                          fontFamily: 'Roboto',
+                                                                          fontSize: Dimensions.font20,
+                                                                          fontWeight: FontWeight.bold
+                                                                      ),
+                                                                      dialogType: DialogType.noHeader,
+                                                                      animType: AnimType.topSlide,
+                                                                      showCloseIcon: true,
+                                                                      dismissOnTouchOutside: true,
+                                                                      dismissOnBackKeyPress: true,
+                                                                      btnCancelIcon: Icons.photo_camera,
+                                                                      btnCancelText: "Camera",
+                                                                      btnCancelOnPress: () async {
+                                                                        final imagePicker = ImagePicker();
+                                                                        _imageFile = await imagePicker.pickImage(source: ImageSource.camera);
+                                                                        if(_imageFile != null){
+                                                                          _imageController.add(File(_imageFile!.path));
+                                                                        }
+                                                                      },
+                                                                      btnCancelColor: AppColors.iconColor1,
+                                                                      btnOkOnPress: () async {
+                                                                        final imagePicker = ImagePicker();
+                                                                        _imageFile = await imagePicker.pickImage(source: ImageSource.gallery);
+                                                                        if(_imageFile != null){
+                                                                          _imageController.add(File(_imageFile!.path));
+                                                                        }
+                                                                      },
+                                                                      btnOkIcon: Icons.upload,
+                                                                      btnOkColor: AppColors.iconColor1,
+                                                                      btnOkText: 'Gallery',
+                                                                    ).show();
+                                                                  },
+                                                                  child: StreamBuilder(
+                                                                    stream: _imageController.stream,
+                                                                    builder: (BuildContext context, AsyncSnapshot<File> snapshot){
+                                                                      if(!snapshot.hasData){
+                                                                        return Container(
+                                                                          margin: EdgeInsets.symmetric(horizontal: Dimensions.width10),
+                                                                          height: Dimensions.listViewImgSize*2,
+                                                                          width: double.maxFinite,
+                                                                          decoration: BoxDecoration(
+                                                                            borderRadius: BorderRadius.circular(Dimensions.radius20/2),
+                                                                            color: Colors.grey[100],
+                                                                          ),
+                                                                          child: CachedNetworkImage(
+                                                                            imageUrl: foodImg.toString(),
+                                                                            imageBuilder: (context, imageProvider) => Container(
+                                                                              decoration: BoxDecoration(
+                                                                                borderRadius: BorderRadius.circular(Dimensions.radius20/2),
+                                                                                image: DecorationImage(
+                                                                                  image: imageProvider,
+                                                                                  fit: BoxFit.cover,
+                                                                                ),
+                                                                              ),
+                                                                            ),
+                                                                          ),
+                                                                        );
+                                                                      }
+                                                                      else{
+                                                                        return Container(
+                                                                          margin: EdgeInsets.symmetric(horizontal: Dimensions.width10),
+                                                                          height: Dimensions.listViewImgSize*2,
+                                                                          width: double.maxFinite,
+                                                                          decoration: BoxDecoration(
+                                                                              borderRadius: BorderRadius.circular(Dimensions.radius20/2),
+                                                                              color: Colors.grey[100],
+                                                                              image: DecorationImage(
+                                                                                fit: BoxFit.cover,
+                                                                                image: FileImage(File(_imageFile!.path)),
+                                                                              )
+                                                                          ),
+                                                                        );
+                                                                      }
+                                                                    },
                                                                   ),
                                                                 ),
                                                                 SizedBox(height: Dimensions.height20,),
@@ -564,12 +656,18 @@ class _MenuManagementPageState extends State<MenuManagementPage> {
                                                       builder: (context, foodImgSnapshot) {
                                                         if (foodImgSnapshot.hasData) {
                                                           var imgUrl = foodImgSnapshot.data?.data() as Map<String, dynamic>;
-                                                          return imgUrl['food_img'] == ""?AppIcon(
-                                                              icon: Icons.fastfood_rounded,
-                                                              backgroundColor: AppColors.mainColor,
-                                                              iconColor: Colors.white,
-                                                              iconSize: Dimensions.height30 + Dimensions.height45,
-                                                              size: Dimensions.height15 * 10)
+                                                          return imgUrl['food_img'] == ""?Container(
+                                                                width: Dimensions.listViewImgSize,
+                                                                height: Dimensions.listViewImgSize,
+                                                                child: Center(child: CircularProgressIndicator(
+                                                                  color: Colors.white,
+                                                                ),
+                                                                ),
+                                                                decoration: BoxDecoration(
+                                                                  borderRadius: BorderRadius.circular(Dimensions.radius20/2),
+                                                                  color: AppColors.iconColor1,
+                                                                ),
+                                                              )
                                                               :  CachedNetworkImage(
                                                             width: Dimensions.listViewImgSize,
                                                             height: Dimensions.listViewImgSize,
@@ -593,7 +691,7 @@ class _MenuManagementPageState extends State<MenuManagementPage> {
                                                             ),
                                                             ),
                                                             decoration: BoxDecoration(
-                                                              borderRadius: BorderRadius.circular(Dimensions.radius20),
+                                                              borderRadius: BorderRadius.circular(Dimensions.radius20/2),
                                                               color: AppColors.iconColor1,
                                                             ),
                                                           );

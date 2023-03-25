@@ -13,7 +13,8 @@ class UserRepository extends GetxController {
   final _db = FirebaseFirestore.instance;
 
   addVendorMenu(VendorMenu menu, String vendorId) async {
-    await _db.collection('vendors').doc(vendorId).collection('foodList').add(menu.toJson());
+    final newDocRef = await _db.collection('vendors').doc(vendorId).collection('foodList').add(menu.toJson());
+    return newDocRef.id;
   }
 
   getVendorMenu(String email, String vendorId) async {
