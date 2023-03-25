@@ -192,8 +192,8 @@ class _AccountPageState extends State<AccountPage> {
                             }
                         ),
                         Positioned(
-                          top: 95,
-                          left: 95,
+                          top: Dimensions.height20*5,
+                          left: Dimensions.height20*5,
                           child: GestureDetector(
                             onTap: (){
                               AwesomeDialog(
@@ -331,7 +331,7 @@ class _AccountPageState extends State<AccountPage> {
                             // Manage Menu
                             GestureDetector(
                               onTap: (){
-                                Get.to(() => MenuManagementPage(email: user.email, vendor_id: user.vendor_id,));
+                                Get.to(() => MenuManagementPage(user: user,));
                               },
                               child: AccountWidget(
                                 appIcon: AppIcon(

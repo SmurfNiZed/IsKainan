@@ -1,11 +1,16 @@
+import 'dart:async';
+import 'dart:io';
 import 'dart:math';
 
 import 'package:awesome_dialog/awesome_dialog.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:iskainan/controllers/auth_controller.dart';
 import 'package:progress_indicators/progress_indicators.dart';
 
@@ -22,9 +27,8 @@ import '../../widgets/small_text.dart';
 import '../splash/splash_page.dart';
 
 class MenuManagementPage extends StatefulWidget {
-  String? email;
-  String? vendor_id;
-  MenuManagementPage({Key? key, required this.email, required this.vendor_id}) : super(key: key);
+  VendorData user;
+  MenuManagementPage({Key? key, required this.user}) : super(key: key);
 
   @override
   State<MenuManagementPage> createState() => _MenuManagementPageState();
@@ -32,13 +36,13 @@ class MenuManagementPage extends StatefulWidget {
 
 class _MenuManagementPageState extends State<MenuManagementPage> {
 
+
   @override
   Widget build(BuildContext context) {
     final controller = Get.put(ProfileController());
 
     Future<void> _addMenu(String vendorId, VendorMenu entry) async {
       final userRepo = Get.put(UserRepository());
-
       final menuInitial = VendorMenu(
         foodName: entry.foodName,
         foodPrice: entry.foodPrice,
@@ -66,9 +70,30 @@ class _MenuManagementPageState extends State<MenuManagementPage> {
       await userRepo.updateVendorMenu(vendorId, entry.foodId!, newMenu);
     }
 
-    Future<void> _deleteMenu(String vendorId, String foodId) async {
+    Future<void> _deleteMenu(String vendorId, String foodId, String vendorName, String foodName) async {
       final userRepo = Get.put(UserRepository());
       await userRepo.deleteVendorMenu(vendorId, foodId);
+      final FirebaseStorage storage = FirebaseStorage.instance;
+      final Reference reference = storage.ref().child('vendors/${vendorName}(${vendorId})/FoodList/${foodName}');
+      reference.delete().whenComplete(() => AwesomeDialog(
+        context: context,
+        title: "Okay!",
+        titleTextStyle: TextStyle(
+            fontFamily: 'Roboto',
+            fontSize: Dimensions.font26,
+            fontWeight: FontWeight.bold
+        ),
+        desc: "Food Deleted",
+        descTextStyle: TextStyle(
+            fontFamily: 'Roboto',
+            fontSize: Dimensions.font20,
+            fontWeight: FontWeight.normal
+        ),
+        dialogType: DialogType.success,
+        animType: AnimType.topSlide,
+        autoDismiss: true,
+        autoHide: Duration(seconds: 3),
+      ).show());
     }
 
     return Scaffold(
@@ -96,6 +121,8 @@ class _MenuManagementPageState extends State<MenuManagementPage> {
                       late String food_img;
                       late String is_available = "false";
                       late String is_spicy = "false";
+                      XFile? _imageFile;
+                      StreamController<File> _imageController = StreamController<File>();
 
                       AwesomeDialog(
                           context: context,
@@ -104,16 +131,29 @@ class _MenuManagementPageState extends State<MenuManagementPage> {
                           dismissOnTouchOutside: true,
                           dismissOnBackKeyPress: true,
                           showCloseIcon: true,
-                          btnOkOnPress: (){
-                            final entry = VendorMenu(
-                              foodName: foodNameController.text.trim(),
-                              foodPrice: foodPriceController.text.trim(),
-                              foodImg: " ",
-                              isAvailable: is_available,
-                              isSpicy: is_spicy,
-                              food_created: Timestamp.now(),
-                            );
-                            _addMenu(widget.vendor_id!, entry);
+                          btnOkOnPress: () async {
+                            String uniqueFileName = foodNameController.text.trim();
+
+                            Reference referenceRoot = FirebaseStorage.instance.ref();
+                            Reference referenceDirImages = referenceRoot.child("vendors/${widget.user.vendor_name}(${widget.user.vendor_id})/FoodList");
+
+                            Reference referenceImageToUpload = referenceDirImages.child(uniqueFileName);
+
+                            try{
+                              await referenceImageToUpload.putFile(File(_imageFile!.path));
+                              String imageUrl = await referenceImageToUpload.getDownloadURL();
+                              final entry = VendorMenu(
+                                foodName: foodNameController.text.trim(),
+                                foodPrice: foodPriceController.text.trim(),
+                                foodImg: imageUrl,
+                                isAvailable: is_available,
+                                isSpicy: is_spicy,
+                                food_created: Timestamp.now(),
+                              );
+                              _addMenu(widget.user.vendor_id!, entry);
+                            }catch(error){
+
+                            }
                           },
                           btnOkColor: AppColors.iconColor1,
                           btnOkText: 'Create',
@@ -129,16 +169,73 @@ class _MenuManagementPageState extends State<MenuManagementPage> {
                                 Column(
                                   children: [
                                     SizedBox(height: Dimensions.height10,),
-                                    Container(
-                                      margin: EdgeInsets.symmetric(horizontal: Dimensions.width10),
-                                      height: Dimensions.listViewImgSize,
-                                      decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(Dimensions.radius20/2),
-                                          color: Colors.white38,
-                                          image: DecorationImage(
-                                            fit: BoxFit.cover,
-                                            image: AssetImage('assets/images/food2.jpg'),
-                                          )
+                                    GestureDetector(
+                                      onTap: (){
+                                        AwesomeDialog(
+                                          context: context,
+                                          title: "Upload Food Photo",
+                                          titleTextStyle: TextStyle(
+                                              fontFamily: 'Roboto',
+                                              fontSize: Dimensions.font20,
+                                              fontWeight: FontWeight.bold
+                                          ),
+                                          dialogType: DialogType.noHeader,
+                                          animType: AnimType.topSlide,
+                                          showCloseIcon: true,
+                                          dismissOnTouchOutside: true,
+                                          dismissOnBackKeyPress: true,
+                                          btnCancelIcon: Icons.photo_camera,
+                                          btnCancelText: "Camera",
+                                          btnCancelOnPress: () async {
+                                            final imagePicker = ImagePicker();
+                                            _imageFile = await imagePicker.pickImage(source: ImageSource.camera);
+                                            if(_imageFile != null){
+                                              _imageController.add(File(_imageFile!.path));
+                                            }
+                                          },
+                                          btnCancelColor: AppColors.iconColor1,
+                                          btnOkOnPress: () async {
+                                            final imagePicker = ImagePicker();
+                                            _imageFile = await imagePicker.pickImage(source: ImageSource.gallery);
+                                            if(_imageFile != null){
+                                              _imageController.add(File(_imageFile!.path));
+                                            }
+                                          },
+                                          btnOkIcon: Icons.upload,
+                                          btnOkColor: AppColors.iconColor1,
+                                          btnOkText: 'Gallery',
+                                        ).show();
+                                      },
+                                      child: StreamBuilder(
+                                        stream: _imageController.stream,
+                                        builder: (BuildContext context, AsyncSnapshot<File> snapshot){
+                                          if(!snapshot.hasData){
+                                            return Container(
+                                                margin: EdgeInsets.symmetric(horizontal: Dimensions.width10),
+                                                height: Dimensions.listViewImgSize,
+                                                width: double.maxFinite,
+                                                decoration: BoxDecoration(
+                                                    borderRadius: BorderRadius.circular(Dimensions.radius20/2),
+                                                    color: Colors.grey[100],
+                                                ),
+                                                child: Icon(Icons.camera_alt),
+                                            );
+                                          }
+                                          else{
+                                            return Container(
+                                              margin: EdgeInsets.symmetric(horizontal: Dimensions.width10),
+                                              height: Dimensions.listViewImgSize,
+                                              decoration: BoxDecoration(
+                                                  borderRadius: BorderRadius.circular(Dimensions.radius20/2),
+                                                  color: Colors.grey[100],
+                                                  image: DecorationImage(
+                                                    fit: BoxFit.cover,
+                                                    image: FileImage(File(_imageFile!.path)),
+                                                  )
+                                              ),
+                                            );
+                                          }
+                                        },
                                       ),
                                     ),
                                     SizedBox(height: Dimensions.height20,),
@@ -240,7 +337,7 @@ class _MenuManagementPageState extends State<MenuManagementPage> {
                     ),
                   ),
                   FutureBuilder(
-                      future: FirebaseFirestore.instance.collection('vendors').where("email", isEqualTo: widget.email).get(),
+                      future: FirebaseFirestore.instance.collection('vendors').where("email", isEqualTo: widget.user.email).get(),
                       builder: (context, snapshot) {
                         if (snapshot.connectionState == ConnectionState.waiting) {
                           return Center(child: JumpingDotsProgressIndicator(
@@ -248,7 +345,7 @@ class _MenuManagementPageState extends State<MenuManagementPage> {
                             )
                           );
                         } else if (snapshot.hasData) {
-                          final Stream<QuerySnapshot> postStream = FirebaseFirestore.instance.collection('vendors').doc(widget.vendor_id).collection('foodList').orderBy("food_created", descending: false).snapshots();
+                          final Stream<QuerySnapshot> postStream = FirebaseFirestore.instance.collection('vendors').doc(widget.user.vendor_id).collection('foodList').orderBy("food_created", descending: true).snapshots();
                           return StreamBuilder<QuerySnapshot>(
                             stream: postStream,
                             builder: (context, snapshot) {
@@ -291,9 +388,11 @@ class _MenuManagementPageState extends State<MenuManagementPage> {
                                         TextEditingController(text: foodPrice.toString());
 
                                         late String vendorId;
+                                        late String vendorName;
 
                                         return GestureDetector(
                                           onTap: (){
+
                                             AwesomeDialog(
                                               context: context,
                                               dialogType: DialogType.noHeader,
@@ -303,7 +402,7 @@ class _MenuManagementPageState extends State<MenuManagementPage> {
                                               dismissOnBackKeyPress: true,
                                               btnCancelText: "Delete",
                                               btnCancelOnPress: (){
-                                                _deleteMenu(vendorId, foodId);
+                                                _deleteMenu(vendorId, foodId, vendorName, foodName);
                                               },
                                               btnCancelColor: AppColors.mainColor,
                                               btnOkOnPress: (){
@@ -327,6 +426,7 @@ class _MenuManagementPageState extends State<MenuManagementPage> {
                                                     if (snapshot.connectionState == ConnectionState.done) {
                                                       VendorData user = snapshot.data as VendorData;
                                                       vendorId = user.vendor_id!;
+                                                      vendorName = user.vendor_name!;
                                                       return Container(
                                                         color: Colors.white,
                                                         child: Column(
@@ -334,7 +434,7 @@ class _MenuManagementPageState extends State<MenuManagementPage> {
                                                           children: [
                                                             Padding(
                                                               padding: EdgeInsets.only(left: Dimensions.width10),
-                                                              child: BigText(text: "Edit a Product"),
+                                                              child: BigText(text: "Edit Product"),
                                                             ),
                                                             Column(
                                                               children: [
@@ -459,17 +559,46 @@ class _MenuManagementPageState extends State<MenuManagementPage> {
                                               child: Row(
                                                 children: [
                                                   // image section
-                                                  Container(
-                                                    width: Dimensions.listViewImgSize,
-                                                    height: Dimensions.listViewImgSize,
-                                                    decoration: BoxDecoration(
-                                                        borderRadius: BorderRadius.circular(Dimensions.radius20),
-                                                        color: Colors.white38,
-                                                        image: DecorationImage(
-                                                          fit: BoxFit.cover,
-                                                          image: AssetImage('assets/images/food2.jpg'),
-                                                        )
-                                                    ),
+                                                  StreamBuilder(
+                                                      stream: FirebaseFirestore.instance.collection('vendors').doc(widget.user.vendor_id).collection('foodList').doc(foodId).snapshots(),
+                                                      builder: (context, foodImgSnapshot) {
+                                                        if (foodImgSnapshot.hasData) {
+                                                          var imgUrl = foodImgSnapshot.data?.data() as Map<String, dynamic>;
+                                                          return imgUrl['food_img'] == ""?AppIcon(
+                                                              icon: Icons.fastfood_rounded,
+                                                              backgroundColor: AppColors.mainColor,
+                                                              iconColor: Colors.white,
+                                                              iconSize: Dimensions.height30 + Dimensions.height45,
+                                                              size: Dimensions.height15 * 10)
+                                                              :  CachedNetworkImage(
+                                                            width: Dimensions.listViewImgSize,
+                                                            height: Dimensions.listViewImgSize,
+                                                            imageUrl: imgUrl['food_img'],
+                                                            imageBuilder: (context, imageProvider) => Container(
+                                                              decoration: BoxDecoration(
+                                                                borderRadius: BorderRadius.circular(Dimensions.radius20),
+                                                                image: DecorationImage(
+                                                                  image: imageProvider,
+                                                                  fit: BoxFit.cover,
+                                                                ),
+                                                              ),
+                                                            ),
+                                                          );
+                                                        } else {
+                                                          return Container(
+                                                            width: Dimensions.listViewImgSize,
+                                                            height: Dimensions.listViewImgSize,
+                                                            child: Center(child: CircularProgressIndicator(
+                                                              color: Colors.white,
+                                                            ),
+                                                            ),
+                                                            decoration: BoxDecoration(
+                                                              borderRadius: BorderRadius.circular(Dimensions.radius20),
+                                                              color: AppColors.iconColor1,
+                                                            ),
+                                                          );
+                                                        }
+                                                      }
                                                   ),
                                                   Expanded(
                                                     child: Container(
