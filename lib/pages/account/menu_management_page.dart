@@ -12,6 +12,7 @@ import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:iskainan/controllers/auth_controller.dart';
+import 'package:iskainan/utils/app_constants.dart';
 import 'package:progress_indicators/progress_indicators.dart';
 
 import '../../controllers/profile_controller.dart';
@@ -75,9 +76,14 @@ class _MenuManagementPageState extends State<MenuManagementPage> {
     Future<void> _deleteMenu(String vendorId, String foodId, String vendorName) async {
       final userRepo = Get.put(UserRepository());
       await userRepo.deleteVendorMenu(vendorId, foodId);
-      final FirebaseStorage storage = FirebaseStorage.instance;
-      final Reference reference = storage.ref().child('vendors/${vendorName}(${vendorId})/FoodList/${foodId}');
-      reference.delete().whenComplete(() => AwesomeDialog(
+      try{
+        final FirebaseStorage storage = FirebaseStorage.instance;
+        final Reference reference = storage.ref().child('vendors/${vendorName}(${vendorId})/FoodList/${foodId}');
+        reference.delete();
+      }catch(e){
+
+      }
+      AwesomeDialog(
         context: context,
         title: "Okay!",
         titleTextStyle: TextStyle(
@@ -95,8 +101,9 @@ class _MenuManagementPageState extends State<MenuManagementPage> {
         animType: AnimType.topSlide,
         autoDismiss: true,
         autoHide: Duration(seconds: 3),
-      ).show());
+      ).show();
     }
+
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -142,25 +149,30 @@ class _MenuManagementPageState extends State<MenuManagementPage> {
                               isSpicy: is_spicy,
                               food_created: Timestamp.now(),
                             );
+                            String imageUrl;
+                            String uniqueFileName = await _addMenu(widget.user.vendor_id!, entry);
 
-                              String uniqueFileName = await _addMenu(widget.user.vendor_id!, entry);
-
+                            if (_imageFile != null){
                               Reference referenceRoot = FirebaseStorage.instance.ref();
                               Reference referenceDirImages = referenceRoot.child("vendors/${widget.user.vendor_name}(${widget.user.vendor_id})/FoodList");
 
                               Reference referenceImageToUpload = referenceDirImages.child(uniqueFileName);
                               await referenceImageToUpload.putFile(File(_imageFile!.path));
-                              String imageUrl = await referenceImageToUpload.getDownloadURL();
-                              final entry2 = VendorMenu(
-                                foodName: foodNameController.text.trim(),
-                                foodPrice: foodPriceController.text.trim(),
-                                foodImg: imageUrl,
-                                isAvailable: is_available,
-                                isSpicy: is_spicy,
-                                food_created: Timestamp.now(),
-                              );
-                              print(uniqueFileName);
-                              await FirebaseFirestore.instance.collection('vendors').doc(widget.user.vendor_id).collection('foodList').doc(uniqueFileName).update(entry2.toJson());
+                              imageUrl = await referenceImageToUpload.getDownloadURL();
+                            } else {
+                              imageUrl = AppConstants.DEFAULT_FOOD_IMAGE;
+                            }
+
+                            final entry2 = VendorMenu(
+                              foodName: foodNameController.text.trim(),
+                              foodPrice: foodPriceController.text.trim(),
+                              foodImg: imageUrl,
+                              isAvailable: is_available,
+                              isSpicy: is_spicy,
+                              food_created: Timestamp.now(),
+                            );
+
+                            await FirebaseFirestore.instance.collection('vendors').doc(widget.user.vendor_id).collection('foodList').doc(uniqueFileName).update(entry2.toJson());
 
 
                           },
@@ -417,29 +429,29 @@ class _MenuManagementPageState extends State<MenuManagementPage> {
                                               },
                                               btnCancelColor: AppColors.mainColor,
                                               btnOkOnPress: () async {
-                                                String uniqueFileName = foodId;
+                                                String imageUrl;
 
-                                                Reference referenceRoot = FirebaseStorage.instance.ref();
-                                                Reference referenceDirImages = referenceRoot.child("vendors/${widget.user.vendor_name}(${widget.user.vendor_id})/FoodList");
-
-                                                Reference referenceImageToUpload = referenceDirImages.child(uniqueFileName);
-
-                                                try{
+                                                if(_imageFile != null){
+                                                  String uniqueFileName = foodId;
+                                                  Reference referenceRoot = FirebaseStorage.instance.ref();
+                                                  Reference referenceDirImages = referenceRoot.child("vendors/${widget.user.vendor_name}(${widget.user.vendor_id})/FoodList");
+                                                  Reference referenceImageToUpload = referenceDirImages.child(uniqueFileName);
                                                   await referenceImageToUpload.putFile(File(_imageFile!.path));
-                                                  String imageUrl = await referenceImageToUpload.getDownloadURL();
-                                                  final updatedEntry = VendorMenu(
-                                                    foodId: foodId,
-                                                    foodName: foodNameController.text.trim(),
-                                                    foodPrice: foodPriceController.text.trim(),
-                                                    foodImg: imageUrl,
-                                                    isAvailable: is_available,
-                                                    isSpicy: is_spicy,
-                                                    food_created: food_created,
-                                                  );
-                                                  _updateMenu(vendorId, updatedEntry);
-                                                }catch(error){
-
+                                                  imageUrl = await referenceImageToUpload.getDownloadURL();
+                                                } else {
+                                                  imageUrl = foodImg;
                                                 }
+
+                                                final updatedEntry = VendorMenu(
+                                                  foodId: foodId,
+                                                  foodName: foodNameController.text.trim(),
+                                                  foodPrice: foodPriceController.text.trim(),
+                                                  foodImg: imageUrl,
+                                                  isAvailable: is_available,
+                                                  isSpicy: is_spicy,
+                                                  food_created: food_created,
+                                                );
+                                                _updateMenu(vendorId, updatedEntry);
                                               },
                                               btnOkColor: AppColors.iconColor1,
                                               btnOkText: 'Save',
@@ -664,7 +676,7 @@ class _MenuManagementPageState extends State<MenuManagementPage> {
                                                                 ),
                                                                 ),
                                                                 decoration: BoxDecoration(
-                                                                  borderRadius: BorderRadius.circular(Dimensions.radius20/2),
+                                                                  borderRadius: BorderRadius.circular(Dimensions.radius20),
                                                                   color: AppColors.iconColor1,
                                                                 ),
                                                               )
