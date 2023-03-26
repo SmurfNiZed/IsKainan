@@ -4,35 +4,28 @@ import 'package:flutter/material.dart';
 import '../utils/colors.dart';
 import '../utils/dimensions.dart';
 
-class AppTextField extends StatelessWidget {
+class AppTextFieldv2 extends StatelessWidget {
   final TextEditingController textController;
   final String hintText;
   final IconData icon;
   final Color backgroundColor;
-  AppTextField({Key? key,
+  AppTextFieldv2({Key? key,
 
-  required this.textController,
-  required this.hintText,
-  required this.icon,
-  required this.backgroundColor}) : super(key: key);
+    required this.textController,
+    required this.hintText,
+    required this.icon,
+    required this.backgroundColor}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Container(
-        margin: EdgeInsets.only(left: Dimensions.height20, right: Dimensions.height20),
+        margin: EdgeInsets.only(left: Dimensions.height10, right: Dimensions.height10),
         decoration: BoxDecoration(
-            color: Colors.white,
+            color: Colors.grey[100]!,
             borderRadius: BorderRadius.circular(Dimensions.radius30),
-            boxShadow: [
-              BoxShadow(
-                  blurRadius: 10,
-                  spreadRadius: 7,
-                  offset: Offset(1, 10),
-                  color: Colors.grey.withOpacity(0.2)
-              )
-            ]
         ),
         child: TextField(
+          cursorColor: AppColors.mainColor,
           controller: textController,
           decoration: InputDecoration(
               hintText: hintText,
@@ -41,14 +34,14 @@ class AppTextField extends StatelessWidget {
                   borderRadius: BorderRadius.circular(Dimensions.radius30),
                   borderSide: BorderSide(
                       width: 1.0,
-                      color: Colors.white
+                      color: AppColors.iconColor1
                   )
               ),
               enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(Dimensions.radius30),
                   borderSide: BorderSide(
                       width: 1.0,
-                      color: Colors.white
+                      color: Colors.grey[100]!
                   )
               ),
               border: OutlineInputBorder(

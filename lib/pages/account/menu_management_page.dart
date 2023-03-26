@@ -20,6 +20,7 @@ import '../../data/repository/user_repo.dart';
 import '../../models/vendor_data_model.dart';
 import '../../utils/colors.dart';
 import '../../utils/dimensions.dart';
+import '../../widgets/AppTextFieldv2.dart';
 import '../../widgets/app_icon.dart';
 import '../../widgets/app_text_field.dart';
 import '../../widgets/big_text.dart';
@@ -260,7 +261,7 @@ class _MenuManagementPageState extends State<MenuManagementPage> {
                                       ),
                                     ),
                                     SizedBox(height: Dimensions.height20,),
-                                    AppTextField(
+                                    AppTextFieldv2(
                                       textController: foodNameController,
                                       hintText: "Product Name",
                                       icon: Icons.restaurant_menu,
@@ -268,75 +269,76 @@ class _MenuManagementPageState extends State<MenuManagementPage> {
                                     ),
                                     SizedBox(height: Dimensions.height20),
 
-                                    AppTextField(
+                                    AppTextFieldv2(
                                       textController: foodPriceController,
                                       hintText: "Price",
                                       icon: Icons.attach_money_rounded,
                                       backgroundColor: AppColors.iconColor1,
                                     ),
                                     SizedBox(height: Dimensions.height20),
-                                    Container(
-                                      margin: EdgeInsets.only(left: Dimensions.height20, right: Dimensions.height20),
-                                      decoration: BoxDecoration(
-                                          color: Colors.white,
-                                          borderRadius: BorderRadius.circular(Dimensions.radius30),
-                                          boxShadow: [
-                                            BoxShadow(
-                                                blurRadius: 10,
-                                                spreadRadius: 7,
-                                                offset: Offset(1, 10),
-                                                color: Colors.grey.withOpacity(0.2)
-                                            )
-                                          ]
-                                      ),
-                                      child: StatefulBuilder(
-                                        builder: (context, _setState) => CheckboxListTile(
-                                          value: is_available=="true"?true:false,
-                                          title: Transform.translate(
-                                            offset: const Offset(-15,0),
-                                            child: SmallText(text: "Available", size: Dimensions.font16,),
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Expanded(
+                                          child: StatefulBuilder(
+                                            builder: (context, _setState) => GestureDetector(
+                                              onTap: () {
+                                                _setState(() {
+                                                  is_available = is_available == "true" ? "false" : "true";
+                                                });
+                                              },
+                                              child: Container(
+                                                height: Dimensions.height45,
+                                                margin: EdgeInsets.only(left: Dimensions.height10, right: Dimensions.height10/2),
+                                                decoration: BoxDecoration(
+                                                  color: is_available == "true" ? AppColors.iconColor1 : Colors.grey[100],
+                                                  borderRadius: BorderRadius.circular(Dimensions.radius30),
+                                                ),
+                                                child: Center(child: Column(
+                                                  mainAxisAlignment: MainAxisAlignment.center,
+                                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                                  children: [
+                                                    SmallText(text: "Available", size: Dimensions.font16, color: is_available == "true" ? Colors.white:Colors.black,),
+                                                  ],
+                                                )),
+                                              ),
+                                            ),
                                           ),
-                                          onChanged: (val) {
-                                            _setState(() => val!?is_available="true":is_available="false");
-                                          },
-                                          controlAffinity: ListTileControlAffinity.leading,
-                                          checkColor: Colors.white,
-                                          activeColor: AppColors.iconColor1,
-                                          contentPadding: EdgeInsets.only(left: Dimensions.width10*2/3),
                                         ),
-                                      ),
+                                        Expanded(
+                                            child: StatefulBuilder(
+                                              builder: (context, _setState) => GestureDetector(
+                                                onTap: () {
+                                                  _setState(() {
+                                                    is_spicy = is_spicy == "true" ? "false" : "true";
+                                                  });
+                                                },
+                                                child: Container(
+                                                  height: Dimensions.height45,
+                                                  margin: EdgeInsets.only(left: Dimensions.height10/2, right: Dimensions.height10),
+                                                  decoration: BoxDecoration(
+                                                    color: is_spicy == "true" ? AppColors.iconColor1 : Colors.grey[100],
+                                                    borderRadius: BorderRadius.circular(Dimensions.radius30),
+                                                  ),
+                                                  child: Center(child: Column(
+                                                    mainAxisAlignment: MainAxisAlignment.center,
+                                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                                    children: [
+                                                      SmallText(text: "Spicy", size: Dimensions.font16, color: is_spicy == "true" ? Colors.white:Colors.black,),
+                                                    ],
+                                                  )),
+                                                ),
+                                              ),
+                                            ),)
+                                      ],
                                     ),
-                                    SizedBox(height: Dimensions.height20,),
+                                    SizedBox(height: Dimensions.height20),
                                     Container(
-                                      margin: EdgeInsets.only(left: Dimensions.height20, right: Dimensions.height20),
-                                      height: 60,
-                                      decoration: BoxDecoration(
-                                          color: Colors.white,
-                                          borderRadius: BorderRadius.circular(Dimensions.radius30),
-                                          boxShadow: [
-                                            BoxShadow(
-                                                blurRadius: 10,
-                                                spreadRadius: 7,
-                                                offset: Offset(1, 10),
-                                                color: Colors.grey.withOpacity(0.2)
-                                            )
-                                          ]
-                                      ),
-                                      child: StatefulBuilder(
-                                        builder: (context, _setState) => CheckboxListTile(
-                                          value: is_spicy=="true"?true:false,
-                                          title: Transform.translate(
-                                            offset: const Offset(-15,0),
-                                            child: SmallText(text: "Spicy", size: Dimensions.font16,),
-                                          ),
-                                          onChanged: (val) {
-                                            _setState(() => val!?is_spicy="true":is_spicy="false");
-                                          },
-                                          controlAffinity: ListTileControlAffinity.leading,
-                                          checkColor: Colors.white,
-                                          activeColor: AppColors.iconColor1,
-                                          contentPadding: EdgeInsets.only(left: Dimensions.width10*2/3),
-                                        ),
+                                      padding: EdgeInsets.symmetric(horizontal: Dimensions.width10),
+                                      child: Divider(
+                                        height: 1, // Set the height of the divider
+                                        color: Colors.grey, // Set the color of the divider
+                                        thickness: 1, // Set the thickness of the divider
                                       ),
                                     ),
                                   ],
@@ -558,7 +560,7 @@ class _MenuManagementPageState extends State<MenuManagementPage> {
                                                                 ),
                                                                 SizedBox(height: Dimensions.height20,),
 
-                                                                AppTextField(
+                                                                AppTextFieldv2(
                                                                   textController: foodNameController,
                                                                   hintText: "Product Name",
                                                                   icon: Icons.restaurant_menu,
@@ -567,76 +569,76 @@ class _MenuManagementPageState extends State<MenuManagementPage> {
                                                                 SizedBox(height: Dimensions.height20),
 
 // Contact Number
-                                                                AppTextField(
+                                                                AppTextFieldv2(
                                                                   textController: foodPriceController,
                                                                   hintText: "Price",
                                                                   icon: Icons.attach_money_rounded,
                                                                   backgroundColor: AppColors.iconColor1,
                                                                 ),
                                                                 SizedBox(height: Dimensions.height20),
-
-                                                                Container(
-                                                                  margin: EdgeInsets.only(left: Dimensions.height20, right: Dimensions.height20),
-                                                                  decoration: BoxDecoration(
-                                                                      color: Colors.white,
-                                                                      borderRadius: BorderRadius.circular(Dimensions.radius30),
-                                                                      boxShadow: [
-                                                                        BoxShadow(
-                                                                            blurRadius: 10,
-                                                                            spreadRadius: 7,
-                                                                            offset: Offset(1, 10),
-                                                                            color: Colors.grey.withOpacity(0.2)
-                                                                        )
-                                                                      ]
-                                                                  ),
-                                                                  child: StatefulBuilder(
-                                                                    builder: (context, _setState) => CheckboxListTile(
-                                                                      value: is_available=="true"?true:false,
-                                                                      title: Transform.translate(
-                                                                        offset: const Offset(-15,0),
-                                                                        child: SmallText(text: "Available", size: Dimensions.font16,),
+                                                                Row(
+                                                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                                  children: [
+                                                                    Expanded(
+                                                                      child: StatefulBuilder(
+                                                                        builder: (context, _setState) => GestureDetector(
+                                                                          onTap: () {
+                                                                            _setState(() {
+                                                                              is_available = is_available == "true" ? "false" : "true";
+                                                                            });
+                                                                          },
+                                                                          child: Container(
+                                                                            height: Dimensions.height45,
+                                                                            margin: EdgeInsets.only(left: Dimensions.height10, right: Dimensions.height10/2),
+                                                                            decoration: BoxDecoration(
+                                                                              color: is_available == "true" ? AppColors.iconColor1 : Colors.grey[100],
+                                                                              borderRadius: BorderRadius.circular(Dimensions.radius30),
+                                                                            ),
+                                                                            child: Center(child: Column(
+                                                                              mainAxisAlignment: MainAxisAlignment.center,
+                                                                              crossAxisAlignment: CrossAxisAlignment.center,
+                                                                              children: [
+                                                                                SmallText(text: "Available", size: Dimensions.font16, color: is_available == "true" ? Colors.white:Colors.black,),
+                                                                              ],
+                                                                            )),
+                                                                          ),
+                                                                        ),
                                                                       ),
-                                                                      onChanged: (val) {
-                                                                        _setState(() => val!?is_available="true":is_available="false");
-                                                                      },
-                                                                      controlAffinity: ListTileControlAffinity.leading,
-                                                                      checkColor: Colors.white,
-                                                                      activeColor: AppColors.iconColor1,
-                                                                      contentPadding: EdgeInsets.only(left: Dimensions.width10*2/3),
                                                                     ),
-                                                                  ),
+                                                                    Expanded(
+                                                                      child: StatefulBuilder(
+                                                                        builder: (context, _setState) => GestureDetector(
+                                                                          onTap: () {
+                                                                            _setState(() {
+                                                                              is_spicy = is_spicy == "true" ? "false" : "true";
+                                                                            });
+                                                                          },
+                                                                          child: Container(
+                                                                            height: Dimensions.height45,
+                                                                            margin: EdgeInsets.only(left: Dimensions.height10/2, right: Dimensions.height10),
+                                                                            decoration: BoxDecoration(
+                                                                              color: is_spicy == "true" ? AppColors.iconColor1 : Colors.grey[100],
+                                                                              borderRadius: BorderRadius.circular(Dimensions.radius30),
+                                                                            ),
+                                                                            child: Center(child: Column(
+                                                                              mainAxisAlignment: MainAxisAlignment.center,
+                                                                              crossAxisAlignment: CrossAxisAlignment.center,
+                                                                              children: [
+                                                                                SmallText(text: "Spicy", size: Dimensions.font16, color: is_spicy == "true" ? Colors.white:Colors.black,),
+                                                                              ],
+                                                                            )),
+                                                                          ),
+                                                                        ),
+                                                                      ),)
+                                                                  ],
                                                                 ),
-                                                                SizedBox(height: Dimensions.height20,),
+                                                                SizedBox(height: Dimensions.height20),
                                                                 Container(
-                                                                  margin: EdgeInsets.only(left: Dimensions.height20, right: Dimensions.height20),
-                                                                  height: 60,
-                                                                  decoration: BoxDecoration(
-                                                                      color: Colors.white,
-                                                                      borderRadius: BorderRadius.circular(Dimensions.radius30),
-                                                                      boxShadow: [
-                                                                        BoxShadow(
-                                                                            blurRadius: 10,
-                                                                            spreadRadius: 7,
-                                                                            offset: Offset(1, 10),
-                                                                            color: Colors.grey.withOpacity(0.2)
-                                                                        )
-                                                                      ]
-                                                                  ),
-                                                                  child: StatefulBuilder(
-                                                                    builder: (context, _setState) => CheckboxListTile(
-                                                                      value: is_spicy=="true"?true:false,
-                                                                      title: Transform.translate(
-                                                                        offset: const Offset(-15,0),
-                                                                        child: SmallText(text: "Spicy", size: Dimensions.font16,),
-                                                                      ),
-                                                                      onChanged: (val) {
-                                                                        _setState(() => val!?is_spicy="true":is_spicy="false");
-                                                                      },
-                                                                      controlAffinity: ListTileControlAffinity.leading,
-                                                                      checkColor: Colors.white,
-                                                                      activeColor: AppColors.iconColor1,
-                                                                      contentPadding: EdgeInsets.only(left: Dimensions.width10*2/3),
-                                                                    ),
+                                                                  padding: EdgeInsets.symmetric(horizontal: Dimensions.width10),
+                                                                  child: Divider(
+                                                                    height: 1, // Set the height of the divider
+                                                                    color: Colors.grey, // Set the color of the divider
+                                                                    thickness: 1, // Set the thickness of the divider
                                                                   ),
                                                                 ),
                                                               ],

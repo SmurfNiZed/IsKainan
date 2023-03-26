@@ -3,6 +3,7 @@ import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
@@ -14,6 +15,7 @@ import '../../models/user_model.dart';
 import '../../models/vendor_data_model.dart';
 import '../../utils/colors.dart';
 import '../../utils/dimensions.dart';
+import '../../widgets/AppTextFieldv2.dart';
 import '../../widgets/app_hidden_text_field.dart';
 import '../../widgets/app_icon.dart';
 import '../../widgets/app_text_field.dart';
@@ -31,6 +33,7 @@ class GeneralInformationPage extends StatefulWidget {
 class _GeneralInformationPageState extends State<GeneralInformationPage> {
   late bool? _checkBoxGCash = false;
   late bool? _checkBoxOpen = false;
+  late bool? _isApproved;
 
   late StreamController<String> _streamController;
   late String startTime;
@@ -102,6 +105,7 @@ class _GeneralInformationPageState extends State<GeneralInformationPage> {
 
             _checkBoxGCash = user.is_gcash == "true" ? true : false;
             _checkBoxOpen = user.is_open == "true" ? true : false;
+            _isApproved = user.approved == "true"? true: false;
             late TextEditingController vendorNameController =
                 TextEditingController(text: user.vendor_name.toString());
             late TextEditingController phoneController =
@@ -123,6 +127,7 @@ class _GeneralInformationPageState extends State<GeneralInformationPage> {
                       )),
                 ),
                 body: Container(
+                  padding: EdgeInsets.symmetric(horizontal: Dimensions.width10),
                   color: Colors.white,
                   child: Column(
                     children: [
@@ -140,7 +145,7 @@ class _GeneralInformationPageState extends State<GeneralInformationPage> {
                                 size: Dimensions.height15 * 10),
                             SizedBox(height: Dimensions.height45),
 
-                            AppTextField(
+                            AppTextFieldv2(
                               textController: vendorNameController,
                               hintText: "Name of Establishment",
                               icon: Icons.food_bank_rounded,
@@ -149,82 +154,70 @@ class _GeneralInformationPageState extends State<GeneralInformationPage> {
                             SizedBox(height: Dimensions.height20),
 
                             // Contact Number
-                            AppTextField(
+                            AppTextFieldv2(
                               textController: phoneController,
                               hintText: "Contact Number",
                               icon: Icons.phone,
                               backgroundColor: AppColors.iconColor1,
                             ),
                             SizedBox(height: Dimensions.height20),
-
-                              Container(
-                                  margin: EdgeInsets.only(left: Dimensions.height20, right: Dimensions.height20),
-                                  decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.circular(Dimensions.radius30),
-                                      boxShadow: [
-                                        BoxShadow(
-                                            blurRadius: 10,
-                                            spreadRadius: 7,
-                                            offset: Offset(1, 10),
-                                            color: Colors.grey.withOpacity(0.2)
-                                        )
-                                      ]
-                                  ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Expanded(
                                   child: StatefulBuilder(
-                                    builder: (context, _setState) => CheckboxListTile(
-                                      value: _checkBoxGCash,
-                                      title: Transform.translate(
-                                        offset: const Offset(-15,0),
-                                        child: SmallText(text: "Gcash Available", size: Dimensions.font16,),
-                                      ),
-                                      onChanged: (val) {
-                                        _setState(() => _checkBoxGCash = val!);
+                                    builder: (context, _setState) => GestureDetector(
+                                      onTap: () {
+                                        _setState(() {
+                                          _checkBoxGCash = !_checkBoxGCash!;
+                                        });
                                       },
-                                      controlAffinity: ListTileControlAffinity.leading,
-                                      checkColor: Colors.white,
-                                      activeColor: AppColors.iconColor1,
-                                      contentPadding: EdgeInsets.only(left: Dimensions.width10*2/3),
+                                      child: Container(
+                                        height: Dimensions.height45,
+                                        margin: EdgeInsets.only(left: Dimensions.height10, right: Dimensions.height10/2),
+                                        decoration: BoxDecoration(
+                                          color: _checkBoxGCash!? Colors.blueAccent : Colors.grey[100],
+                                          borderRadius: BorderRadius.circular(Dimensions.radius30),
+                                        ),
+                                        child: Center(child: Column(
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          crossAxisAlignment: CrossAxisAlignment.center,
+                                          children: [
+                                            SmallText(text: "Gcash", size: Dimensions.font16, color: _checkBoxGCash!? Colors.white:Colors.black,),
+                                          ],
+                                        )),
+                                      ),
                                     ),
                                   ),
-                              ),
-
-                            SizedBox(height: Dimensions.height20,),
-
-                            Container(
-                              margin: EdgeInsets.only(left: Dimensions.height20, right: Dimensions.height20),
-                              height: 60,
-                              decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(Dimensions.radius30),
-                                  boxShadow: [
-                                    BoxShadow(
-                                        blurRadius: 10,
-                                        spreadRadius: 7,
-                                        offset: Offset(1, 10),
-                                        color: Colors.grey.withOpacity(0.2)
-                                    )
-                                  ]
-                              ),
-                              child: StatefulBuilder(
-                                builder: (context, _setState) => CheckboxListTile(
-                                  value: _checkBoxOpen,
-                                  title: Transform.translate(
-                                    offset: const Offset(-15,0),
-                                    child: SmallText(text: "Store is Open", size: Dimensions.font16,),
-                                  ),
-                                  onChanged: (val) {
-                                    _setState(() => _checkBoxOpen = val!);
-                                  },
-                                  controlAffinity: ListTileControlAffinity.leading,
-                                  checkColor: Colors.white,
-                                  activeColor: AppColors.iconColor1,
-                                  contentPadding: EdgeInsets.only(left: Dimensions.width10*2/3),
                                 ),
-                              ),
+                                Expanded(
+                                  child: StatefulBuilder(
+                                    builder: (context, _setState) => GestureDetector(
+                                      onTap: () {
+                                        _setState(() {
+                                          _checkBoxOpen =  !_checkBoxOpen!;
+                                        });
+                                      },
+                                      child: Container(
+                                        height: Dimensions.height45,
+                                        margin: EdgeInsets.only(left: Dimensions.height10/2, right: Dimensions.height10),
+                                        decoration: BoxDecoration(
+                                          color: _checkBoxOpen!? AppColors.iconColor1 : Colors.grey[100],
+                                          borderRadius: BorderRadius.circular(Dimensions.radius30),
+                                        ),
+                                        child: Center(child: Column(
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          crossAxisAlignment: CrossAxisAlignment.center,
+                                          children: [
+                                            SmallText(text: "Open", size: Dimensions.font16, color: _checkBoxOpen!? Colors.white:Colors.black,),
+                                          ],
+                                        )),
+                                      ),
+                                    ),
+                                  ),)
+                              ],
                             ),
-
-                            SizedBox(height: Dimensions.height20,),
+                            SizedBox(height: Dimensions.height20),
 
 
                             GestureDetector(
@@ -268,20 +261,12 @@ class _GeneralInformationPageState extends State<GeneralInformationPage> {
                               },
                               child: Container(
                                 padding: EdgeInsets.symmetric(horizontal: Dimensions.width10),
-                                margin: EdgeInsets.only(left: Dimensions.height20, right: Dimensions.height20),
+                                margin: EdgeInsets.only(left: Dimensions.height10, right: Dimensions.height10),
                                 height: 50,
                                 width: Dimensions.screenWidth,
                                 decoration: BoxDecoration(
-                                    color: Colors.white,
+                                    color: Colors.grey[100],
                                     borderRadius: BorderRadius.circular(Dimensions.radius30),
-                                    boxShadow: [
-                                      BoxShadow(
-                                          blurRadius: 10,
-                                          spreadRadius: 7,
-                                          offset: Offset(1, 10),
-                                          color: Colors.grey.withOpacity(0.2)
-                                      )
-                                    ]
                                 ),
                                 child: StreamBuilder<String>(
                                   stream: _streamController.stream,
@@ -306,8 +291,43 @@ class _GeneralInformationPageState extends State<GeneralInformationPage> {
                               ),
                             ),
 
+                            SizedBox(height: Dimensions.height20),
+                            RichText(text: TextSpan(
+                              text: "This vendor is ",
+                              style:
+                              TextStyle(
+                                color: Colors.grey,
+                                fontSize: Dimensions.font16,
+                              ),
+                              children: [
+                                TextSpan(
+                                  text: _isApproved!?"verified":"unverified",
+                                  style: TextStyle(
+                                    color: _isApproved!?AppColors.iconColor1:AppColors.mainColor,
+                                    fontSize: Dimensions.font16,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                  recognizer: TapGestureRecognizer()..onTap=()=>AwesomeDialog(
+                                      context: context,
+                                      dialogType: DialogType.question,
+                                      animType: AnimType.topSlide,
+                                      showCloseIcon: true,
+                                      dismissOnTouchOutside: true,
+                                      dismissOnBackKeyPress: true,
+                                  ).show(),
+                                )
+                              ],
+                            ),
+                            ),
                             SizedBox(height: Dimensions.height30),
-                            user.approved == "true"?SmallText(text: "This vendor is approved."):SmallText(text: "This vendor is not yet approved."),
+                            Container(
+                              padding: EdgeInsets.symmetric(horizontal: Dimensions.width20),
+                              child: Divider(
+                                height: 1, // Set the height of the divider
+                                color: Colors.grey, // Set the color of the divider
+                                thickness: 1, // Set the thickness of the divider
+                              ),
+                            ),
                             SizedBox(height: Dimensions.height30),
                             GestureDetector(
                               onTap: () {
