@@ -57,9 +57,15 @@ dependencies:
   time_range_picker: ^2.2.0
 
 dev_dependencies:
+  flutter_launcher_icons: "^0.12.0"
   flutter_test:
     sdk: flutter
 
+flutter_icons:
+  android: true
+  ios: true
+  image_path: "assets/images/icon.jpg"
+  min_sdk_android: 21 # android min sdk min:16, default 21
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
