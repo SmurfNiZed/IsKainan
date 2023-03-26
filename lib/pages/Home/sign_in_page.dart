@@ -9,7 +9,6 @@ import 'package:iskainan/widgets/app_text_field.dart';
 import '../../controllers/auth_controller.dart';
 import '../../routes/route_helper.dart';
 import '../../utils/dimensions.dart';
-import '../../widgets/app_hidden_text_field.dart';
 import '../../widgets/big_text.dart';
 import '../../utils/colors.dart';
 import '../account/account_page.dart';
@@ -66,7 +65,7 @@ class VendorSignInPage extends StatelessWidget {
               SizedBox(height: Dimensions.height20),
 
               // Password
-              AppHiddenTextField(textController: passwordController, hintText: "Password", icon: Icons.key_rounded, backgroundColor: AppColors.mainColor,),
+              AppTextField(textController: passwordController, hintText: "Password", icon: Icons.key_rounded, backgroundColor: AppColors.mainColor, isPassword: true),
               SizedBox(height: Dimensions.height20),
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,

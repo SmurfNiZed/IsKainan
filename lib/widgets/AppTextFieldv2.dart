@@ -4,17 +4,26 @@ import 'package:flutter/material.dart';
 import '../utils/colors.dart';
 import '../utils/dimensions.dart';
 
-class AppTextFieldv2 extends StatelessWidget {
+class AppTextFieldv2 extends StatefulWidget {
   final TextEditingController textController;
   final String hintText;
   final IconData icon;
   final Color backgroundColor;
+  bool? isPassword;
   AppTextFieldv2({Key? key,
 
     required this.textController,
     required this.hintText,
     required this.icon,
-    required this.backgroundColor}) : super(key: key);
+    required this.backgroundColor,
+    this.isPassword = false}) : super(key: key);
+
+  @override
+  State<AppTextFieldv2> createState() => _AppTextFieldv2State();
+}
+
+class _AppTextFieldv2State extends State<AppTextFieldv2> {
+  bool _obscureText = true;
 
   @override
   Widget build(BuildContext context) {
@@ -25,11 +34,23 @@ class AppTextFieldv2 extends StatelessWidget {
             borderRadius: BorderRadius.circular(Dimensions.radius30),
         ),
         child: TextField(
+          obscureText: (widget.isPassword! && _obscureText),
           cursorColor: AppColors.mainColor,
-          controller: textController,
+          controller: widget.textController,
           decoration: InputDecoration(
-              hintText: hintText,
-              prefixIcon: Icon(icon, color: backgroundColor),
+              suffixIcon: widget.isPassword!?IconButton(
+                icon: Icon(
+                  _obscureText ? Icons.visibility_off:Icons.visibility,
+                  color: Colors.grey,
+                ),
+                onPressed: (){
+                  setState((){
+                    _obscureText = !_obscureText;
+                  });
+                },
+              ):SizedBox(),
+              hintText: widget.hintText,
+              prefixIcon: Icon(widget.icon, color: widget.backgroundColor),
               focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(Dimensions.radius30),
                   borderSide: BorderSide(

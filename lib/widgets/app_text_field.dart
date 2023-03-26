@@ -4,17 +4,26 @@ import 'package:flutter/material.dart';
 import '../utils/colors.dart';
 import '../utils/dimensions.dart';
 
-class AppTextField extends StatelessWidget {
+class AppTextField extends StatefulWidget {
   final TextEditingController textController;
   final String hintText;
   final IconData icon;
   final Color backgroundColor;
+  bool? isPassword;
   AppTextField({Key? key,
 
   required this.textController,
   required this.hintText,
   required this.icon,
-  required this.backgroundColor}) : super(key: key);
+  required this.backgroundColor,
+  this.isPassword = false}) : super(key: key);
+
+  @override
+  State<AppTextField> createState() => _AppTextFieldState();
+}
+
+class _AppTextFieldState extends State<AppTextField> {
+  bool _obscureText = true;
 
   @override
   Widget build(BuildContext context) {
@@ -33,10 +42,22 @@ class AppTextField extends StatelessWidget {
             ]
         ),
         child: TextField(
-          controller: textController,
+          controller: widget.textController,
+          obscureText: (widget.isPassword! && _obscureText),
           decoration: InputDecoration(
-              hintText: hintText,
-              prefixIcon: Icon(icon, color: backgroundColor),
+              suffixIcon: widget.isPassword!?IconButton(
+                icon: Icon(
+                  _obscureText ? Icons.visibility_off:Icons.visibility,
+                  color: Colors.grey,
+                ),
+                onPressed: (){
+                  setState((){
+                    _obscureText = !_obscureText;
+                  });
+                },
+              ):SizedBox(),
+              hintText: widget.hintText,
+              prefixIcon: Icon(widget.icon, color: widget.backgroundColor),
               focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(Dimensions.radius30),
                   borderSide: BorderSide(
@@ -53,7 +74,7 @@ class AppTextField extends StatelessWidget {
               ),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(Dimensions.radius30),
-              )
+              ),
           ),
         )
     );

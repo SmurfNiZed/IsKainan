@@ -16,7 +16,6 @@ import '../../models/vendor_data_model.dart';
 import '../../utils/colors.dart';
 import '../../utils/dimensions.dart';
 import '../../widgets/AppTextFieldv2.dart';
-import '../../widgets/app_hidden_text_field.dart';
 import '../../widgets/app_icon.dart';
 import '../../widgets/app_text_field.dart';
 import '../../widgets/big_text.dart';
@@ -110,7 +109,6 @@ class _GeneralInformationPageState extends State<GeneralInformationPage> {
                 TextEditingController(text: user.vendor_name.toString());
             late TextEditingController phoneController =
                 TextEditingController(text: user.phone.toString());
-            late TextEditingController operatingHoursController = TextEditingController(text: user.operating_hours.toString());
             return Scaffold(
                 appBar: AppBar(
                   automaticallyImplyLeading: false,
@@ -199,17 +197,69 @@ class _GeneralInformationPageState extends State<GeneralInformationPage> {
                                         });
                                       },
                                       child: Container(
+                                        padding: EdgeInsets.symmetric(horizontal: Dimensions.width10),
                                         height: Dimensions.height45,
                                         margin: EdgeInsets.only(left: Dimensions.height10/2, right: Dimensions.height10),
                                         decoration: BoxDecoration(
                                           color: _checkBoxOpen!? AppColors.iconColor1 : Colors.grey[100],
                                           borderRadius: BorderRadius.circular(Dimensions.radius30),
                                         ),
-                                        child: Center(child: Column(
-                                          mainAxisAlignment: MainAxisAlignment.center,
+                                        child: Center(child: Row(
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                           crossAxisAlignment: CrossAxisAlignment.center,
                                           children: [
+                                            SizedBox(width: Dimensions.height10,),
                                             SmallText(text: "Open", size: Dimensions.font16, color: _checkBoxOpen!? Colors.white:Colors.black,),
+                                            GestureDetector(
+                                              onTap: (){
+                                                AwesomeDialog(
+                                                  context: context,
+                                                  dialogType: DialogType.question,
+                                                  animType: AnimType.topSlide,
+                                                  showCloseIcon: true,
+                                                  dismissOnTouchOutside: true,
+                                                  dismissOnBackKeyPress: true,
+                                                  body: Container(
+                                                    padding: EdgeInsets.only(left: Dimensions.width20, right: Dimensions.width20, bottom: Dimensions.height20),
+                                                    child: Column(
+                                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                                      children: [
+                                                        Text(
+                                                          "Your shop will close automatically once it's past your selected operating hours. Only use this option if you plan to stop operating for some time.",
+                                                          textAlign: TextAlign.justify,
+                                                          style: TextStyle(
+                                                              height: 1.5,
+                                                              fontFamily: 'Roboto',
+                                                              fontWeight: FontWeight.w500,
+                                                              color: Colors.grey
+                                                          ),
+                                                        ),
+                                                        SizedBox(height: Dimensions.height10,),
+                                                        Text(
+                                                          "- Maintenance\n- Day-offs\n- Holidays",
+                                                          textAlign: TextAlign.left,
+                                                          style: TextStyle(
+                                                              height: 1.5,
+                                                              fontFamily: 'Roboto',
+                                                              fontWeight: FontWeight.w500,
+                                                              color: Colors.grey
+                                                          ),
+                                                        )
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ).show();
+                                              },
+                                              child: CircleAvatar(
+                                                child: Icon(
+                                                  Icons.question_mark,
+                                                  size: 15,
+                                                  color: _checkBoxOpen!?AppColors.iconColor1:Colors.grey[100],
+                                                ),
+                                                radius: Dimensions.width10,
+                                                backgroundColor: _checkBoxOpen!?Colors.grey[100]:AppColors.iconColor1,
+                                              ),
+                                            ),
                                           ],
                                         )),
                                       ),
@@ -308,14 +358,42 @@ class _GeneralInformationPageState extends State<GeneralInformationPage> {
                                     fontWeight: FontWeight.bold,
                                   ),
                                   recognizer: TapGestureRecognizer()..onTap=()=>AwesomeDialog(
-                                      context: context,
-                                      dialogType: DialogType.question,
-                                      animType: AnimType.topSlide,
-                                      showCloseIcon: true,
-                                      dismissOnTouchOutside: true,
-                                      dismissOnBackKeyPress: true,
+                                    context: context,
+                                    dialogType: DialogType.question,
+                                    animType: AnimType.topSlide,
+                                    showCloseIcon: true,
+                                    dismissOnTouchOutside: true,
+                                    dismissOnBackKeyPress: true,
+                                    body: Container(
+                                      padding: EdgeInsets.only(left: Dimensions.width20, right: Dimensions.width20, bottom: Dimensions.height20),
+                                      child: Column(
+                                        children: [
+                                          Text(
+                                            "At IsKainan, we prioritize authenticity and safety for our customers. To ensure this, we carefully verify all vendor accounts, which may take some time. Only verified accounts can be seen publicly. To speed up the process, start setting up your menu, location, and general information!",
+                                            textAlign: TextAlign.justify,
+                                            style: TextStyle(
+                                              height: 1.5,
+                                              fontFamily: 'Roboto',
+                                              fontWeight: FontWeight.w500,
+                                              color: Colors.grey
+                                            ),
+                                          ),
+                                          SizedBox(height: Dimensions.height10,),
+                                          Text(
+                                            "During the verification process, we review the accuracy of the information you've provided and confirm that you are a legitimate vendor around the campus community. This helps us maintain a trusted marketplace for everyone involved. Thank you for your patience and understanding.",
+                                            textAlign: TextAlign.justify,
+                                            style: TextStyle(
+                                                height: 1.5,
+                                                fontFamily: 'Roboto',
+                                                fontWeight: FontWeight.w500,
+                                                color: Colors.grey
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                    ),
                                   ).show(),
-                                )
+                                ),
                               ],
                             ),
                             ),

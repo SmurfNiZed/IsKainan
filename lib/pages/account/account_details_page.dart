@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -17,8 +18,8 @@ import '../../models/vendor_data_model.dart';
 import '../../routes/route_helper.dart';
 import '../../utils/colors.dart';
 import '../../utils/dimensions.dart';
+import '../../widgets/AppTextFieldv2.dart';
 import '../../widgets/account_widget.dart';
-import '../../widgets/app_hidden_text_field.dart';
 import '../../widgets/app_icon.dart';
 import '../../widgets/app_text_field.dart';
 import '../../widgets/big_text.dart';
@@ -52,9 +53,8 @@ class AccountDetailsPage extends StatelessWidget {
 
           await FirebaseAuth.instance.currentUser!.updateEmail(email);                                                    // Updates email in Firebase Authentication
           await FirebaseAuth.instance.currentUser!.updatePassword(password);                                              // Updates password in Firebase Authentication
-          await FirebaseFirestore.instance.collection('vendors').doc(id).update({'email': email, 'password': password});  // Updates Email and Password in Firebase Firestore
-          showCustomerSnackBar("Account details updated. Logging you out", title: "Success", color: Colors.green);
-          AuthController.instance.logout();
+          await FirebaseFirestore.instance.collection('vendors').doc(id).update({'email': email, 'password': password});// Updates Email and Password in Firebase Firestore
+          showCustomerSnackBar("Account details updated", title: "Success", color: Colors.green);
           // Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => AccountPage()));
           // Get.offAll(() => AccountPage());
         }catch(e){
@@ -100,11 +100,11 @@ class AccountDetailsPage extends StatelessWidget {
                                 SizedBox(height: Dimensions.height45),
 
                                 // Email
-                                AppTextField(textController: emailController, hintText: "Email", icon: Icons.email_rounded, backgroundColor: AppColors.paraColor,),
+                                AppTextFieldv2(textController: emailController, hintText: "Email", icon: Icons.email_rounded, backgroundColor: AppColors.paraColor,),
                                 SizedBox(height: Dimensions.height20),
 
                                 // Password
-                                AppHiddenTextField(textController: passwordController, hintText: "Password", icon: Icons.key_rounded, backgroundColor: AppColors.paraColor,),
+                                AppTextFieldv2(textController: passwordController, hintText: "Password", icon: Icons.key_rounded, backgroundColor: AppColors.paraColor, isPassword: true),
                                 SizedBox(height: Dimensions.height30),
 
                                 GestureDetector(

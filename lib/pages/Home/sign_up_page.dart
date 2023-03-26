@@ -16,7 +16,6 @@ import '../../models/signup_body_model.dart';
 import '../../models/user_model.dart';
 import '../../routes/route_helper.dart';
 import '../../utils/dimensions.dart';
-import '../../widgets/app_hidden_text_field.dart';
 import '../../widgets/big_text.dart';
 import '../../utils/colors.dart';
 
@@ -93,7 +92,7 @@ class VendorSignUpPage extends StatelessWidget {
                   SizedBox(height: Dimensions.height20),
 
                   // Password
-                  AppHiddenTextField(textController: passwordController, hintText: "Password", icon: Icons.key_rounded, backgroundColor: AppColors.mainColor,),
+                  AppTextField(textController: passwordController, hintText: "Password", icon: Icons.key_rounded, backgroundColor: AppColors.mainColor, isPassword: true),
                   SizedBox(height: Dimensions.height20),
 
                   // Vendor Name

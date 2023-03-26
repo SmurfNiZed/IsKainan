@@ -33,11 +33,7 @@ class AuthController extends GetxController{
   }
 
   _initialScreen(User? user){
-    if(user == null){
-      Get.offAll(() => SplashScreen());
-    } else {
-      Get.offAll(() => AccountPage());
-    }
+    Get.offAll(() => SplashScreen());
   }
 
   void register(VendorData user) async {
