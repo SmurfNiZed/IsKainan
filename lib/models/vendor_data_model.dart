@@ -13,6 +13,7 @@ class VendorData {
   String? vendor_img;
   String? is_gcash;
   List<int>? operating_hours;
+  List<bool>? operating_days;
   String? is_open;
   Timestamp? account_created;
   String? approved;
@@ -29,6 +30,7 @@ class VendorData {
         this.vendor_img,
         this.is_gcash,
         this.operating_hours,
+        this.operating_days,
         this.is_open,
         this.account_created,
         this.approved,
@@ -46,6 +48,7 @@ class VendorData {
       'account_created': account_created,
       'is_open': is_open,
       'operating_hours': operating_hours,
+      'operating_days': operating_days,
       'is_gcash': is_gcash,
       'vendor_img': vendor_img,
       'approved': approved,
@@ -78,6 +81,7 @@ class VendorData {
       vendor_img: data['vendor_img'],
       is_gcash: data['is_gcash'].toString(),
       operating_hours: List<int>.from(data['operating_hours'] ?? []),
+      operating_days: List<bool>.from(data['operating_days'] ?? []),
       is_open: data['is_open'].toString(),
       account_created: data['account_created'],
       approved: data['approved'] ?? "false",

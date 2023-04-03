@@ -1,27 +1,20 @@
 import 'dart:async';
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:iskainan/controllers/profile_controller.dart';
 import 'package:time_range_picker/time_range_picker.dart';
 import 'package:weekday_selector/weekday_selector.dart';
-
 import '../../base/show_custom_snackbar.dart';
-import '../../models/user_model.dart';
 import '../../models/vendor_data_model.dart';
 import '../../utils/colors.dart';
 import '../../utils/dimensions.dart';
 import '../../widgets/AppTextFieldv2.dart';
 import '../../widgets/app_icon.dart';
-import '../../widgets/app_text_field.dart';
 import '../../widgets/big_text.dart';
 import '../../widgets/small_text.dart';
-import 'account_page.dart';
 
 class GeneralInformationPage extends StatefulWidget {
   const GeneralInformationPage({Key? key}) : super(key: key);
@@ -39,8 +32,7 @@ class _GeneralInformationPageState extends State<GeneralInformationPage> {
   late String startTime;
   late String endTime;
 
-  final values = <bool?>[false, false, false, false, false, false, false];
-
+  late List<bool> values;
 
   @override
   Widget build(BuildContext context) {
@@ -52,6 +44,7 @@ class _GeneralInformationPageState extends State<GeneralInformationPage> {
         bool isGcash,
         bool isOpen,
         List<int> operatingHours,
+        List<bool> operatingDays,
         String? id) async {
       String vendorName = vendorNameController.text.trim();
       String phone = phoneController.text.trim();
@@ -70,6 +63,7 @@ class _GeneralInformationPageState extends State<GeneralInformationPage> {
             'is_gcash': (isGcash ? "true" : "false"),
             'is_open': (isOpen ? "true" : "false"),
             'operating_hours': operatingHours,
+            'operating_days': operatingDays,
           }).whenComplete(() => AwesomeDialog(
             context: context,
             title: "All Set!",
@@ -104,6 +98,7 @@ class _GeneralInformationPageState extends State<GeneralInformationPage> {
            startTime = '${(user.operating_hours![0]~/60)%12}:${((user.operating_hours![0]%60)).toString().padLeft(2, '0')} ${(user.operating_hours![0]~/60) < 12 ? 'AM' : 'PM'}';
            endTime = '${(user.operating_hours![1]~/60)%12}:${((user.operating_hours![1]%60)).toString().padLeft(2, '0')} ${(user.operating_hours![1]~/60) < 12 ? 'AM' : 'PM'}';
            String op_hours = startTime + " - " + endTime;
+           values = user.operating_days!;
 
             _checkBoxGCash = user.is_gcash == "true" ? true : false;
             _checkBoxOpen = user.is_open == "true" ? true : false;
@@ -260,7 +255,6 @@ class _GeneralInformationPageState extends State<GeneralInformationPage> {
                                     ),
                                     SizedBox(height: Dimensions.height20),
 
-
                                     GestureDetector(
                                       onTap: () async {
                                         TimeRange result = await showTimeRangePicker(
@@ -282,7 +276,7 @@ class _GeneralInformationPageState extends State<GeneralInformationPage> {
                                                 data: Theme.of(context).copyWith(
                                                     textButtonTheme: TextButtonThemeData(
                                                         style: TextButton.styleFrom(
-                                                            primary: AppColors.mainColor
+                                                        foregroundColor: AppColors.mainColor
                                                         )
                                                     )
                                                 ),
@@ -446,6 +440,7 @@ class _GeneralInformationPageState extends State<GeneralInformationPage> {
                                             _checkBoxGCash!,
                                             _checkBoxOpen!,
                                             user.operating_hours!,
+                                            user.operating_days!,
                                             user.vendor_id);
                                       },
                                       child: Container(

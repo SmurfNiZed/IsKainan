@@ -62,6 +62,7 @@ class VendorSignUpPage extends StatelessWidget {
           vendor_img: "",
           is_gcash: "false",
           operating_hours: [480, 1200],   // 8:00 AM - 8:00 PM default
+          operating_days: [false, false, false, false, false, false, false],
           is_open: "false",
           account_created: Timestamp.now(),
           approved: "false",
