@@ -287,8 +287,8 @@ class _GeneralInformationPageState extends State<GeneralInformationPage> {
                                         user.operating_hours![0] = (result.startTime.hour * 60) + result.startTime.minute;
                                         user.operating_hours![1] = (result.endTime.hour * 60) + result.endTime.minute;
 
-                                        startTime = '${result.startTime.hour%12}:${(result.startTime.minute).toString().padLeft(2, '0')} ${result.startTime.hour < 12 ? 'AM' : 'PM'}';
-                                        endTime = '${result.endTime.hour%12}:${(result.endTime.minute).toString().padLeft(2, '0')} ${result.endTime.hour < 12 ? 'AM' : 'PM'}';
+                                        startTime = '${result.startTime.hour%12==0?12:result.startTime.hour%12}:${(result.startTime.minute).toString().padLeft(2, '0')} ${result.startTime.hour < 12 ? 'AM' : 'PM'}';
+                                        endTime = '${result.endTime.hour%12==0?12:result.endTime.hour%12}:${(result.endTime.minute).toString().padLeft(2, '0')} ${result.endTime.hour < 12 ? 'AM' : 'PM'}';
                                         op_hours = startTime + " - " + endTime;
                                         _streamController.sink.add(op_hours);
                                         // });
