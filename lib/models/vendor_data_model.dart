@@ -9,7 +9,9 @@ class VendorData {
   String? vendor_name;
   String? password;
   String? phone;
-  GeoPoint? vendor_location;
+  String? vendor_location;
+  double? latitude;
+  double? longitude;
   String? vendor_img;
   String? is_gcash;
   List<int>? operating_hours;
@@ -19,14 +21,16 @@ class VendorData {
   String? approved;
   // VendorMenu? vendorMenu;
 
+
   VendorData(
       {this.vendor_id,
         this.email,
         this.vendor_name,
         this.password,
         this.phone,
-        double? latitude,
-        double? longitude,
+        this.latitude,
+        this.longitude,
+        this.vendor_location,
         this.vendor_img,
         this.is_gcash,
         this.operating_hours,
@@ -35,7 +39,12 @@ class VendorData {
         this.account_created,
         this.approved,
         /*this.vendorMenu*/}) {
-    vendor_location = latitude != null && longitude != null ? GeoPoint(latitude, longitude) : null;
+    late Future<String?> getLocation;
+    getLocation = getAddressFromLatLng(latitude!, longitude!);
+
+    getLocation.then((String? data) {
+      data != null?vendor_location = data:"";
+    });
   }
 
   toJson(){
@@ -44,6 +53,8 @@ class VendorData {
       'vendor_name': vendor_name,
       'password': password,
       'phone': phone,
+      'latitude': latitude,
+      'longitude': longitude,
       'vendor_location': vendor_location,
       'account_created': account_created,
       'is_open': is_open,
@@ -57,18 +68,6 @@ class VendorData {
 
   factory VendorData.fromSnapshot(DocumentSnapshot<Map<String, dynamic>> document) {
     final data = document.data()!;
-    GeoPoint geoPoint = data['vendor_location'];
-
-    // print("vendorId:"+document.id);
-    // print("email:" + data['email']);
-    // print("vendor_name:" +data['vendor_name']);
-    // print("password:" +data['password']);
-    // print("phone:" +data['phone']);
-    // print("vendorImg:" +data['vendor_img']);
-    // print("operatingHours:" +data['operating_hours']);
-    // print("accountCreated:" +data['account_created']);
-    // print("isOpen:" +data['is_open']);
-    // print("isGcash:" +data['is_gcash']);
 
     return VendorData(
       vendor_id: document.id,
@@ -76,8 +75,9 @@ class VendorData {
       password: data['password'],
       vendor_name: data['vendor_name'],
       phone: data['phone'],
-      latitude: geoPoint.latitude,
-      longitude: geoPoint.longitude,
+      latitude: data['latitude'],
+      longitude: data['longitude'],
+      vendor_location: data['vendor_location'],
       vendor_img: data['vendor_img'],
       is_gcash: data['is_gcash'].toString(),
       operating_hours: List<int>.from(data['operating_hours'] ?? []),
@@ -85,7 +85,6 @@ class VendorData {
       is_open: data['is_open'].toString(),
       account_created: data['account_created'],
       approved: data['approved'] ?? "false",
-      // vendorMenu: VendorMenu.fromSnapshot(data['vendorMenu'])
     );
   }
 

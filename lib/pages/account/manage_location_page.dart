@@ -26,6 +26,7 @@ class _ManageLocationPage extends State<ManageLocationPage> {
   final List<Marker> _markers = [];
   late GeoPoint chosenLocation;
   late Future<String?> chosenAddress;
+  late bool isLoaded;
 
   @override
   void initState(){
@@ -38,8 +39,16 @@ class _ManageLocationPage extends State<ManageLocationPage> {
 
   Widget build(BuildContext context) {
     Future<void> _updateVendorLocation(GeoPoint vendor_location, String? id) async {
+
       try{
-        await FirebaseFirestore.instance.collection('vendors').doc(id).update({'vendor_location': vendor_location});
+        String newLocation;
+        late String? getLocation;
+        getLocation = await getAddressFromLatLng(vendor_location.latitude, vendor_location.longitude);
+        print(getLocation);
+
+        await FirebaseFirestore.instance.collection('vendors').doc(id).update({'latitude': vendor_location.latitude,
+                                                                              'longitude': vendor_location.longitude,
+                                                                              'vendor_location': getLocation});
         AwesomeDialog(
           context: context,
           title: "All Set!",
@@ -90,131 +99,237 @@ class _ManageLocationPage extends State<ManageLocationPage> {
             onCameraMove: (position) {
               chosenLocation = GeoPoint(position.target.latitude, position.target.longitude);
               chosenAddress = getAddressFromLatLng(chosenLocation.latitude, chosenLocation.longitude);
-              // address = getAddressFromLatLng(chosenLocation) as String?;
               setState(() {
                 _markers.first =
                     _markers.first.copyWith(positionParam: position.target);
               });
             },
-            // onCameraIdle: () {
-            //   chosenAddress = getAddressFromLatLng(chosenLocation.latitude, chosenLocation.longitude);
-            // },
           ),
-          Positioned(
-            top: Dimensions.height45 + Dimensions.height10,
-            left: Dimensions.width20,
-            right: Dimensions.width20,
-            child: Container(
-              padding: EdgeInsets.symmetric(horizontal: Dimensions.width10),
-              height: 50,
-              decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(Dimensions.radius20/2),
-                  boxShadow: [
-                    BoxShadow(
-                        blurRadius: 10,
-                        spreadRadius: 7,
-                        offset: Offset(1, 10),
-                        color: Colors.grey.withOpacity(0.2)
-                    )
-                  ]
-              ),
-              child: FutureBuilder(
-                  future: chosenAddress,
-                  builder: (context, snapshot) {
-                    if(snapshot.connectionState == ConnectionState.done) {
-                      if(snapshot.hasData){
-                        String? add = snapshot.data!;
-                        return Builder(
-                          builder: (context) {
-                            return Row(
+          FutureBuilder(
+              future: chosenAddress,
+              builder: (context, snapshot) {
+                if(snapshot.connectionState == ConnectionState.done) {
+                  if(snapshot.hasData){
+                    String? add = snapshot.data!;
+                    return Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Column(
+                          children: [
+                            SizedBox(height: Dimensions.height45 + Dimensions.height10,),
+                            Container(
+                              padding: EdgeInsets.symmetric(horizontal: Dimensions.width10),
+                              margin: EdgeInsets.symmetric(horizontal: Dimensions.width20),
+                              height: 50,
+                              decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(Dimensions.radius20/2),
+                                  boxShadow: [
+                                    BoxShadow(
+                                        blurRadius: 10,
+                                        spreadRadius: 7,
+                                        offset: Offset(1, 10),
+                                        color: Colors.grey.withOpacity(0.2)
+                                    )
+                                  ]
+                              ),
+                              child: Builder(
+                                  builder: (context) {
+                                    return Row(
+                                      children: [
+                                        Icon(Icons.storefront, size: 25, color: AppColors.iconColor1),
+                                        SizedBox(width: Dimensions.width10,),
+                                        Expanded(child: Text(
+                                            add,
+                                            maxLines: 1,
+                                            style: TextStyle(
+                                              fontFamily: 'Roboto',
+                                              fontWeight: FontWeight.normal,
+                                              color: Colors.black,
+                                              fontSize: 18,
+                                              overflow: TextOverflow.ellipsis,
+                                            )/*, size: Dimensions.font20,*/)),
+                                      ],
+                                    );
+                                  }
+                              ),
+                            ),
+                          ],
+                        ),
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            GestureDetector(
+                              onTap: (){
+                                _updateVendorLocation(chosenLocation, widget.Id);
+                              },
+                              child: Container(
+                                margin: EdgeInsets.only(left: Dimensions.width20, right: Dimensions.width20, bottom: Dimensions.height20),
+                                height: 50,
+                                width: Dimensions.screenWidth,
+                                decoration: BoxDecoration(
+                                    color: AppColors.iconColor1,
+                                    borderRadius: BorderRadius.circular(Dimensions.radius30),
+                                    boxShadow: [
+                                      BoxShadow(
+                                          blurRadius: 10,
+                                          spreadRadius: 7,
+                                          offset: Offset(1, 10),
+                                          color: Colors.grey.withOpacity(0.2)
+                                      )
+                                    ]
+                                ),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    BigText(text: "Set Location", color: Colors.white,),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    );
+                  } else {
+                    return Center(
+                        child: Text(
+                            "Can't find a street, move pin to a better spot!",
+                            maxLines: 1,
+                            style: TextStyle(
+                              fontFamily: 'Roboto',
+                              fontWeight: FontWeight.normal,
+                              color: Colors.black,
+                              fontSize: 18,
+                              overflow: TextOverflow.ellipsis,
+                            )/*, size: Dimensions.font20,*/)
+                    );
+                  }
+                } else {
+                  return Positioned(
+                    top: Dimensions.height45 + Dimensions.height10,
+                    left: Dimensions.width20,
+                    right: Dimensions.width20,
+                    child: Container(
+                        padding: EdgeInsets.symmetric(horizontal: Dimensions.width10),
+                        height: 50,
+                        decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(Dimensions.radius20/2),
+                            boxShadow: [
+                              BoxShadow(
+                                  blurRadius: 10,
+                                  spreadRadius: 7,
+                                  offset: Offset(1, 10),
+                                  color: Colors.grey.withOpacity(0.2)
+                              )
+                            ]
+                        ),
+                        child: Stack(
+                          children: [
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Icon(Icons.storefront, size: 25, color: AppColors.iconColor1),
-                                SizedBox(width: Dimensions.width10,),
-                                Expanded(child: Text(
-                                    add,
-                                    maxLines: 1,
-                                    style: TextStyle(
-                                      fontFamily: 'Roboto',
-                                      fontWeight: FontWeight.normal,
-                                      color: Colors.black,
-                                      fontSize: 18,
-                                      overflow: TextOverflow.ellipsis,
-                                    )/*, size: Dimensions.font20,*/)),
                               ],
-                            );
-                          }
-                        );
-                      } else {
-                        return Center(
-                          child: Text(
-                              "Can't find a street, move pin to a better spot!",
-                              maxLines: 1,
-                              style: TextStyle(
-                                fontFamily: 'Roboto',
-                                fontWeight: FontWeight.normal,
-                                color: Colors.black,
-                                fontSize: 18,
-                                overflow: TextOverflow.ellipsis,
-                              )/*, size: Dimensions.font20,*/)
-                        );
-                      }
-                    } else {
-                      return Stack(
-                        children: [
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Icon(Icons.storefront, size: 25, color: AppColors.iconColor1),
-                            ],
-                          ),
-                          Center(
-                            child: JumpingDotsProgressIndicator(
-                              color: AppColors.iconColor1,
-                              fontSize: Dimensions.font26,
                             ),
-                          ),
-                        ],
-                      );
-                    }
-                  })
-            ),
-          ),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              GestureDetector(
-                onTap: (){
-                  _updateVendorLocation(chosenLocation, widget.Id);
-                },
-                child: Container(
-                  margin: EdgeInsets.only(left: Dimensions.width20, right: Dimensions.width20, bottom: Dimensions.height20),
-                  height: 50,
-                  width: Dimensions.screenWidth,
-                  decoration: BoxDecoration(
-                      color: AppColors.iconColor1,
-                      borderRadius: BorderRadius.circular(Dimensions.radius30),
-                      boxShadow: [
-                        BoxShadow(
-                            blurRadius: 10,
-                            spreadRadius: 7,
-                            offset: Offset(1, 10),
-                            color: Colors.grey.withOpacity(0.2)
-                        )
-                      ]
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      BigText(text: "Set Location", color: Colors.white,),
-                    ],
-                  ),
-                ),
-              ),
-            ],
-          ),
+                            Center(
+                              child: JumpingDotsProgressIndicator(
+                                color: AppColors.iconColor1,
+                                fontSize: Dimensions.font26,
+                              ),
+                            ),
+                          ],
+                        ),
+                    ),
+                  );
+                }
+              }),
+          // Positioned(
+          //   top: Dimensions.height45 + Dimensions.height10,
+          //   left: Dimensions.width20,
+          //   right: Dimensions.width20,
+          //   child: Container(
+          //     padding: EdgeInsets.symmetric(horizontal: Dimensions.width10),
+          //     height: 50,
+          //     decoration: BoxDecoration(
+          //         color: Colors.white,
+          //         borderRadius: BorderRadius.circular(Dimensions.radius20/2),
+          //         boxShadow: [
+          //           BoxShadow(
+          //               blurRadius: 10,
+          //               spreadRadius: 7,
+          //               offset: Offset(1, 10),
+          //               color: Colors.grey.withOpacity(0.2)
+          //           )
+          //         ]
+          //     ),
+          //     child: FutureBuilder(
+          //         future: chosenAddress,
+          //         builder: (context, snapshot) {
+          //           if(snapshot.connectionState == ConnectionState.done) {
+          //             if(snapshot.hasData){
+          //               String? add = snapshot.data!;
+          //               isLoaded = true;
+          //               return Builder(
+          //                 builder: (context) {
+          //                   return Row(
+          //                     children: [
+          //                       Icon(Icons.storefront, size: 25, color: AppColors.iconColor1),
+          //                       SizedBox(width: Dimensions.width10,),
+          //                       Expanded(child: Text(
+          //                           add,
+          //                           maxLines: 1,
+          //                           style: TextStyle(
+          //                             fontFamily: 'Roboto',
+          //                             fontWeight: FontWeight.normal,
+          //                             color: Colors.black,
+          //                             fontSize: 18,
+          //                             overflow: TextOverflow.ellipsis,
+          //                           )/*, size: Dimensions.font20,*/)),
+          //                     ],
+          //                   );
+          //                 }
+          //               );
+          //             } else {
+          //               return Center(
+          //                 child: Text(
+          //                     "Can't find a street, move pin to a better spot!",
+          //                     maxLines: 1,
+          //                     style: TextStyle(
+          //                       fontFamily: 'Roboto',
+          //                       fontWeight: FontWeight.normal,
+          //                       color: Colors.black,
+          //                       fontSize: 18,
+          //                       overflow: TextOverflow.ellipsis,
+          //                     )/*, size: Dimensions.font20,*/)
+          //               );
+          //             }
+          //           } else {
+          //             isLoaded = false;
+          //             return Stack(
+          //               children: [
+          //                 Column(
+          //                   mainAxisAlignment: MainAxisAlignment.center,
+          //                   crossAxisAlignment: CrossAxisAlignment.start,
+          //                   children: [
+          //                     Icon(Icons.storefront, size: 25, color: AppColors.iconColor1),
+          //                   ],
+          //                 ),
+          //                 Center(
+          //                   child: JumpingDotsProgressIndicator(
+          //                     color: AppColors.iconColor1,
+          //                     fontSize: Dimensions.font26,
+          //                   ),
+          //                 ),
+          //               ],
+          //             );
+          //           }
+          //         })
+          //   ),
+          // ),
           Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [

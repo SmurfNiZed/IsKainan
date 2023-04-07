@@ -355,7 +355,7 @@ class _AccountPageState extends State<AccountPage> {
                                     var loc = vendorLocSnapshot.data?.data() as Map<String, dynamic>;
                                     return GestureDetector(
                                       onTap: () {
-                                        Get.to(() => ManageLocationPage(startSpot: loc['vendor_location']!, Id: user.vendor_id!,));
+                                        Get.to(() => ManageLocationPage(startSpot: GeoPoint(loc['latitude']!, loc['longitude']!), Id: user.vendor_id!,));
                                       },
                                       child: AccountWidget(
                                         appIcon: AppIcon(

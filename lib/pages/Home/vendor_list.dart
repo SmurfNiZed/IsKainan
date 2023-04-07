@@ -1,14 +1,20 @@
 import 'dart:math';
 
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_state_manager/src/simple/get_state.dart';
+import 'package:iskainan/models/vendor_data_model.dart';
 import 'package:iskainan/widgets/app_column.dart';
 import 'package:iskainan/widgets/rectangle_icon_widget.dart';
+import 'package:progress_indicators/progress_indicators.dart';
 
+import '../../controllers/address_name_controller.dart';
 import '../../controllers/vendor_controller.dart';
+import '../../data/hardcoded_data.dart';
 import '../../routes/route_helper.dart';
 import '../../utils/colors.dart';
 import '../../utils/dimensions.dart';
@@ -21,12 +27,143 @@ class VendorList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final CollectionReference myCollection = FirebaseFirestore.instance.collection('vendors');
+    Stream<QuerySnapshot> myStream = myCollection.snapshots();
     return Container(
       color: Colors.white,
       padding: EdgeInsets.only(top: Dimensions.height20),
       child: Column(
         children: [
-          GetBuilder<VendorController>(builder: (vendor){
+          StreamBuilder<QuerySnapshot>(
+            stream: myStream,
+            builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+              if (snapshot.hasError) {
+                return Text('Error: ${snapshot.error}');
+              }
+
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Text('Loading...');
+              }
+
+              if (snapshot.hasData) {
+                List<VendorData> vendorDataList = snapshot.data!.docs.map((DocumentSnapshot document) {
+                  return VendorData.fromSnapshot(document as DocumentSnapshot<Map<String, dynamic>>);
+                }).toList();
+
+                var shop = snapshot.data;
+                if (vendorDataList.length == 0) {
+                  return Container(
+                    height: Dimensions.height30*5,
+                    width: double.maxFinite,
+                    margin: EdgeInsets.only(left: Dimensions.width20, right: Dimensions.width20, bottom: Dimensions.height20, top: Dimensions.height20),
+                    child: Center(child: Text("Nothing in here yet!", style: TextStyle(fontSize: Dimensions.font26,color: AppColors.paraColor, fontFamily: 'Roboto', fontWeight: FontWeight.bold),)),
+                    decoration: BoxDecoration(
+                      color: Colors.grey.withOpacity(0.06),
+                      borderRadius: BorderRadius.circular(Dimensions.radius20/2),
+                    ),
+                  );
+                } else {
+                  return ListView.builder(
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
+                    itemCount: vendorDataList.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      final thisShop = vendorDataList[index];
+
+                      return GestureDetector(
+                        onTap: (){
+                          Get.toNamed(RouteHelper.getVendorDetail(index));
+                        },
+                        child: Opacity(
+                          opacity: thisShop.is_open=='true'?1:0.2,
+                          child: Container(
+                            margin: EdgeInsets.only(left: Dimensions.width20, right: Dimensions.width20, bottom: Dimensions.height20),
+                            child: Row(
+                              children: [
+                                // image section
+                                Container(
+                                  width: Dimensions.listViewImgSize,
+                                  height: Dimensions.listViewImgSize,
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(Dimensions.radius20),
+                                      color: Colors.white38,
+                                      image: DecorationImage(
+                                        fit: BoxFit.cover,
+                                        image: CachedNetworkImageProvider(thisShop.vendor_img!),
+                                      )
+                                  ),
+                                ),
+                                Expanded(
+                                  child: Container(
+                                    height: Dimensions.listViewImgSize,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.only(
+                                          topRight: Radius.circular(Dimensions.radius20),
+                                          bottomRight: Radius.circular(Dimensions.radius20)
+                                      ),
+                                      color: Colors.white,
+                                    ),
+                                    child:
+                                    Padding(padding: EdgeInsets.only(left: Dimensions.width10, right: Dimensions.width10, bottom: Dimensions.height10),
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              BigText(text: thisShop.vendor_name!, size: Dimensions.font20,),
+                                              SizedBox(height: Dimensions.height10/2,),
+                                              Row(
+                                                children: [
+                                                  SmallText(text: thisShop.vendor_location!, size: Dimensions.font16*0.8, isOneLine: true,),
+                                                ],
+                                              ),
+                                            ],
+                                          ),
+                                          Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              BigText(text: "₱x-y", size: Dimensions.font16*.9),
+                                              SizedBox(height: Dimensions.height10/2,),
+                                              Row(
+                                                children: [
+                                                  RectangleIconWidget(text: "NEW", iconColor: AppColors.isNew, isActivated: true),
+                                                  SizedBox(width: Dimensions.width10/2,),
+                                                  RectangleIconWidget(text: "GCASH", iconColor: Colors.blueAccent, isActivated: thisShop.is_gcash=="true"?true:false),
+                                                ],
+                                              ),
+                                              SizedBox(height: Dimensions.height10/2,),
+                                            ],
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                  );
+                }
+              } else {
+                return Container(
+                  height: Dimensions.height30*5,
+                  width: double.maxFinite,
+                  margin: EdgeInsets.only(left: Dimensions.width20, right: Dimensions.width20, bottom: Dimensions.height20, top: Dimensions.height20),
+                  child: Center(child: Text("Nothing in here yet!", style: TextStyle(fontSize: Dimensions.font26,color: AppColors.paraColor, fontFamily: 'Roboto', fontWeight: FontWeight.bold),)),
+                  decoration: BoxDecoration(
+                    color: Colors.grey.withOpacity(0.06),
+                    borderRadius: BorderRadius.circular(Dimensions.radius20/2),
+                  ),
+                );
+              }
+            },
+          ),
+        GetBuilder<VendorController>(builder: (vendor){
             return vendor.isLoaded?ListView.builder(
                 physics: NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
