@@ -87,44 +87,6 @@ class VendorData {
       approved: data['approved'] ?? "false",
     );
   }
-
-  // Parsing Data
-  // factory VendorData.fromSnapshot(DocumentSnapshot<Map<String, dynamic>> document)
-  // {
-  //   final data = document.data()!;
-  //   return VendorData(
-  //     vendorId: document.id,
-  //     email: data["email"],
-  //     password: data["password"],
-  //     vendorName: data["vendorName"],
-  //     phone: data["phone"],
-  //     latitude: data["latitude"],
-  //     longitude: data["longitude"],
-  //     vendorImg: data["vendorImg"],
-  //     isGcash: data["isGcash"],
-  //     operatingHours: data["operatingHours"],
-  //     isOpen: data["isOpen"],
-  //     accountCreated: data["accountCreated"],
-  //     vendorMenu: data["vendorMenu"],
-  //   );
-  // }
-
-  // Upon account creation
-  // toJson(){
-  //   return {
-  //   'email': email,
-  //   'vendor_name': vendorName,
-  //   'password': password,
-  //   'phone': phone,
-  //   'vendor_location': vendorLocation,
-  //   'vendor_menu': vendorMenu,
-  //   'accountCreated': accountCreated,
-  //   'isOpen': isOpen,
-  //   'operatingHours': operatingHours,
-  //   'isGcash': isGcash,
-  //   'vendorImg': vendorImg
-  //   };
-  // }
 }
 
 class VendorMenu {

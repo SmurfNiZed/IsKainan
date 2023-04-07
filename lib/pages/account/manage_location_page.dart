@@ -26,7 +26,6 @@ class _ManageLocationPage extends State<ManageLocationPage> {
   final List<Marker> _markers = [];
   late GeoPoint chosenLocation;
   late Future<String?> chosenAddress;
-  late bool isLoaded;
 
   @override
   void initState(){
@@ -44,7 +43,6 @@ class _ManageLocationPage extends State<ManageLocationPage> {
         String newLocation;
         late String? getLocation;
         getLocation = await getAddressFromLatLng(vendor_location.latitude, vendor_location.longitude);
-        print(getLocation);
 
         await FirebaseFirestore.instance.collection('vendors').doc(id).update({'latitude': vendor_location.latitude,
                                                                               'longitude': vendor_location.longitude,

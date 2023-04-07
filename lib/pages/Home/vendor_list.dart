@@ -27,15 +27,15 @@ class VendorList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final CollectionReference myCollection = FirebaseFirestore.instance.collection('vendors');
-    Stream<QuerySnapshot> myStream = myCollection.snapshots();
+    final CollectionReference vendors = FirebaseFirestore.instance.collection('vendors');
+    Stream<QuerySnapshot> myStream1 = vendors.snapshots();
     return Container(
       color: Colors.white,
       padding: EdgeInsets.only(top: Dimensions.height20),
       child: Column(
         children: [
           StreamBuilder<QuerySnapshot>(
-            stream: myStream,
+            stream: myStream1,
             builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
               if (snapshot.hasError) {
                 return Text('Error: ${snapshot.error}');
@@ -50,13 +50,13 @@ class VendorList extends StatelessWidget {
                   return VendorData.fromSnapshot(document as DocumentSnapshot<Map<String, dynamic>>);
                 }).toList();
 
-                var shop = snapshot.data;
+
                 if (vendorDataList.length == 0) {
                   return Container(
                     height: Dimensions.height30*5,
                     width: double.maxFinite,
                     margin: EdgeInsets.only(left: Dimensions.width20, right: Dimensions.width20, bottom: Dimensions.height20, top: Dimensions.height20),
-                    child: Center(child: Text("Nothing in here yet!", style: TextStyle(fontSize: Dimensions.font26,color: AppColors.paraColor, fontFamily: 'Roboto', fontWeight: FontWeight.bold),)),
+                    child: Center(child: Text("No vendors available!", style: TextStyle(fontSize: Dimensions.font26,color: AppColors.paraColor, fontFamily: 'Roboto', fontWeight: FontWeight.bold),)),
                     decoration: BoxDecoration(
                       color: Colors.grey.withOpacity(0.06),
                       borderRadius: BorderRadius.circular(Dimensions.radius20/2),
@@ -69,6 +69,23 @@ class VendorList extends StatelessWidget {
                     itemCount: vendorDataList.length,
                     itemBuilder: (BuildContext context, int index) {
                       final thisShop = vendorDataList[index];
+                      List<double>? price_range;
+
+                      Future<List<double>> getFoodPrices() async {
+                        QuerySnapshot foodSnapshot = await FirebaseFirestore.instance
+                            .collection('vendors')
+                            .doc(thisShop.vendor_id)
+                            .collection('foodList')
+                            .orderBy("food_created", descending: true)
+                            .get();
+
+                        List<double> prices = foodSnapshot.docs.map((doc) {
+                          return double.parse(doc['food_price']);
+                        }).toList();
+
+                        return prices;
+                      }
+
 
                       return GestureDetector(
                         onTap: (){
@@ -124,7 +141,28 @@ class VendorList extends StatelessWidget {
                                           Column(
                                             crossAxisAlignment: CrossAxisAlignment.start,
                                             children: [
-                                              BigText(text: "₱x-y", size: Dimensions.font16*.9),
+                                              FutureBuilder<List<double>>(
+                                                future: getFoodPrices(),
+                                                builder: (BuildContext context, AsyncSnapshot<List<double>> snapshot) {
+                                                  if (snapshot.hasData) {
+                                                    List<double> prices = snapshot.data!;
+
+                                                    // Build your ListView.builder using prices
+                                                    return BigText(text: prices.length > 1?"₱"+((prices).reduce((a, b) => a < b ? a : b).toStringAsFixed(2) + " - ₱" + (prices).reduce((a, b) => a > b ? a : b).toStringAsFixed(2)):"₱"+(prices).reduce((a, b) => a < b ? a : b).toStringAsFixed(2), size: Dimensions.font16*.9);
+                                                  } else if (snapshot.hasError) {
+                                                    // Handle the case where there was an error fetching prices
+                                                    return Center(
+                                                      child: Text('Error fetching prices: ${snapshot.error}'),
+                                                    );
+                                                  } else {
+                                                    // Handle the case where prices haven't finished loading yet
+                                                    return Center(
+                                                      child: JumpingDotsProgressIndicator(),
+                                                    );
+                                                  }
+                                                },
+                                              ),
+                                              // BigText(text: "₱"+price_range.toString(), size: Dimensions.font16*.9),
                                               SizedBox(height: Dimensions.height10/2,),
                                               Row(
                                                 children: [
