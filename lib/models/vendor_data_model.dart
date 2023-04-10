@@ -19,8 +19,6 @@ class VendorData {
   String? is_open;
   Timestamp? account_created;
   String? approved;
-  // VendorMenu? vendorMenu;
-
 
   VendorData(
       {this.vendor_id,
@@ -37,8 +35,7 @@ class VendorData {
         this.operating_days,
         this.is_open,
         this.account_created,
-        this.approved,
-        /*this.vendorMenu*/}) {
+        this.approved}) {
     late Future<String?> getLocation;
     getLocation = getAddressFromLatLng(latitude!, longitude!);
 
@@ -97,11 +94,6 @@ class VendorMenu {
   String? isAvailable;
   String? isSpicy;
   Timestamp? food_created;
-  // String? isShellfish;
-  // String? isPeanut;
-  // String? isMilk;
-  // String? isFish;
-  // String? isSoy;
 
   VendorMenu({
     this.foodId,
@@ -110,12 +102,7 @@ class VendorMenu {
     this.foodImg,
     this.isAvailable,
     this.isSpicy,
-    this.food_created,
-    /*this.isShellfish,
-    this.isPeanut,
-    this.isMilk,
-    this.isFish,
-    this.isSoy*/});
+    this.food_created});
 
   factory VendorMenu.fromSnapshot(DocumentSnapshot<Map<String, dynamic>> document){
     final data = document.data()!;
@@ -127,11 +114,6 @@ class VendorMenu {
         isAvailable: data["isAvailable"],
         isSpicy: data["isSpicy"],
         food_created: data["food_created"],
-        // isShellfish: data["isShellfish"],
-        // isPeanut: data["isPeanut"],
-        // isMilk: data["isMilk"],
-        // isFish: data["isFish"],
-        // isSoy: data["isSoy"]
     );
   }
 
@@ -143,11 +125,6 @@ class VendorMenu {
       'is_available': isAvailable,
       'is_spicy': isSpicy,
       'food_created': food_created,
-      // 'is_shellfish': isShellfish,
-      // 'is_peanut': isPeanut,
-      // 'is_milk': isMilk,
-      // 'is_fish': isFish,
-      // 'is_soy': isSoy,
     };
   }
 }

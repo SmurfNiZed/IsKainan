@@ -32,23 +32,21 @@ class Home extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<VendorController>(builder: (_){
-      return GetMaterialApp(
-        theme: ThemeData(
+    return GetMaterialApp(
+      theme: ThemeData(
           primaryColor: AppColors.mainColor,
           accentColor: AppColors.mainColor,
 
           fontFamily: 'Roboto'
-        ),
-        debugShowCheckedModeBanner: false,
-        title: 'IsKainan: Campus Food App',
+      ),
+      debugShowCheckedModeBanner: false,
+      title: 'IsKainan: Campus Food App',
 
-        // home: SplashScreen(),
-        // initialRoute: FirebaseAuth.instance.currentUser == null
-        //               ? RouteHelper.getInitial()
-        //               : RouteHelper.getAccountPage(),
-        getPages: RouteHelper.routes,
-      );
-    });
+      // home: SplashScreen(),
+      // initialRoute: FirebaseAuth.instance.currentUser == null
+      //               ? RouteHelper.getInitial()
+      //               : RouteHelper.getAccountPage(),
+      getPages: RouteHelper.routes,
+    );
   }
 }

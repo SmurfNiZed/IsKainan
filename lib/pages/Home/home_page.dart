@@ -36,7 +36,7 @@ class _HomePageState extends State<HomePage> {
     return [
       MainPage(),
       VendorList(),
-      FoodList(),
+      // FoodList(),
     ];
   }
 
@@ -54,12 +54,12 @@ class _HomePageState extends State<HomePage> {
         activeColorPrimary: AppColors.mainColor,
         inactiveColorPrimary: CupertinoColors.systemGrey,
       ),
-      PersistentBottomNavBarItem(
-        icon: Icon(Icons.fastfood_rounded),
-        title: ("All Food"),
-        activeColorPrimary: AppColors.mainColor,
-        inactiveColorPrimary: CupertinoColors.systemGrey,
-      ),
+      // PersistentBottomNavBarItem(
+      //   icon: Icon(Icons.fastfood_rounded),
+      //   title: ("All Food"),
+      //   activeColorPrimary: AppColors.mainColor,
+      //   inactiveColorPrimary: CupertinoColors.systemGrey,
+      // ),
     ];
   }
 

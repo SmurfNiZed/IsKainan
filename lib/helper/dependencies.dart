@@ -22,7 +22,7 @@ Future<void> init()async { // init() method
   Get.lazyPut(()=>LocationRepo(apiClient: Get.find(), sharedPreferences: Get.find()));
 
   // controllers
-  Get.lazyPut(()=>VendorController(vendorRepo: Get.find()));
+  // Get.lazyPut(()=>VendorController(vendorRepo: Get.find()));
   // Get.lazyPut(() => LocationController(locationRep: Get.find()))
   // Get.lazyPut(() => AuthController(authRepo: Get.find()));
 }
