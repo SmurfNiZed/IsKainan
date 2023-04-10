@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:get/get_state_manager/src/simple/get_controllers.dart';
 import '../models/vendor_data_model.dart';
 
@@ -11,9 +10,13 @@ class VendorController extends GetxController{
   void onInit() {
     super.onInit();
     getVendors();
+    getVendorMenu();
   }
   final CollectionReference vendorsCollection = FirebaseFirestore.instance.collection('vendors');
+  final Query<Map<String, dynamic>> vendorMenuCollection = FirebaseFirestore.instance.collectionGroup('foodList');
+
   List<VendorData> vendors = [];
+  List<VendorMenu> vendorMenu = [];
 
   Future<void> getVendors() async {
     QuerySnapshot querySnapshot = await vendorsCollection.get();
@@ -25,4 +28,11 @@ class VendorController extends GetxController{
     return await VendorData.fromSnapshot(vendor as DocumentSnapshot<Map<String, dynamic>>);
   }
 
+  Future<void> getVendorMenu() async {
+    final QuerySnapshot snapshot = await vendorMenuCollection.get();
+
+    vendorMenu = snapshot.docs.map((DocumentSnapshot document) {
+      return VendorMenu.fromSnapshot(document as DocumentSnapshot<Map<String, dynamic>>);
+    }).toList();
+  }
 }

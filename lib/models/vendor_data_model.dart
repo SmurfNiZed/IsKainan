@@ -105,15 +105,15 @@ class VendorMenu {
     this.food_created});
 
   factory VendorMenu.fromSnapshot(DocumentSnapshot<Map<String, dynamic>> document){
-    final data = document.data()!;
+    final data = document.data();
     return VendorMenu(
-        foodId: document.id,
-        foodName: data["foodName"],
-        foodPrice: data["foodPrice"],
-        foodImg: data["foodImg"],
-        isAvailable: data["isAvailable"],
-        isSpicy: data["isSpicy"],
-        food_created: data["food_created"],
+      foodId: document.id,
+      foodName: data!["food_name"],
+      foodPrice: data["food_price"],
+      foodImg: data["food_img"],
+      isAvailable: data["is_available"],
+      isSpicy: data["is_spicy"],
+      food_created: data["food_created"],
     );
   }
 

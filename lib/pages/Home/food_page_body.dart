@@ -74,6 +74,7 @@ class _FoodPageBodyState extends State<FoodPageBody> {
                             controller: pageController,
                             itemCount: _vendorController.vendors.length,                                                 // Ilang ididisplay sa relevant food
                             itemBuilder: (context, position){
+                              print(position);
                               return _buildPageItem(position,  _vendorController.vendors[position]);
                             })
                     ),
@@ -114,99 +115,188 @@ class _FoodPageBodyState extends State<FoodPageBody> {
               ],
             ),
           ),
-
           // Recommended Food scroll
-          // GetBuilder<VendorController>(builder: (vendor){
-          //   return vendor.isLoaded?ListView.builder(
-          //       physics: NeverScrollableScrollPhysics(),
-          //       shrinkWrap: true,
-          //       itemCount: vendor.vendorList.length,
-          //       itemBuilder: (context, index) {
-          //         return GestureDetector(
-          //           onTap: (){
-          //             Get.toNamed(RouteHelper.getFoodDetail(index, vendor.vendorList[index].food_model.length-1));
-          //           },
-          //           child: Opacity(
-          //             opacity: (vendor.vendorList[index].food_model[vendor.vendorList[index].food_model.length-1].isAvailable!&&vendor.vendorList[index].isOpen!)?1:0.4,
-          //             child: Container(
-          //               margin: EdgeInsets.only(left: Dimensions.width20, right: Dimensions.width20, bottom: Dimensions.height10),
-          //               child: Row(
-          //                 children: [
-          //                   // image section
-          //                   Container(
-          //                     width: Dimensions.listViewImgSize,
-          //                     height: Dimensions.listViewImgSize,
-          //                     decoration: BoxDecoration(
-          //                         borderRadius: BorderRadius.circular(Dimensions.radius20),
-          //                         image: DecorationImage(
-          //                           fit: BoxFit.cover,
-          //                           image: AssetImage(vendor.vendorList[index].food_model[vendor.vendorList[index].food_model.length-1].foodImg!),
-          //                         )
-          //                     ),
-          //                   ),
-          //                   Expanded(
-          //                     child: Container(
-          //                       height: Dimensions.listViewTextContSize,
-          //                       decoration: BoxDecoration(
-          //                         borderRadius: BorderRadius.only(
-          //                             topRight: Radius.circular(Dimensions.radius20),
-          //                             bottomRight: Radius.circular(Dimensions.radius20)
-          //                         ),
+          GetBuilder<VendorController>(builder: (_){
+            if (_vendorController.vendorMenu.isEmpty) {
+              return Center(child: CircularProgressIndicator());
+            } else {
+              return Column(
+                children: [
+                  Container(
+                      child: ListView.builder(
+                          physics: NeverScrollableScrollPhysics(),
+                          shrinkWrap: true,
+                          itemCount: _vendorController.vendorMenu.length,
+                          itemBuilder: (context, index) {
+                            return GestureDetector(
+                              onTap: (){
+                                // Get.toNamed(RouteHelper.getFoodDetail(index, _vendorController.vendors[index].food_model.length-1));
+                              },
+                              child: Opacity(
+                                opacity: (_vendorController.vendorMenu[index].isAvailable=="true")?1:0.4,
+                                child: Container(
+                                  margin: EdgeInsets.only(left: Dimensions.width20, right: Dimensions.width20, bottom: Dimensions.height10),
+                                  child: Row(
+                                    children: [
+                                      // image section
+                                      Container(
+                                        width: Dimensions.listViewImgSize,
+                                        height: Dimensions.listViewImgSize,
+                                        decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.circular(Dimensions.radius20),
+                                            image: DecorationImage(
+                                              fit: BoxFit.cover,
+                                              image: NetworkImage(_vendorController.vendorMenu[index].foodImg!),
+                                            )
+                                        ),
+                                      ),
+                                      Expanded(
+                                        child: Container(
+                                          height: Dimensions.listViewTextContSize,
+                                          decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.only(
+                                                topRight: Radius.circular(Dimensions.radius20),
+                                                bottomRight: Radius.circular(Dimensions.radius20)
+                                            ),
+
+                                          ),
+                                          child:
+                                          Padding(padding: EdgeInsets.only(left: Dimensions.width10, right: Dimensions.width10),
+                                            child: Column(
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                              children: [
+                                                Column(
+                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                  children: [
+                                                    BigText(text: _vendorController.vendorMenu[index].foodName!, size: Dimensions.font20,),
+                                                  ],
+                                                ),
+                                                Column(
+                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                  children: [
+                                                    BigText(text: "₱"+_vendorController.vendorMenu[index].foodPrice!, size: Dimensions.font16*.9),
+                                                    SizedBox(height: Dimensions.height10/2,),
+                                                    Row(
+                                                      children: [
+                                                        RectangleIconWidget(text: "NEW", iconColor: AppColors.isNew, isActivated: true),
+                                                        SizedBox(width: Dimensions.width10/2,),
+                                                        _vendorController.vendorMenu[index].isSpicy=="true"?RectangleIconWidget(text: "SPICY", iconColor: Colors.red[900]!, isActivated: _vendorController.vendorMenu[index].isSpicy=="true"?true:false):Text(""),
+                                                      ],
+                                                    ),
+                                                    SizedBox(height: Dimensions.height10/2,)
+                                                  ],
+                                                )
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            );
+                          })
+                  ),
+                ],
+              );
+            }
+          }),
+          // FutureBuilder<QuerySnapshot>(
+          //   future: FirebaseFirestore.instance.collectionGroup('foodList').get(),
+          //   builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+          //     if (snapshot.connectionState == ConnectionState.waiting) {
+          //       // return a loading indicator while waiting for the query result
+          //       return CircularProgressIndicator();
+          //     } else if (snapshot.hasError) {
+          //       // return an error message if the query fails
+          //       return Text('Error: ${snapshot.error}');
+          //     } else {
+          //       // extract the list of documents from the query snapshot and build your UI
           //
+          //       final List<VendorMenu> vendorMenus = snapshot.data!.docs.map((DocumentSnapshot document) {
+          //         return VendorMenu.fromSnapshot(document as DocumentSnapshot<Map<String, dynamic>>);
+          //       }).toList();
+          //
+          //       return ListView.builder(
+          //           physics: NeverScrollableScrollPhysics(),
+          //           shrinkWrap: true,
+          //           itemCount: vendorMenus.length,
+          //           itemBuilder: (context, index) {
+          //             return GestureDetector(
+          //                 onTap: (){
+          //                   // Get.toNamed(RouteHelper.getFoodDetail(index, _vendorController.vendors[index].food_model.length-1));
+          //                 },
+          //               child: Opacity(
+          //                 opacity: (vendorMenus[index].isAvailable=="true")?1:0.4,
+          //                 child: Container(
+          //                   margin: EdgeInsets.only(left: Dimensions.width20, right: Dimensions.width20, bottom: Dimensions.height10),
+          //                   child: Row(
+          //                     children: [
+          //                       // image section
+          //                       Container(
+          //                         width: Dimensions.listViewImgSize,
+          //                         height: Dimensions.listViewImgSize,
+          //                         decoration: BoxDecoration(
+          //                             borderRadius: BorderRadius.circular(Dimensions.radius20),
+          //                             image: DecorationImage(
+          //                               fit: BoxFit.cover,
+          //                               image: NetworkImage(vendorMenus[index].foodImg!),
+          //                             )
+          //                         ),
           //                       ),
-          //                       child:
-          //                       Padding(padding: EdgeInsets.only(left: Dimensions.width10, right: Dimensions.width10),
-          //                         child: Column(
-          //                           crossAxisAlignment: CrossAxisAlignment.start,
-          //                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          //                           children: [
-          //                             Column(
-          //                               crossAxisAlignment: CrossAxisAlignment.start,
-          //                               children: [
-          //                                 BigText(text: vendor.vendorList[index].food_model[vendor.vendorList[index].food_model.length-1].foodName!, size: Dimensions.font20,),
-          //                                 SizedBox(height: Dimensions.height10/2,),
-          //                                 SmallText(text: vendor.vendorList[index].vendorName! + ", " + vendor.vendorList[index].vendorLocation!, size: Dimensions.font16*0.8, isOneLine: true,),
-          //                               ],
+          //                       Expanded(
+          //                         child: Container(
+          //                           height: Dimensions.listViewTextContSize,
+          //                           decoration: BoxDecoration(
+          //                             borderRadius: BorderRadius.only(
+          //                                 topRight: Radius.circular(Dimensions.radius20),
+          //                                 bottomRight: Radius.circular(Dimensions.radius20)
           //                             ),
-          //                             Column(
+          //
+          //                           ),
+          //                           child:
+          //                           Padding(padding: EdgeInsets.only(left: Dimensions.width10, right: Dimensions.width10),
+          //                             child: Column(
           //                               crossAxisAlignment: CrossAxisAlignment.start,
+          //                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
           //                               children: [
-          //                                 BigText(text: "₱"+(vendor.vendorList[index].food_model[vendor.vendorList[index].food_model.length-1].foodPrice!), size: Dimensions.font16*.9),
-          //                                 SizedBox(height: Dimensions.height10/2,),
-          //                                 Row(
+          //                                 Column(
+          //                                   crossAxisAlignment: CrossAxisAlignment.start,
           //                                   children: [
-          //                                     RectangleIconWidget(text: "NEW", iconColor: AppColors.isNew, isActivated: true),
-          //                                     SizedBox(width: Dimensions.width10/2,),
-          //                                     vendor.vendorList[index].food_model[vendor.vendorList[index].food_model.length-1].isSpicy!?RectangleIconWidget(text: "SPICY", iconColor: Colors.red[900]!, isActivated: vendor.vendorList[index].food_model[vendor.vendorList[index].food_model.length-1].isSpicy!):Text(""),
+          //                                     BigText(text: vendorMenus[index].foodName!, size: Dimensions.font20,),
           //                                   ],
           //                                 ),
-          //                                 SizedBox(height: Dimensions.height10/2,)
+          //                                 Column(
+          //                                   crossAxisAlignment: CrossAxisAlignment.start,
+          //                                   children: [
+          //                                     BigText(text: "₱"+vendorMenus[index].foodPrice!, size: Dimensions.font16*.9),
+          //                                     SizedBox(height: Dimensions.height10/2,),
+          //                                     Row(
+          //                                       children: [
+          //                                         RectangleIconWidget(text: "NEW", iconColor: AppColors.isNew, isActivated: true),
+          //                                         SizedBox(width: Dimensions.width10/2,),
+          //                                         vendorMenus[index].isSpicy=="true"?RectangleIconWidget(text: "SPICY", iconColor: Colors.red[900]!, isActivated: vendorMenus[index].isSpicy=="true"?true:false):Text(""),
+          //                                       ],
+          //                                     ),
+          //                                     SizedBox(height: Dimensions.height10/2,)
+          //                                   ],
+          //                                 )
           //                               ],
-          //                             )
-          //                           ],
+          //                             ),
+          //                           ),
           //                         ),
           //                       ),
-          //                     ),
+          //                     ],
           //                   ),
-          //                 ],
+          //                 ),
           //               ),
-          //             ),
-          //           ),
-          //         );
-          //       }):Container(
-          //         width: Dimensions.screenWidth,
-          //         height: Dimensions.screenWidth/2,
-          //         child: Column(
-          //           mainAxisAlignment: MainAxisAlignment.center,
-          //           crossAxisAlignment: CrossAxisAlignment.center,
-          //           children: [
-          //             CircularProgressIndicator(
-          //               color: AppColors.mainColor,
-          //             ),
-          //           ],
-          //         ),
-          //       );
-          // })
+          //             );
+          //           });
+          //     }
+          //   }
+          // )
         ],
       ),
     );
