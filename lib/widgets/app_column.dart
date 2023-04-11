@@ -1,7 +1,4 @@
 import 'dart:async';
-import 'dart:math';
-
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -10,29 +7,21 @@ import 'package:get/get_core/src/get_main.dart';
 import 'package:iskainan/widgets/rectangle_icon_widget.dart';
 import 'package:iskainan/widgets/small_text.dart';
 import 'package:progress_indicators/progress_indicators.dart';
-
-import '../controllers/profile_controller.dart';
 import '../controllers/vendor_controller.dart';
-import '../models/vendor_data_model.dart';
 import '../utils/colors.dart';
 import '../utils/dimensions.dart';
-import 'app_icon.dart';
 import 'big_text.dart';
 import 'icon_and_text_widget.dart';
 
 class AppColumn extends StatefulWidget {
-  final int pageId;
-  AppColumn({Key? key, required this.pageId}) : super(key: key);
+  final String vendorId;
+  AppColumn({Key? key, required this.vendorId}) : super(key: key);
 
   @override
   State<AppColumn> createState() => _AppColumnState();
 }
 
 class _AppColumnState extends State<AppColumn> {
-  late bool? _checkBoxGCash = false;
-  late bool? _checkBoxOpen = false;
-  late bool? _isApproved;
-
   late StreamController<String> _streamController;
   late String startTime;
   late String endTime;
@@ -40,7 +29,14 @@ class _AppColumnState extends State<AppColumn> {
   late List<bool> values;
   @override
   Widget build(BuildContext context) {
-    var vendorProfile = Get.find<VendorController>().vendors[widget.pageId];
+    var vendorProfile;
+    for(int i = 0; i < Get.find<VendorController>().vendors.length; i++){
+      if(Get.find<VendorController>().vendors[i].vendor_id == widget.vendorId){
+        vendorProfile = Get.find<VendorController>().vendors[i];
+        break;
+      }
+    }
+
     late String startTime = '${(vendorProfile.operating_hours![0]~/60)%12}:${((vendorProfile.operating_hours![0]%60)).toString().padLeft(2, '0')} ${(vendorProfile.operating_hours![0]~/60) < 12 ? 'AM' : 'PM'}';
     late String endTime = '${(vendorProfile.operating_hours![1]~/60)%12}:${((vendorProfile.operating_hours![1]%60)).toString().padLeft(2, '0')} ${(vendorProfile.operating_hours![1]~/60) < 12 ? 'AM' : 'PM'}';
 

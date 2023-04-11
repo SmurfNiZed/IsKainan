@@ -61,7 +61,7 @@ class RecommendedFoodDetail extends StatelessWidget {
                               child: AppIcon(icon: Icons.clear)),
                           GestureDetector(
                               onTap: (){
-                                Get.toNamed(RouteHelper.getVendorDetail(pageId));
+                                Get.toNamed(RouteHelper.getVendorDetail(vendorId));
                               },
                               child: AppIcon(icon: Icons.store)),
                         ],

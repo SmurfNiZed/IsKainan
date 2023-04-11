@@ -56,7 +56,7 @@ class VendorList extends StatelessWidget {
 
                   return GestureDetector(
                     onTap: (){
-                      Get.toNamed(RouteHelper.getVendorDetail(index));
+                      Get.toNamed(RouteHelper.getVendorDetail(vendor.vendors[index].vendor_id!));
                     },
                     child: Opacity(
                       opacity: vendor.vendors[index].is_open=="true"?1:0.2,

@@ -45,7 +45,7 @@ class RouteHelper{
   static String getAllergiesPage()=>'$allergiesPage';
   static String getVendorSignUpPage()=>'$vendorSignUpPage';
   static String getVendorSignInPage()=>'$vendorSignInPage';
-  static String getVendorDetail(int vendorId)=>'$vendorDetail?vendorId=$vendorId';
+  static String getVendorDetail(String vendorId)=>'$vendorDetail?vendorId=$vendorId';
   static String getFoodDetail(String vendorId, String foodId)=>'$foodDetail?vendorId=$vendorId&foodId=$foodId';
   static String getVendorList()=>'$vendorList';
   static String getFoodList()=>'$foodList';
@@ -76,8 +76,8 @@ class RouteHelper{
     GetPage(name: accountPage, page: ()=>AccountPage()),
 
     GetPage(name: vendorDetail, page:(){
-      var pageId = Get.parameters['vendorId'];
-      return VendorDetail(pageId: int.parse(pageId!));
+      var vendorId = Get.parameters['vendorId'];
+      return VendorDetail(vendorId: vendorId!);
       },
     ),
 

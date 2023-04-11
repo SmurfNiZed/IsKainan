@@ -22,8 +22,8 @@ import '../../widgets/icon_and_text_widget.dart';
 import '../../widgets/small_text.dart';
 
 class VendorDetail extends StatefulWidget {
-  final int pageId;
-  const VendorDetail({Key? key, required this.pageId}) : super(key: key);
+  final String vendorId;
+  const VendorDetail({Key? key, required this.vendorId}) : super(key: key);
 
   @override
   State<VendorDetail> createState() => _VendorDetailState();
@@ -41,7 +41,7 @@ class _VendorDetailState extends State<VendorDetail> {
     final controller = Get.put(VendorController());
 
     return FutureBuilder(
-        future: controller.getVendorData(controller.vendors[widget.pageId].vendor_id!),
+        future: controller.getVendorData(widget.vendorId),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
             VendorData user = snapshot.data as VendorData;
@@ -86,7 +86,7 @@ class _VendorDetailState extends State<VendorDetail> {
                     bottom: PreferredSize(
                         preferredSize: Size.fromHeight(90),
                         child: Container(
-                          child: AppColumn(pageId: widget.pageId!,),
+                          child: AppColumn(vendorId: widget.vendorId,),
                           width: double.maxFinite,
                           padding: EdgeInsets.only(top: Dimensions.width20, left: Dimensions.width20, right: Dimensions.width20, bottom: Dimensions.width15),
                           decoration: BoxDecoration(

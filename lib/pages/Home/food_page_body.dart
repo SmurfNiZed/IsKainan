@@ -10,6 +10,7 @@ import 'package:iskainan/widgets/big_text.dart';
 import 'package:iskainan/widgets/icon_and_text_widget.dart';
 import 'package:iskainan/widgets/rectangle_icon_widget.dart';
 import 'package:iskainan/widgets/small_text.dart';
+import 'package:progress_indicators/progress_indicators.dart';
 import '../../models/vendor_data_model.dart';
 import '../../routes/route_helper.dart';
 import '../../utils/colors.dart';
@@ -74,7 +75,7 @@ class _FoodPageBodyState extends State<FoodPageBody> {
                             controller: pageController,
                             itemCount: _vendorController.vendors.length,                                                 // Ilang ididisplay sa relevant food
                             itemBuilder: (context, position){
-                              // print(position);
+                              print(position);
                               return _buildPageItem(position,  _vendorController.vendors[position]);
                             })
                     ),
@@ -171,6 +172,37 @@ class _FoodPageBodyState extends State<FoodPageBody> {
                                                   crossAxisAlignment: CrossAxisAlignment.start,
                                                   children: [
                                                     BigText(text: _vendorController.vendorMenu[index].foodName!, size: Dimensions.font20,),
+                                                    SizedBox(height: Dimensions.height10/2,),
+                                                    FutureBuilder<QuerySnapshot<Map<String, dynamic>>>(
+                                                      future: FirebaseFirestore.instance.collectionGroup('foodList').get(),
+                                                      builder: (context, snapshot) {
+                                                        if (snapshot.connectionState == ConnectionState.waiting) {
+                                                          return JumpingDotsProgressIndicator(
+                                                            fontSize: Dimensions.font16,
+                                                            color: AppColors.mainColor,
+                                                          );
+                                                        } else if (snapshot.hasError) {
+                                                          return Text('Error: ${snapshot.error}');
+                                                        } else {
+                                                          var vendorId = snapshot.data!.docs[index].reference.parent.parent!.id;
+                                                          return FutureBuilder<VendorData>(
+                                                            future: _vendorController.getVendorData(vendorId),
+                                                            builder: (context, snapshot2) {
+                                                              if (snapshot2.connectionState == ConnectionState.waiting) {
+                                                                return JumpingDotsProgressIndicator(
+                                                                  fontSize: Dimensions.font16/2,
+                                                                  color: AppColors.iconColor1,
+                                                                );
+                                                              } else if (snapshot2.hasError) {
+                                                                return Text('Error: ${snapshot2.error}');
+                                                              } else {
+                                                                return SmallText(text: snapshot2.data!.vendor_name!, size: Dimensions.font16*0.8, isOneLine: true,);
+                                                              }
+                                                            },
+                                                          );
+                                                        }
+                                                      },
+                                                    ),
                                                   ],
                                                 ),
                                                 Column(
@@ -204,100 +236,6 @@ class _FoodPageBodyState extends State<FoodPageBody> {
               );
             }
           }),
-          // FutureBuilder<QuerySnapshot>(
-          //   future: FirebaseFirestore.instance.collectionGroup('foodList').get(),
-          //   builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-          //     if (snapshot.connectionState == ConnectionState.waiting) {
-          //       // return a loading indicator while waiting for the query result
-          //       return CircularProgressIndicator();
-          //     } else if (snapshot.hasError) {
-          //       // return an error message if the query fails
-          //       return Text('Error: ${snapshot.error}');
-          //     } else {
-          //       // extract the list of documents from the query snapshot and build your UI
-          //
-          //       final List<VendorMenu> vendorMenus = snapshot.data!.docs.map((DocumentSnapshot document) {
-          //         return VendorMenu.fromSnapshot(document as DocumentSnapshot<Map<String, dynamic>>);
-          //       }).toList();
-          //
-          //       return ListView.builder(
-          //           physics: NeverScrollableScrollPhysics(),
-          //           shrinkWrap: true,
-          //           itemCount: vendorMenus.length,
-          //           itemBuilder: (context, index) {
-          //             return GestureDetector(
-          //                 onTap: (){
-          //                   // Get.toNamed(RouteHelper.getFoodDetail(index, _vendorController.vendors[index].food_model.length-1));
-          //                 },
-          //               child: Opacity(
-          //                 opacity: (vendorMenus[index].isAvailable=="true")?1:0.4,
-          //                 child: Container(
-          //                   margin: EdgeInsets.only(left: Dimensions.width20, right: Dimensions.width20, bottom: Dimensions.height10),
-          //                   child: Row(
-          //                     children: [
-          //                       // image section
-          //                       Container(
-          //                         width: Dimensions.listViewImgSize,
-          //                         height: Dimensions.listViewImgSize,
-          //                         decoration: BoxDecoration(
-          //                             borderRadius: BorderRadius.circular(Dimensions.radius20),
-          //                             image: DecorationImage(
-          //                               fit: BoxFit.cover,
-          //                               image: NetworkImage(vendorMenus[index].foodImg!),
-          //                             )
-          //                         ),
-          //                       ),
-          //                       Expanded(
-          //                         child: Container(
-          //                           height: Dimensions.listViewTextContSize,
-          //                           decoration: BoxDecoration(
-          //                             borderRadius: BorderRadius.only(
-          //                                 topRight: Radius.circular(Dimensions.radius20),
-          //                                 bottomRight: Radius.circular(Dimensions.radius20)
-          //                             ),
-          //
-          //                           ),
-          //                           child:
-          //                           Padding(padding: EdgeInsets.only(left: Dimensions.width10, right: Dimensions.width10),
-          //                             child: Column(
-          //                               crossAxisAlignment: CrossAxisAlignment.start,
-          //                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          //                               children: [
-          //                                 Column(
-          //                                   crossAxisAlignment: CrossAxisAlignment.start,
-          //                                   children: [
-          //                                     BigText(text: vendorMenus[index].foodName!, size: Dimensions.font20,),
-          //                                   ],
-          //                                 ),
-          //                                 Column(
-          //                                   crossAxisAlignment: CrossAxisAlignment.start,
-          //                                   children: [
-          //                                     BigText(text: "₱"+vendorMenus[index].foodPrice!, size: Dimensions.font16*.9),
-          //                                     SizedBox(height: Dimensions.height10/2,),
-          //                                     Row(
-          //                                       children: [
-          //                                         RectangleIconWidget(text: "NEW", iconColor: AppColors.isNew, isActivated: true),
-          //                                         SizedBox(width: Dimensions.width10/2,),
-          //                                         vendorMenus[index].isSpicy=="true"?RectangleIconWidget(text: "SPICY", iconColor: Colors.red[900]!, isActivated: vendorMenus[index].isSpicy=="true"?true:false):Text(""),
-          //                                       ],
-          //                                     ),
-          //                                     SizedBox(height: Dimensions.height10/2,)
-          //                                   ],
-          //                                 )
-          //                               ],
-          //                             ),
-          //                           ),
-          //                         ),
-          //                       ),
-          //                     ],
-          //                   ),
-          //                 ),
-          //               ),
-          //             );
-          //           });
-          //     }
-          //   }
-          // )
         ],
       ),
     );
@@ -329,7 +267,7 @@ class _FoodPageBodyState extends State<FoodPageBody> {
         children: [
           GestureDetector(
             onTap: (){
-              Get.toNamed(RouteHelper.getVendorDetail(index));
+              Get.toNamed(RouteHelper.getVendorDetail(vendor.vendor_id!));
             },
             child: Opacity(
               opacity: vendor.is_open=="true"?1:0.4,
@@ -375,7 +313,7 @@ class _FoodPageBodyState extends State<FoodPageBody> {
                 opacity: vendor.is_open=="true"?1:0.2,
                 child: Container(
                   padding: EdgeInsets.only(top: Dimensions.height10, left: Dimensions.width15, right: Dimensions.width15, bottom: Dimensions.height10),
-                  child: AppColumn(pageId: index,),
+                  child: AppColumn(vendorId: _vendorController.vendors[index].vendor_id!,),
                 ),
               )
             ),
