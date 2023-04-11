@@ -35,4 +35,9 @@ class VendorController extends GetxController{
       return VendorMenu.fromSnapshot(document as DocumentSnapshot<Map<String, dynamic>>);
     }).toList();
   }
+
+  Future<VendorMenu> getVendorMenuData(String vendorId, String foodId) async {
+    DocumentSnapshot menuSnapshot = await vendorsCollection.doc(vendorId).collection('foodList').doc(foodId).get();
+    return await VendorMenu.fromSnapshot(menuSnapshot as DocumentSnapshot<Map<String, dynamic>>);
+  }
 }

@@ -46,7 +46,7 @@ class RouteHelper{
   static String getVendorSignUpPage()=>'$vendorSignUpPage';
   static String getVendorSignInPage()=>'$vendorSignInPage';
   static String getVendorDetail(int vendorId)=>'$vendorDetail?vendorId=$vendorId';
-  static String getFoodDetail(int pageId, int foodId)=>'$foodDetail?pageId=$pageId&foodId=$foodId';
+  static String getFoodDetail(String vendorId, String foodId)=>'$foodDetail?vendorId=$vendorId&foodId=$foodId';
   static String getVendorList()=>'$vendorList';
   static String getFoodList()=>'$foodList';
   static String getAccountPage()=>'$accountPage';
@@ -77,16 +77,15 @@ class RouteHelper{
 
     GetPage(name: vendorDetail, page:(){
       var pageId = Get.parameters['vendorId'];
-      print("pageId:" + pageId.toString());
       return VendorDetail(pageId: int.parse(pageId!));
       },
     ),
 
-    // GetPage(name: foodDetail, page:(){
-    //   var pageId = Get.parameters['pageId'];
-    //   var foodId = Get.parameters['foodId'];
-    //   return RecommendedFoodDetail(pageId: int.parse(pageId!), foodId: int.parse(foodId!));
-    // },
-    // ),
+    GetPage(name: foodDetail, page:(){
+      var foodId = Get.parameters['foodId'];
+      var vendorId = Get.parameters['vendorId'];
+      return RecommendedFoodDetail(vendorId: vendorId!, foodId: foodId!);
+      },
+    ),
   ];
 }

@@ -74,7 +74,7 @@ class _FoodPageBodyState extends State<FoodPageBody> {
                             controller: pageController,
                             itemCount: _vendorController.vendors.length,                                                 // Ilang ididisplay sa relevant food
                             itemBuilder: (context, position){
-                              print(position);
+                              // print(position);
                               return _buildPageItem(position,  _vendorController.vendors[position]);
                             })
                     ),
@@ -129,8 +129,9 @@ class _FoodPageBodyState extends State<FoodPageBody> {
                           itemCount: _vendorController.vendorMenu.length,
                           itemBuilder: (context, index) {
                             return GestureDetector(
-                              onTap: (){
-                                // Get.toNamed(RouteHelper.getFoodDetail(index, _vendorController.vendors[index].food_model.length-1));
+                              onTap: () async {
+                                QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collectionGroup('foodList').get();
+                                Get.toNamed(RouteHelper.getFoodDetail(querySnapshot.docs[index].reference.parent.parent!.id, _vendorController.vendorMenu[index].foodId!));
                               },
                               child: Opacity(
                                 opacity: (_vendorController.vendorMenu[index].isAvailable=="true")?1:0.4,
