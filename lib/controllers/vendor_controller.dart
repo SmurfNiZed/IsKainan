@@ -12,6 +12,7 @@ class VendorController extends GetxController{
     getVendors();
     getVendorMenu();
   }
+
   final CollectionReference vendorsCollection = FirebaseFirestore.instance.collection('vendors');
   final Query<Map<String, dynamic>> vendorMenuCollection = FirebaseFirestore.instance.collectionGroup('foodList');
 

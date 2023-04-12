@@ -28,8 +28,13 @@ class FoodPageBody extends StatefulWidget {
 }
 
 class _FoodPageBodyState extends State<FoodPageBody> {
+  Future<void> _loadResource() async {
+    Get.find<VendorController>().getVendors();
+    Get.find<VendorController>().getVendorMenu();
+  }
+
   PageController pageController = PageController(viewportFraction: 0.85);
-  final VendorController _vendorController = Get.put(VendorController());
+  VendorController _vendorController = Get.put(VendorController());
   var _currPageValue = 0.0;
   double _scaleFactor = 0.8;
   double _height = Dimensions.pageViewContainer;
@@ -59,10 +64,10 @@ class _FoodPageBodyState extends State<FoodPageBody> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Column(
-        children: [
-          GetBuilder<VendorController>(builder: (_){
+    return RefreshIndicator(
+        child: Column(
+          children: [
+            GetBuilder<VendorController>(builder: (_){
               if (_vendorController.vendors.isEmpty) {
                 return Center(child: CircularProgressIndicator());
               } else {
@@ -75,7 +80,7 @@ class _FoodPageBodyState extends State<FoodPageBody> {
                             controller: pageController,
                             itemCount: _vendorController.vendors.length,                                                 // Ilang ididisplay sa relevant food
                             itemBuilder: (context, position){
-                              // print(position);
+                              print(position);
                               return _buildPageItem(position,  _vendorController.vendors[position]);
                             })
                     ),
@@ -83,134 +88,135 @@ class _FoodPageBodyState extends State<FoodPageBody> {
                 );
               }
             },
-          ),
-          GetBuilder<VendorController>(builder: (_){
-            return DotsIndicator(// Page Dots animation
-                        dotsCount: _vendorController.vendors.isEmpty?1:_vendorController.vendors.length,
-                        position: _currPageValue,
-                        decorator: DotsDecorator(
-                          activeColor: AppColors.iconColor1,
-                          size: const Size.square(9.0),
-                          activeSize: const Size(18.0, 9.0),
-                          activeShape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.0)),
-                        ),
-                      );
-          }),
-          SizedBox(height: Dimensions.height30,),
-          Container(
-            margin: EdgeInsets.only(left: Dimensions.width20),
-            child: Row(
-              crossAxisAlignment:CrossAxisAlignment.end ,
-              children: [
-                BigText(text: "Recommended"),
-                SizedBox(width: Dimensions.width10,),
-                Container(
-                  margin: const EdgeInsets.only(bottom: 3),
-                  child: BigText(text: ".", color: Colors.black26),
-                ),
-                SizedBox(width: Dimensions.width10,),
-                Container(
-                  margin: const EdgeInsets.only(bottom: 2),
-                  child: SmallText(text: "Street Food", color: Colors.black26),
-                )
-              ],
             ),
-          ),
-          // Recommended Food scroll
-          GetBuilder<VendorController>(builder: (_){
-            if (_vendorController.vendorMenu.isEmpty) {
-              return Center(child: CircularProgressIndicator());
-            } else {
-              return Column(
+            GetBuilder<VendorController>(builder: (_){
+              return DotsIndicator(// Page Dots animation
+                dotsCount: _vendorController.vendors.isEmpty?1:_vendorController.vendors.length,
+                position: _currPageValue,
+                decorator: DotsDecorator(
+                  activeColor: AppColors.iconColor1,
+                  size: const Size.square(9.0),
+                  activeSize: const Size(18.0, 9.0),
+                  activeShape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.0)),
+                ),
+              );
+            }),
+            SizedBox(height: Dimensions.height30,),
+            Container(
+              margin: EdgeInsets.only(left: Dimensions.width20),
+              child: Row(
+                crossAxisAlignment:CrossAxisAlignment.end ,
                 children: [
+                  BigText(text: "Recommended"),
+                  SizedBox(width: Dimensions.width10,),
                   Container(
-                      child: ListView.builder(
-                          physics: NeverScrollableScrollPhysics(),
-                          shrinkWrap: true,
-                          itemCount: _vendorController.vendorMenu.length,
-                          itemBuilder: (context, index) {
-                            return GestureDetector(
-                              onTap: () async {
-                                QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collectionGroup('foodList').get();
-                                Get.toNamed(RouteHelper.getFoodDetail(querySnapshot.docs[index].reference.parent.parent!.id, _vendorController.vendorMenu[index].foodId!));
-                              },
-                              child: Opacity(
-                                opacity: (_vendorController.vendorMenu[index].isAvailable=="true")?1:0.4,
-                                child: Container(
-                                  margin: EdgeInsets.only(left: Dimensions.width20, right: Dimensions.width20, bottom: Dimensions.height10),
-                                  child: Row(
-                                    children: [
-                                      // image section
-                                      Container(
-                                        width: Dimensions.listViewImgSize,
-                                        height: Dimensions.listViewImgSize,
-                                        decoration: BoxDecoration(
-                                            borderRadius: BorderRadius.circular(Dimensions.radius20),
-                                            image: DecorationImage(
-                                              fit: BoxFit.cover,
-                                              image: NetworkImage(_vendorController.vendorMenu[index].foodImg!),
-                                            )
-                                        ),
-                                      ),
-                                      Expanded(
-                                        child: Container(
-                                          height: Dimensions.listViewTextContSize,
+                    margin: const EdgeInsets.only(bottom: 3),
+                    child: BigText(text: ".", color: Colors.black26),
+                  ),
+                  SizedBox(width: Dimensions.width10,),
+                  Container(
+                    margin: const EdgeInsets.only(bottom: 2),
+                    child: SmallText(text: "Street Food", color: Colors.black26),
+                  )
+                ],
+              ),
+            ),
+            // Recommended Food scroll
+            GetBuilder<VendorController>(builder: (_){
+              if (_vendorController.vendorMenu.isEmpty) {
+                return Center(child: CircularProgressIndicator());
+              } else {
+                return Column(
+                  children: [
+                    Container(
+                        child: ListView.builder(
+                            physics: NeverScrollableScrollPhysics(),
+                            shrinkWrap: true,
+                            itemCount: _vendorController.vendorMenu.length,
+                            itemBuilder: (context, index) {
+                              return GestureDetector(
+                                onTap: () async {
+                                  QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collectionGroup('foodList').get();
+                                  Get.toNamed(RouteHelper.getFoodDetail(querySnapshot.docs[index].reference.parent.parent!.id, _vendorController.vendorMenu[index].foodId!));
+                                },
+                                child: Opacity(
+                                  opacity: (_vendorController.vendorMenu[index].isAvailable=="true")?1:0.4,
+                                  child: Container(
+                                    margin: EdgeInsets.only(left: Dimensions.width20, right: Dimensions.width20, bottom: Dimensions.height10),
+                                    child: Row(
+                                      children: [
+                                        // image section
+                                        Container(
+                                          width: Dimensions.listViewImgSize,
+                                          height: Dimensions.listViewImgSize,
                                           decoration: BoxDecoration(
-                                            borderRadius: BorderRadius.only(
-                                                topRight: Radius.circular(Dimensions.radius20),
-                                                bottomRight: Radius.circular(Dimensions.radius20)
-                                            ),
-
+                                              borderRadius: BorderRadius.circular(Dimensions.radius20),
+                                              image: DecorationImage(
+                                                fit: BoxFit.cover,
+                                                image: NetworkImage(_vendorController.vendorMenu[index].foodImg!),
+                                              )
                                           ),
-                                          child:
-                                          Padding(padding: EdgeInsets.only(left: Dimensions.width10, right: Dimensions.width10),
-                                            child: Column(
-                                              crossAxisAlignment: CrossAxisAlignment.start,
-                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                              children: [
-                                                Column(
-                                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                                  children: [
-                                                    BigText(text: _vendorController.vendorMenu[index].foodName!, size: Dimensions.font20,),
-                                                    SizedBox(height: Dimensions.height10/2,),
-                                                    SmallText(text: _vendorController.vendorMenu[index].vendorName!, size: Dimensions.font16*0.8, isOneLine: true,)
-                                                  ],
-                                                ),
-                                                Column(
-                                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                                  children: [
-                                                    BigText(text: "₱"+_vendorController.vendorMenu[index].foodPrice!, size: Dimensions.font16*.9),
-                                                    SizedBox(height: Dimensions.height10/2,),
-                                                    Row(
-                                                      children: [
-                                                        RectangleIconWidget(text: "NEW", iconColor: AppColors.isNew, isActivated: true),
-                                                        SizedBox(width: Dimensions.width10/2,),
-                                                        _vendorController.vendorMenu[index].isSpicy=="true"?RectangleIconWidget(text: "SPICY", iconColor: Colors.red[900]!, isActivated: _vendorController.vendorMenu[index].isSpicy=="true"?true:false):Text(""),
-                                                      ],
-                                                    ),
-                                                    SizedBox(height: Dimensions.height10/2,)
-                                                  ],
-                                                )
-                                              ],
+                                        ),
+                                        Expanded(
+                                          child: Container(
+                                            height: Dimensions.listViewTextContSize,
+                                            decoration: BoxDecoration(
+                                              borderRadius: BorderRadius.only(
+                                                  topRight: Radius.circular(Dimensions.radius20),
+                                                  bottomRight: Radius.circular(Dimensions.radius20)
+                                              ),
+
+                                            ),
+                                            child:
+                                            Padding(padding: EdgeInsets.only(left: Dimensions.width10, right: Dimensions.width10),
+                                              child: Column(
+                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                children: [
+                                                  Column(
+                                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                                    children: [
+                                                      BigText(text: _vendorController.vendorMenu[index].foodName!, size: Dimensions.font20,),
+                                                      SizedBox(height: Dimensions.height10/2,),
+                                                      SmallText(text: _vendorController.vendorMenu[index].vendorName!, size: Dimensions.font16*0.8, isOneLine: true,)
+                                                    ],
+                                                  ),
+                                                  Column(
+                                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                                    children: [
+                                                      BigText(text: "₱"+_vendorController.vendorMenu[index].foodPrice!, size: Dimensions.font16*.9),
+                                                      SizedBox(height: Dimensions.height10/2,),
+                                                      Row(
+                                                        children: [
+                                                          RectangleIconWidget(text: "NEW", iconColor: AppColors.isNew, isActivated: true),
+                                                          SizedBox(width: Dimensions.width10/2,),
+                                                          _vendorController.vendorMenu[index].isSpicy=="true"?RectangleIconWidget(text: "SPICY", iconColor: Colors.red[900]!, isActivated: _vendorController.vendorMenu[index].isSpicy=="true"?true:false):Text(""),
+                                                        ],
+                                                      ),
+                                                      SizedBox(height: Dimensions.height10/2,)
+                                                    ],
+                                                  )
+                                                ],
+                                              ),
                                             ),
                                           ),
                                         ),
-                                      ),
-                                    ],
+                                      ],
+                                    ),
                                   ),
                                 ),
-                              ),
-                            );
-                          })
-                  ),
-                ],
-              );
-            }
-          }),
-        ],
-      ),
-    );
+                              );
+                            })
+                    ),
+                  ],
+                );
+              }
+            }),
+          ],
+        ),
+        onRefresh: _loadResource);
   }
+
   Widget _buildPageItem(int index, VendorData vendor){                                     // Use stack para mapatong patong ang pics
     Matrix4 matrix = new Matrix4.identity();                            // Math for sliding animation, DO NOT TOUCH PLS
     if(index == _currPageValue.floor()){
@@ -232,7 +238,7 @@ class _FoodPageBodyState extends State<FoodPageBody> {
       matrix = Matrix4.diagonal3Values(1, currScale, 1)..setTranslationRaw(0, _height*(1-_scaleFactor)/2, 0);
     }
 
-    return Transform(
+    return RefreshIndicator(child: Transform(
       transform: matrix,
       child: Stack(
         children: [
@@ -249,8 +255,8 @@ class _FoodPageBodyState extends State<FoodPageBody> {
                       borderRadius: BorderRadius.circular(Dimensions.radius30),
                       color: index.isEven?Color(0xFF69c5df):Color(0xFF9294cc),
                       image: DecorationImage(
-                        fit: BoxFit.cover,
-                        image: CachedNetworkImageProvider(vendor.vendor_img!)
+                          fit: BoxFit.cover,
+                          image: CachedNetworkImageProvider(vendor.vendor_img!)
                       )
                   )
               ),
@@ -266,13 +272,13 @@ class _FoodPageBodyState extends State<FoodPageBody> {
                     color: Colors.white,
                     boxShadow: [                                                              // Drop Shadow
                       BoxShadow(
-                        color: Color(0xFFe8e8e8),
-                        blurRadius: 5.0,
-                        offset: Offset(0, 5)
+                          color: Color(0xFFe8e8e8),
+                          blurRadius: 5.0,
+                          offset: Offset(0, 5)
                       ),
                       BoxShadow(
-                        color: Colors.white,
-                        offset: Offset(-5, 0)
+                          color: Colors.white,
+                          offset: Offset(-5, 0)
                       ),
                       BoxShadow(
                           color: Colors.white,
@@ -280,17 +286,17 @@ class _FoodPageBodyState extends State<FoodPageBody> {
                       )
                     ]
                 ),
-              child: Opacity(
-                opacity: vendor.is_open=="true"?1:0.2,
-                child: Container(
-                  padding: EdgeInsets.only(top: Dimensions.height10, left: Dimensions.width15, right: Dimensions.width15, bottom: Dimensions.height10),
-                  child: AppColumn(vendorId: _vendorController.vendors[index].vendor_id!,),
-                ),
-              )
+                child: Opacity(
+                  opacity: vendor.is_open=="true"?1:0.2,
+                  child: Container(
+                    padding: EdgeInsets.only(top: Dimensions.height10, left: Dimensions.width15, right: Dimensions.width15, bottom: Dimensions.height10),
+                    child: AppColumn(vendorId: _vendorController.vendors[index].vendor_id!,),
+                  ),
+                )
             ),
           ),
         ],
       ),
-    );
+    ), onRefresh: _loadResource);
   }
 }

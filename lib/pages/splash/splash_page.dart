@@ -24,14 +24,15 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
   late Animation<double> animation;
   late AnimationController controller;
 
-  // Future<void> _loadResource() async {
-  //   await Get.find<VendorController>().getVendorList();
-  // }
+  Future<void> _loadResource() async {
+    await Get.find<VendorController>().getVendors();
+    await Get.find<VendorController>().getVendorMenu();
+  }
 
   @override
   void initState(){
     super.initState();
-    // _loadResource();
+    _loadResource();
   }
 
   @override
