@@ -88,6 +88,8 @@ class VendorData {
 
 class VendorMenu {
   String? foodId;
+  String? vendorId;
+  String? vendorName;
   String? foodName;
   String? foodPrice;
   String? foodImg;
@@ -97,6 +99,8 @@ class VendorMenu {
 
   VendorMenu({
     this.foodId,
+    this.vendorId,
+    this.vendorName,
     this.foodName,
     this.foodPrice,
     this.foodImg,
@@ -108,7 +112,9 @@ class VendorMenu {
     final data = document.data();
     return VendorMenu(
       foodId: document.id,
-      foodName: data!["food_name"],
+      vendorName: data!["vendor_name"],
+      vendorId: data["vendor_id"],
+      foodName: data["food_name"],
       foodPrice: data["food_price"],
       foodImg: data["food_img"],
       isAvailable: data["is_available"],
@@ -120,6 +126,8 @@ class VendorMenu {
   toJson() {
     return {
       'food_name': foodName,
+      'vendor_id': vendorId,
+      'vendor_name': vendorName,
       'food_price': foodPrice,
       'food_img': foodImg,
       'is_available': isAvailable,

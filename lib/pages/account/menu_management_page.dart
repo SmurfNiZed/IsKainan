@@ -43,26 +43,30 @@ class _MenuManagementPageState extends State<MenuManagementPage> {
   Widget build(BuildContext context) {
     final controller = Get.put(ProfileController());
 
-    Future<String> _addMenu(String vendorId, VendorMenu entry) async {
+    Future<String> _addMenu(VendorData user, VendorMenu entry) async {
       final userRepo = Get.put(UserRepository());
       final menuInitial = VendorMenu(
         foodName: entry.foodName,
         foodPrice: entry.foodPrice,
         foodImg: entry.foodImg,
+        vendorId: user.vendor_id,
+        vendorName: user.vendor_name,
         isAvailable: entry.isAvailable,
         isSpicy: entry.isSpicy,
         food_created: Timestamp.now(),
       );
 
-      String result = await userRepo.addVendorMenu(menuInitial, vendorId);
+      String result = await userRepo.addVendorMenu(menuInitial, user.vendor_id!);
 
       return result.toString();
     }
 
-    Future<void> _updateMenu(String vendorId, VendorMenu entry) async {
+    Future<void> _updateMenu(VendorData user, VendorMenu entry) async {
       final userRepo = Get.put(UserRepository());
 
       final newMenu = VendorMenu(
+        vendorId: user.vendor_id,
+        vendorName: user.vendor_name,
         foodName: entry.foodName,
         foodPrice: entry.foodPrice,
         foodImg: entry.foodImg,
@@ -71,7 +75,7 @@ class _MenuManagementPageState extends State<MenuManagementPage> {
         food_created: entry.food_created
       );
 
-      await userRepo.updateVendorMenu(vendorId, entry.foodId!, newMenu);
+      await userRepo.updateVendorMenu(user.vendor_id!, entry.foodId!, newMenu);
     }
 
     Future<void> _deleteMenu(String vendorId, String foodId, String vendorName) async {
@@ -128,7 +132,6 @@ class _MenuManagementPageState extends State<MenuManagementPage> {
                     onTap: (){
                       late TextEditingController foodNameController = TextEditingController();
                       late TextEditingController foodPriceController = TextEditingController();
-                      late String food_img;
                       late String is_available = "false";
                       late String is_spicy = "false";
                       XFile? _imageFile;
@@ -145,13 +148,15 @@ class _MenuManagementPageState extends State<MenuManagementPage> {
                             final entry = VendorMenu(
                               foodName: foodNameController.text.trim(),
                               foodPrice: foodPriceController.text.trim(),
+                              vendorName: widget.user.vendor_name,
+                              vendorId: widget.user.vendor_id,
                               foodImg: "",
                               isAvailable: is_available,
                               isSpicy: is_spicy,
                               food_created: Timestamp.now(),
                             );
                             String imageUrl;
-                            String uniqueFileName = await _addMenu(widget.user.vendor_id!, entry);
+                            String uniqueFileName = await _addMenu(widget.user, entry);
 
                             if (_imageFile != null){
                               Reference referenceRoot = FirebaseStorage.instance.ref();
@@ -167,6 +172,8 @@ class _MenuManagementPageState extends State<MenuManagementPage> {
                             final entry2 = VendorMenu(
                               foodName: foodNameController.text.trim(),
                               foodPrice: foodPriceController.text.trim(),
+                              vendorName: widget.user.vendor_name,
+                              vendorId: widget.user.vendor_id,
                               foodImg: imageUrl,
                               isAvailable: is_available,
                               isSpicy: is_spicy,
@@ -453,7 +460,7 @@ class _MenuManagementPageState extends State<MenuManagementPage> {
                                                   isSpicy: is_spicy,
                                                   food_created: food_created,
                                                 );
-                                                _updateMenu(vendorId, updatedEntry);
+                                                _updateMenu(widget.user, updatedEntry);
                                               },
                                               btnOkColor: AppColors.iconColor1,
                                               btnOkText: 'Save',

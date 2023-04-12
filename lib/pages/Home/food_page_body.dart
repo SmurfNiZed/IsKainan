@@ -75,7 +75,7 @@ class _FoodPageBodyState extends State<FoodPageBody> {
                             controller: pageController,
                             itemCount: _vendorController.vendors.length,                                                 // Ilang ididisplay sa relevant food
                             itemBuilder: (context, position){
-                              print(position);
+                              // print(position);
                               return _buildPageItem(position,  _vendorController.vendors[position]);
                             })
                     ),
@@ -173,36 +173,7 @@ class _FoodPageBodyState extends State<FoodPageBody> {
                                                   children: [
                                                     BigText(text: _vendorController.vendorMenu[index].foodName!, size: Dimensions.font20,),
                                                     SizedBox(height: Dimensions.height10/2,),
-                                                    FutureBuilder<QuerySnapshot<Map<String, dynamic>>>(
-                                                      future: FirebaseFirestore.instance.collectionGroup('foodList').get(),
-                                                      builder: (context, snapshot) {
-                                                        if (snapshot.connectionState == ConnectionState.waiting) {
-                                                          return JumpingDotsProgressIndicator(
-                                                            fontSize: Dimensions.font16,
-                                                            color: AppColors.mainColor,
-                                                          );
-                                                        } else if (snapshot.hasError) {
-                                                          return Text('Error: ${snapshot.error}');
-                                                        } else {
-                                                          var vendorId = snapshot.data!.docs[index].reference.parent.parent!.id;
-                                                          return FutureBuilder<VendorData>(
-                                                            future: _vendorController.getVendorData(vendorId),
-                                                            builder: (context, snapshot2) {
-                                                              if (snapshot2.connectionState == ConnectionState.waiting) {
-                                                                return JumpingDotsProgressIndicator(
-                                                                  fontSize: Dimensions.font16/2,
-                                                                  color: AppColors.iconColor1,
-                                                                );
-                                                              } else if (snapshot2.hasError) {
-                                                                return Text('Error: ${snapshot2.error}');
-                                                              } else {
-                                                                return SmallText(text: snapshot2.data!.vendor_name!, size: Dimensions.font16*0.8, isOneLine: true,);
-                                                              }
-                                                            },
-                                                          );
-                                                        }
-                                                      },
-                                                    ),
+                                                    SmallText(text: _vendorController.vendorMenu[index].vendorName!, size: Dimensions.font16*0.8, isOneLine: true,)
                                                   ],
                                                 ),
                                                 Column(
