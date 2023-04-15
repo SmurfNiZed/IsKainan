@@ -178,7 +178,7 @@ class _FoodPageBodyState extends State<FoodPageBody> {
                                                     children: [
                                                       BigText(text: _vendorController.vendorMenu[index].foodName!, size: Dimensions.font20,),
                                                       SizedBox(height: Dimensions.height10/2,),
-                                                      SmallText(text: _vendorController.vendorMenu[index].vendorName!, size: Dimensions.font16*0.8, isOneLine: true,)
+                                                      SmallText(text: _vendorController.vendorMenu[index].vendorName! + ", " + _vendorController.vendorMenu[index].vendorLoc!, size: Dimensions.font16*0.8, isOneLine: true,)
                                                     ],
                                                   ),
                                                   Column(

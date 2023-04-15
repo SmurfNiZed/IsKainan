@@ -90,6 +90,7 @@ class VendorMenu {
   String? foodId;
   String? vendorId;
   String? vendorName;
+  String? vendorLoc;
   String? foodName;
   String? foodPrice;
   String? foodImg;
@@ -101,6 +102,7 @@ class VendorMenu {
     this.foodId,
     this.vendorId,
     this.vendorName,
+    this.vendorLoc,
     this.foodName,
     this.foodPrice,
     this.foodImg,
@@ -114,6 +116,7 @@ class VendorMenu {
       foodId: document.id,
       vendorName: data!["vendor_name"],
       vendorId: data["vendor_id"],
+      vendorLoc: data["vendor_loc"],
       foodName: data["food_name"],
       foodPrice: data["food_price"],
       foodImg: data["food_img"],
@@ -128,6 +131,7 @@ class VendorMenu {
       'food_name': foodName,
       'vendor_id': vendorId,
       'vendor_name': vendorName,
+      'vendor_loc': vendorLoc,
       'food_price': foodPrice,
       'food_img': foodImg,
       'is_available': isAvailable,
