@@ -11,13 +11,16 @@ class VendorController extends GetxController{
     super.onInit();
     getVendors();
     getVendorMenu();
+    getCheapVendorMenu();
   }
 
   final CollectionReference vendorsCollection = FirebaseFirestore.instance.collection('vendors');
   final Query<Map<String, dynamic>> vendorMenuCollection = FirebaseFirestore.instance.collectionGroup('foodList');
 
+
   List<VendorData> vendors = [];
   List<VendorMenu> vendorMenu = [];
+  List<VendorMenu> cheapVendorMenu = [];
 
   Future<void> getVendors() async {
     QuerySnapshot querySnapshot = await vendorsCollection.get();
@@ -27,6 +30,14 @@ class VendorController extends GetxController{
   Future<VendorData> getVendorData(String vendorId) async {
     DocumentSnapshot vendor = await vendorsCollection.doc(vendorId).get();
     return await VendorData.fromSnapshot(vendor as DocumentSnapshot<Map<String, dynamic>>);
+  }
+
+  Future<void> getCheapVendorMenu() async {
+    await vendorMenuCollection.get().then((snapshot) {
+      cheapVendorMenu = snapshot.docs.map((DocumentSnapshot document) {
+        return VendorMenu.fromSnapshot(document as DocumentSnapshot<Map<String, dynamic>>);
+      }).toList();
+    });
   }
 
   Future<void> getVendorMenu() async {

@@ -149,7 +149,7 @@ class _MenuManagementPageState extends State<MenuManagementPage> {
                           btnOkOnPress: () async {
                             final entry = VendorMenu(
                               foodName: foodNameController.text.trim(),
-                              foodPrice: foodPriceController.text.trim(),
+                              foodPrice: double.parse(foodPriceController.text.trim()),
                               vendorName: widget.user.vendor_name,
                               vendorId: widget.user.vendor_id,
                               vendorLoc: widget.user.vendor_location,
@@ -174,7 +174,7 @@ class _MenuManagementPageState extends State<MenuManagementPage> {
 
                             final entry2 = VendorMenu(
                               foodName: foodNameController.text.trim(),
-                              foodPrice: foodPriceController.text.trim(),
+                              foodPrice: double.parse(foodPriceController.text.trim()),
                               vendorName: widget.user.vendor_name,
                               vendorId: widget.user.vendor_id,
                               vendorLoc: widget.user.vendor_location,
@@ -458,12 +458,13 @@ class _MenuManagementPageState extends State<MenuManagementPage> {
                                                 final updatedEntry = VendorMenu(
                                                   foodId: foodId,
                                                   foodName: foodNameController.text.trim(),
-                                                  foodPrice: foodPriceController.text.trim(),
+                                                  foodPrice: double.parse(foodPriceController.text.trim()),
                                                   foodImg: imageUrl,
                                                   isAvailable: is_available,
                                                   isSpicy: is_spicy,
                                                   food_created: food_created,
                                                 );
+
                                                 _updateMenu(widget.user, updatedEntry);
                                               },
                                               btnOkColor: AppColors.iconColor1,
@@ -748,7 +749,7 @@ class _MenuManagementPageState extends State<MenuManagementPage> {
                                                             Column(
                                                               crossAxisAlignment: CrossAxisAlignment.start,
                                                               children: [
-                                                                BigText(text: foodPrice==" "?"":"₱"+ foodPrice, size: Dimensions.font16*.9),
+                                                                BigText(text: foodPrice==" "?"":"₱"+ foodPrice.toStringAsFixed(2), size: Dimensions.font16*.9),
                                                                 SizedBox(height: Dimensions.height10/2,),
                                                                 Row(
                                                                   children: [

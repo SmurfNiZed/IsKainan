@@ -27,6 +27,7 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
   Future<void> _loadResource() async {
     await Get.find<VendorController>().getVendors();
     await Get.find<VendorController>().getVendorMenu();
+    await Get.find<VendorController>().getCheapVendorMenu();
   }
 
   @override

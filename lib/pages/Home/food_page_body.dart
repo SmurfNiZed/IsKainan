@@ -31,6 +31,7 @@ class _FoodPageBodyState extends State<FoodPageBody> {
   Future<void> _loadResource() async {
     Get.find<VendorController>().getVendors();
     Get.find<VendorController>().getVendorMenu();
+    Get.find<VendorController>().getCheapVendorMenu();
   }
 
   PageController pageController = PageController(viewportFraction: 0.85);
@@ -49,6 +50,7 @@ class _FoodPageBodyState extends State<FoodPageBody> {
   @override
   void initState(){
     super.initState();
+    _loadResource;
     pageController.addListener(() {
       setState(() {
         _currPageValue = pageController.page!;
@@ -122,8 +124,17 @@ class _FoodPageBodyState extends State<FoodPageBody> {
             ),
             // Recommended Food scroll
             GetBuilder<VendorController>(builder: (_){
-              if (_vendorController.vendorMenu.isEmpty) {
-                return Center(child: CircularProgressIndicator());
+              if (_vendorController.cheapVendorMenu.isEmpty) {
+                return Center(
+                    child: Container(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            CircularProgressIndicator(
+                              color: AppColors.mainColor,
+                            ),
+                          ],
+                        )));
               } else {
                 return Column(
                   children: [
@@ -131,7 +142,7 @@ class _FoodPageBodyState extends State<FoodPageBody> {
                         child: ListView.builder(
                             physics: NeverScrollableScrollPhysics(),
                             shrinkWrap: true,
-                            itemCount: _vendorController.vendorMenu.length,
+                            itemCount: 3,
                             itemBuilder: (context, index) {
                               return GestureDetector(
                                 onTap: () async {
@@ -139,7 +150,7 @@ class _FoodPageBodyState extends State<FoodPageBody> {
                                   Get.toNamed(RouteHelper.getFoodDetail(querySnapshot.docs[index].reference.parent.parent!.id, _vendorController.vendorMenu[index].foodId!));
                                 },
                                 child: Opacity(
-                                  opacity: (_vendorController.vendorMenu[index].isAvailable=="true")?1:0.4,
+                                  opacity: (_vendorController.cheapVendorMenu[index].isAvailable=="true")?1:0.4,
                                   child: Container(
                                     margin: EdgeInsets.only(left: Dimensions.width20, right: Dimensions.width20, bottom: Dimensions.height20),
                                     child: Row(
@@ -152,7 +163,7 @@ class _FoodPageBodyState extends State<FoodPageBody> {
                                               borderRadius: BorderRadius.circular(Dimensions.radius20),
                                               image: DecorationImage(
                                                 fit: BoxFit.cover,
-                                                image: NetworkImage(_vendorController.vendorMenu[index].foodImg!),
+                                                image: NetworkImage(_vendorController.cheapVendorMenu[index].foodImg!),
                                               )
                                           ),
                                         ),
@@ -175,21 +186,21 @@ class _FoodPageBodyState extends State<FoodPageBody> {
                                                   Column(
                                                     crossAxisAlignment: CrossAxisAlignment.start,
                                                     children: [
-                                                      BigText(text: _vendorController.vendorMenu[index].foodName!, size: Dimensions.font20,),
+                                                      BigText(text: _vendorController.cheapVendorMenu[index].foodName!, size: Dimensions.font20,),
                                                       SizedBox(height: Dimensions.height10/2,),
-                                                      SmallText(text: _vendorController.vendorMenu[index].vendorName! + ", " + _vendorController.vendorMenu[index].vendorLoc!, size: Dimensions.font16*0.8, isOneLine: true,)
+                                                      SmallText(text: _vendorController.cheapVendorMenu[index].vendorName! + ", " + _vendorController.cheapVendorMenu[index].vendorLoc!, size: Dimensions.font16*0.8, isOneLine: true,)
                                                     ],
                                                   ),
                                                   Column(
                                                     crossAxisAlignment: CrossAxisAlignment.start,
                                                     children: [
-                                                      BigText(text: "₱"+_vendorController.vendorMenu[index].foodPrice!, size: Dimensions.font16*.9),
+                                                      BigText(text: "₱"+_vendorController.cheapVendorMenu[index].foodPrice.toStringAsFixed(2), size: Dimensions.font16*.9),
                                                       SizedBox(height: Dimensions.height10/2,),
                                                       Row(
                                                         children: [
                                                           RectangleIconWidget(text: "NEW", iconColor: AppColors.isNew, isActivated: true),
                                                           SizedBox(width: Dimensions.width10/2,),
-                                                          _vendorController.vendorMenu[index].isSpicy=="true"?RectangleIconWidget(text: "SPICY", iconColor: Colors.red[900]!, isActivated: _vendorController.vendorMenu[index].isSpicy=="true"?true:false):Text(""),
+                                                          _vendorController.cheapVendorMenu[index].isSpicy=="true"?RectangleIconWidget(text: "SPICY", iconColor: Colors.red[900]!, isActivated: _vendorController.vendorMenu[index].isSpicy=="true"?true:false):Text(""),
                                                         ],
                                                       ),
                                                       SizedBox(height: Dimensions.height10/2,)

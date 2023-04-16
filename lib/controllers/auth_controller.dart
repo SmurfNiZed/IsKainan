@@ -30,6 +30,7 @@ class AuthController extends GetxController{
     // notify changes
     firebaseUser.bindStream(auth.userChanges());
     ever(firebaseUser, _initialScreen);
+
   }
 
   _initialScreen(User? user){

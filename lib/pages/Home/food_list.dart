@@ -86,7 +86,7 @@ class FoodList extends StatelessWidget {
                                       Column(
                                         crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
-                                          BigText(text: "₱"+_vendorController.vendorMenu[index].foodPrice!, size: Dimensions.font16*.9),
+                                          BigText(text: "₱"+_vendorController.vendorMenu[index].foodPrice!.toStringAsFixed(2), size: Dimensions.font16*.9),
                                           SizedBox(height: Dimensions.height10/2,),
                                           Row(
                                             children: [

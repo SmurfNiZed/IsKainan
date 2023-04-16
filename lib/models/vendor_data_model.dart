@@ -92,7 +92,7 @@ class VendorMenu {
   String? vendorName;
   String? vendorLoc;
   String? foodName;
-  String? foodPrice;
+  double foodPrice;
   String? foodImg;
   String? isAvailable;
   String? isSpicy;
@@ -104,7 +104,7 @@ class VendorMenu {
     this.vendorName,
     this.vendorLoc,
     this.foodName,
-    this.foodPrice,
+    required this.foodPrice,
     this.foodImg,
     this.isAvailable,
     this.isSpicy,
@@ -118,7 +118,7 @@ class VendorMenu {
       vendorId: data["vendor_id"],
       vendorLoc: data["vendor_loc"],
       foodName: data["food_name"],
-      foodPrice: data["food_price"],
+      foodPrice: (data["food_price"] as num).toDouble(),
       foodImg: data["food_img"],
       isAvailable: data["is_available"],
       isSpicy: data["is_spicy"],

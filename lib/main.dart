@@ -8,6 +8,7 @@ import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:iskainan/controllers/auth_controller.dart';
 import 'package:iskainan/controllers/vendor_controller.dart';
 import 'package:iskainan/firebase_options.dart';
+import 'package:iskainan/pages/splash/splash_page.dart';
 
 import 'package:iskainan/routes/route_helper.dart';
 import 'package:iskainan/utils/colors.dart';
@@ -42,11 +43,11 @@ class Home extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'IsKainan: Campus Food App',
 
-      // home: SplashScreen(),
+      home: SplashScreen(),
       // initialRoute: FirebaseAuth.instance.currentUser == null
       //               ? RouteHelper.getInitial()
       //               : RouteHelper.getAccountPage(),
-      initialRoute: RouteHelper.getInitial(),
+      // initialRoute: RouteHelper.getInitial(),
       getPages: RouteHelper.routes,
     );
   }

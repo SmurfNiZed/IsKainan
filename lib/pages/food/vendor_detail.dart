@@ -100,15 +100,15 @@ class _VendorDetailState extends State<VendorDetail> {
         heroTag: "vendor_detail_page",
         onPressed: () async {
           bool locationEnabled = await Geolocator.isLocationServiceEnabled();
-          print(locationEnabled);
+
           if (!locationEnabled) {
-            print('Please enable location services');
+
           } else {
             LocationPermission permission = await Geolocator.checkPermission();
             if (permission == LocationPermission.denied) {
               permission = await Geolocator.requestPermission();
               if (permission == LocationPermission.denied) {
-                print('Location permission is denied');
+
               } else {
                 _showCircularProgressIndicator();
                 Position position = await Geolocator.getCurrentPosition();
@@ -262,7 +262,7 @@ class _VendorDetailState extends State<VendorDetail> {
                                             children: [
                                               SmallText(text: data[index].foodName!, size: Dimensions.font20,),
                                               SizedBox(height: Dimensions.height10),
-                                              BigText(text: "₱" + data[index].foodPrice!, size: Dimensions.font16,),
+                                              BigText(text: "₱" + data[index].foodPrice!.toString(), size: Dimensions.font16,),
                                               SizedBox(height: Dimensions.height10),
                                               Row(
                                                 mainAxisAlignment: MainAxisAlignment.start,

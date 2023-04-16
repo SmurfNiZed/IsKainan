@@ -47,7 +47,7 @@ class VendorList extends StatelessWidget {
                           .orderBy("food_created", descending: true)
                           .get();
                       List<double> prices = foodSnapshot.docs.map((doc) {
-                        return double.parse(doc['food_price']);
+                        return (doc['food_price'] as num).toDouble();
                       }).toList();
                       return prices;
                     }
