@@ -33,52 +33,52 @@ class VendorList extends StatelessWidget {
       child: Column(
         children: [
           GetBuilder<VendorController>(builder: (vendor){
-            return ListView.builder(
-                physics: NeverScrollableScrollPhysics(),
-                shrinkWrap: true,
-                itemCount: vendor.vendors.length,
-                itemBuilder: (context, index) {
-                  Future<List<double>> getFoodPrices() async {
-                    QuerySnapshot foodSnapshot = await FirebaseFirestore.instance
-                        .collection('vendors')
-                        .doc(vendor.vendors[index].vendor_id)
-                        .collection('foodList')
-                        .orderBy("food_created", descending: true)
-                        .get();
-                    List<double> prices = foodSnapshot.docs.map((doc) {
-                      return double.parse(doc['food_price']);
-                    }).toList();
-                    return prices;
-                  }
+            return Expanded(
+              child: ListView.builder(
+                  physics: AlwaysScrollableScrollPhysics(),
+                  shrinkWrap: true,
+                  itemCount: vendor.vendors.length,
+                  itemBuilder: (context, index) {
+                    Future<List<double>> getFoodPrices() async {
+                      QuerySnapshot foodSnapshot = await FirebaseFirestore.instance
+                          .collection('vendors')
+                          .doc(vendor.vendors[index].vendor_id)
+                          .collection('foodList')
+                          .orderBy("food_created", descending: true)
+                          .get();
+                      List<double> prices = foodSnapshot.docs.map((doc) {
+                        return double.parse(doc['food_price']);
+                      }).toList();
+                      return prices;
+                    }
 
-                  late String startTime = '${(vendor.vendors[index].operating_hours![0]~/60)%12}:${((vendor.vendors[index].operating_hours![0]%60)).toString().padLeft(2, '0')} ${(vendor.vendors[index].operating_hours![0]~/60) < 12 ? 'AM' : 'PM'}';
-                  late String endTime = '${(vendor.vendors[index].operating_hours![1]~/60)%12}:${((vendor.vendors[index].operating_hours![1]%60)).toString().padLeft(2, '0')} ${(vendor.vendors[index].operating_hours![1]~/60) < 12 ? 'AM' : 'PM'}';
+                    late String startTime = '${(vendor.vendors[index].operating_hours![0]~/60)%12}:${((vendor.vendors[index].operating_hours![0]%60)).toString().padLeft(2, '0')} ${(vendor.vendors[index].operating_hours![0]~/60) < 12 ? 'AM' : 'PM'}';
+                    late String endTime = '${(vendor.vendors[index].operating_hours![1]~/60)%12}:${((vendor.vendors[index].operating_hours![1]%60)).toString().padLeft(2, '0')} ${(vendor.vendors[index].operating_hours![1]~/60) < 12 ? 'AM' : 'PM'}';
 
-                  return GestureDetector(
-                    onTap: (){
-                      Get.toNamed(RouteHelper.getVendorDetail(vendor.vendors[index].vendor_id!));
-                    },
-                    child: Opacity(
-                      opacity: vendor.vendors[index].is_open=="true"?1:0.2,
-                      child: Container(
-                        margin: EdgeInsets.only(left: Dimensions.width20, right: Dimensions.width20, bottom: Dimensions.height20),
-                        child: Row(
-                          children: [
-                            // image section
-                            Container(
-                              width: Dimensions.listViewImgSize,
-                              height: Dimensions.listViewImgSize,
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(Dimensions.radius20),
-                                  color: Colors.white38,
-                                  image: DecorationImage(
-                                    fit: BoxFit.cover,
-                                    image: CachedNetworkImageProvider(vendor.vendors[index].vendor_img!),
-                                  )
+                    return GestureDetector(
+                      onTap: (){
+                        Get.toNamed(RouteHelper.getVendorDetail(vendor.vendors[index].vendor_id!));
+                      },
+                      child: Opacity(
+                        opacity: vendor.vendors[index].is_open=="true"?1:0.2,
+                        child: Container(
+                          margin: EdgeInsets.only(left: Dimensions.width20, right: Dimensions.width20, bottom: Dimensions.height20),
+                          child: Row(
+                            children: [
+                              // image section
+                              Container(
+                                width: Dimensions.listViewImgSize,
+                                height: Dimensions.listViewImgSize,
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(Dimensions.radius20),
+                                    color: Colors.white38,
+                                    image: DecorationImage(
+                                      fit: BoxFit.cover,
+                                      image: CachedNetworkImageProvider(vendor.vendors[index].vendor_img!),
+                                    )
+                                ),
                               ),
-                            ),
-                            Expanded(
-                              child: Container(
+                              Container(
                                 height: Dimensions.listViewImgSize,
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.only(
@@ -142,14 +142,14 @@ class VendorList extends StatelessWidget {
                                   ),
                                 ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
-                    ),
-                  );
-                }
-              );
+                    );
+                  }
+                ),
+            );
           })
         ],
       ),

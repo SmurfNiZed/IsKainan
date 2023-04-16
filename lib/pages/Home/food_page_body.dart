@@ -141,7 +141,7 @@ class _FoodPageBodyState extends State<FoodPageBody> {
                                 child: Opacity(
                                   opacity: (_vendorController.vendorMenu[index].isAvailable=="true")?1:0.4,
                                   child: Container(
-                                    margin: EdgeInsets.only(left: Dimensions.width20, right: Dimensions.width20, bottom: Dimensions.height10),
+                                    margin: EdgeInsets.only(left: Dimensions.width20, right: Dimensions.width20, bottom: Dimensions.height20),
                                     child: Row(
                                       children: [
                                         // image section

@@ -46,6 +46,7 @@ class Home extends StatelessWidget {
       // initialRoute: FirebaseAuth.instance.currentUser == null
       //               ? RouteHelper.getInitial()
       //               : RouteHelper.getAccountPage(),
+      initialRoute: RouteHelper.getInitial(),
       getPages: RouteHelper.routes,
     );
   }
