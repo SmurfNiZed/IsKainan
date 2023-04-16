@@ -54,7 +54,7 @@ class _RecommendedFoodDetailState extends State<RecommendedFoodDetail> {
       autoDismiss: true,
       dismissOnBackKeyPress: false,
       dismissOnTouchOutside: false,
-      autoHide: Duration(seconds: 2),
+      autoHide: Duration(seconds: 1),
     ).show();
   }
 

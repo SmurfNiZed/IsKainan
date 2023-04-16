@@ -68,7 +68,7 @@ class _VendorDetailState extends State<VendorDetail> {
       autoDismiss: true,
       dismissOnBackKeyPress: false,
       dismissOnTouchOutside: false,
-      autoHide: Duration(seconds: 2),
+      autoHide: Duration(seconds: 1),
     ).show();
   }
 
