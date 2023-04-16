@@ -47,7 +47,7 @@ class RouteHelper{
   static String getVendorList()=>'$vendorList';
   static String getFoodList()=>'$foodList';
   static String getAccountPage()=>'$accountPage';
-  static String getFindVendor(String startLat, String startLng, String lat, String lng)=>'$findVendor?startLat=$startLat&startLng=$startLng&lat=$lat&lng=$lng';
+  static String getFindVendor(String startLat, String startLng, String lat, String lng, String vendorName, String vendorAddress)=>'$findVendor?startLat=$startLat&startLng=$startLng&lat=$lat&lng=$lng&vendorName=$vendorName&vendorAddress=$vendorAddress';
   // static String getGeneralInformationPage(UserModel user)=>'$generalInformationPage?user=$user';
 
   static List<GetPage> routes=[
@@ -72,7 +72,9 @@ class RouteHelper{
       var startLng = Get.parameters['startLng'] as String;
       var lat = Get.parameters['lat'] as String;
       var lng = Get.parameters['lng'] as String;
-      return FindVendor(startSpot: GeoPoint(double.parse(startLat!), double.parse(startLng!)), endSpot: GeoPoint(double.parse(lat), double.parse(lng)));
+      var vendorName = Get.parameters['vendorName'] as String;
+      var vendorAddress = Get.parameters['vendorAddress'] as String;
+      return FindVendor(startSpot: GeoPoint(double.parse(startLat!), double.parse(startLng!)), endSpot: GeoPoint(double.parse(lat), double.parse(lng)), vendorName: vendorName, vendorAddress: vendorAddress,);
       },
     ),
 

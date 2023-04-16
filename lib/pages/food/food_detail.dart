@@ -58,16 +58,21 @@ class _RecommendedFoodDetailState extends State<RecommendedFoodDetail> {
     ).show();
   }
 
-  void _navigateToFindVendor(Position position) {
-    final DocumentReference documentReference = FirebaseFirestore.instance.collection('vendors').doc(widget.vendorId);
+  Future<void> _navigateToFindVendor(Position position) async {
+    final DocumentReference<Map<String, dynamic>> documentReference = FirebaseFirestore.instance.collection('vendors').doc(widget.vendorId);
+
     documentReference.get().then((DocumentSnapshot documentSnapshot) {
       var latitude = documentSnapshot.get('latitude');
       var longitude = documentSnapshot.get('longitude');
+      var vendorName = documentSnapshot.get('vendor_name');
+      var vendorAddress = documentSnapshot.get('vendor_location');
       Get.toNamed(RouteHelper.getFindVendor(
           position.latitude.toString(),
           position.longitude.toString(),
           latitude.toString(),
-          longitude.toString()
+          longitude.toString(),
+          vendorName,
+          vendorAddress
       ));
     });
   }

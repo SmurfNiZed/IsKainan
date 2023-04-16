@@ -80,7 +80,6 @@ class _FoodPageBodyState extends State<FoodPageBody> {
                             controller: pageController,
                             itemCount: _vendorController.vendors.length,                                                 // Ilang ididisplay sa relevant food
                             itemBuilder: (context, position){
-                              print(position);
                               return _buildPageItem(position,  _vendorController.vendors[position]);
                             })
                     ),
