@@ -33,7 +33,7 @@ class VendorList extends StatelessWidget {
       child: Column(
         children: [
           GetBuilder<VendorController>(builder: (vendor){
-            return Expanded(
+            return Container(
               child: ListView.builder(
                   physics: AlwaysScrollableScrollPhysics(),
                   shrinkWrap: true,
@@ -78,67 +78,63 @@ class VendorList extends StatelessWidget {
                                     )
                                 ),
                               ),
-                              Container(
-                                height: Dimensions.listViewImgSize,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.only(
-                                      topRight: Radius.circular(Dimensions.radius20),
-                                      bottomRight: Radius.circular(Dimensions.radius20)
+                              Expanded(
+                                child: Container(
+                                  height: Dimensions.listViewImgSize,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.only(
+                                        topRight: Radius.circular(Dimensions.radius20),
+                                        bottomRight: Radius.circular(Dimensions.radius20)
+                                    ),
+                                    color: Colors.white,
                                   ),
-                                  color: Colors.white,
-                                ),
-                                child:
-                                Padding(padding: EdgeInsets.only(left: Dimensions.width10, right: Dimensions.width10, bottom: Dimensions.height10),
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          BigText(text: vendor.vendors[index].vendor_name!, size: Dimensions.font20,),
-                                          SizedBox(height: Dimensions.height10/2,),
-                                          Row(
-                                            children: [
-                                              SmallText(text: startTime + " - " + endTime, size: Dimensions.font16*0.8, isOneLine: true,),
-                                              SizedBox(width: Dimensions.width10,),
-                                              SmallText(text: vendor.vendors[index].vendor_location!, size: Dimensions.font16*0.8, isOneLine: true,),
-                                            ],
-                                          ),
-                                        ],
-                                      ),
-                                      Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          FutureBuilder<List<double>>(
-                                            future: getFoodPrices(),
-                                            builder: (BuildContext context, AsyncSnapshot<List<double>> snapshot) {
-                                              if (snapshot.hasData) {
-                                                List<double> prices = snapshot.data!;
-                                                return BigText(text: prices.length > 1?"₱"+((prices).reduce((a, b) => a < b ? a : b).toStringAsFixed(2) + " - ₱" + (prices).reduce((a, b) => a > b ? a : b).toStringAsFixed(2)):"₱"+(prices).reduce((a, b) => a < b ? a : b).toStringAsFixed(2), size: Dimensions.font16*.9);
-                                              } else if (snapshot.hasError) {
-                                                return Center(
-                                                  child: Text('Error fetching prices: ${snapshot.error}'),
-                                                );
-                                              } else {
-                                                return Center(
-                                                  child: JumpingDotsProgressIndicator(),
-                                                );
-                                              }
-                                            },
-                                          ),
-                                          SizedBox(height: Dimensions.height10/2,),
-                                          Row(
-                                            children: [
-                                              RectangleIconWidget(text: "NEW", iconColor: AppColors.isNew, isActivated: true),
-                                              SizedBox(width: Dimensions.width10/2,),
-                                              RectangleIconWidget(text: "GCASH", iconColor: Colors.blueAccent, isActivated: vendor.vendors[index].is_gcash=="true"?true:false)
-                                            ],
-                                          ),
-                                          SizedBox(height: Dimensions.height10/2,)
-                                        ],
-                                      )
-                                    ],
+                                  child:
+                                  Padding(padding: EdgeInsets.only(left: Dimensions.width10, right: Dimensions.width10, bottom: Dimensions.height10),
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            BigText(text: vendor.vendors[index].vendor_name!, size: Dimensions.font20,),
+                                            SizedBox(height: Dimensions.height10/2,),
+                                            SmallText(text: startTime + " - " + endTime+ "   " + vendor.vendors[index].vendor_location!, size: Dimensions.font16*0.8, isOneLine: true,),
+                                          ],
+                                        ),
+                                        Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            FutureBuilder<List<double>>(
+                                              future: getFoodPrices(),
+                                              builder: (BuildContext context, AsyncSnapshot<List<double>> snapshot) {
+                                                if (snapshot.hasData) {
+                                                  List<double> prices = snapshot.data!;
+                                                  return BigText(text: prices.length > 1?"₱"+((prices).reduce((a, b) => a < b ? a : b).toStringAsFixed(2) + " - ₱" + (prices).reduce((a, b) => a > b ? a : b).toStringAsFixed(2)):"₱"+(prices).reduce((a, b) => a < b ? a : b).toStringAsFixed(2), size: Dimensions.font16*.9);
+                                                } else if (snapshot.hasError) {
+                                                  return Center(
+                                                    child: Text('Error fetching prices: ${snapshot.error}'),
+                                                  );
+                                                } else {
+                                                  return Center(
+                                                    child: JumpingDotsProgressIndicator(),
+                                                  );
+                                                }
+                                              },
+                                            ),
+                                            SizedBox(height: Dimensions.height10/2,),
+                                            Row(
+                                              children: [
+                                                RectangleIconWidget(text: "NEW", iconColor: AppColors.isNew, isActivated: true),
+                                                SizedBox(width: Dimensions.width10/2,),
+                                                RectangleIconWidget(text: "GCASH", iconColor: Colors.blueAccent, isActivated: vendor.vendors[index].is_gcash=="true"?true:false)
+                                              ],
+                                            ),
+                                            SizedBox(height: Dimensions.height10/2,)
+                                          ],
+                                        )
+                                      ],
+                                    ),
                                   ),
                                 ),
                               ),
@@ -156,3 +152,4 @@ class VendorList extends StatelessWidget {
     );
   }
 }
+

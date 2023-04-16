@@ -47,6 +47,18 @@ class _ManageLocationPage extends State<ManageLocationPage> {
         await FirebaseFirestore.instance.collection('vendors').doc(id).update({'latitude': vendor_location.latitude,
                                                                               'longitude': vendor_location.longitude,
                                                                               'vendor_location': getLocation});
+
+        final snapshot = await FirebaseFirestore.instance.collection('vendors').doc(id).collection('foodList').get();
+
+        final batch = FirebaseFirestore.instance.batch();
+
+        snapshot.docs.forEach((doc) {
+          final docRef = doc.reference;
+          batch.update(docRef, {'vendor_loc': getLocation});
+        });
+
+        await batch.commit();
+
         AwesomeDialog(
           context: context,
           title: "All Set!",
