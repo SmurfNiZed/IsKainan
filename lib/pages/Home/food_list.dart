@@ -14,6 +14,7 @@ import '../../controllers/vendor_controller.dart';
 import '../../routes/route_helper.dart';
 import '../../utils/colors.dart';
 import '../../utils/dimensions.dart';
+import '../../utils/is_new.dart';
 import '../../widgets/big_text.dart';
 import '../../widgets/icon_and_text_widget.dart';
 import '../../widgets/small_text.dart';
@@ -72,16 +73,14 @@ class _FoodListState extends State<FoodList> {
                                   ),
                                   Expanded(
                                     child: Container(
-                                      height: Dimensions.listViewTextContSize,
+                                      height: Dimensions.listViewImgSize,
                                       decoration: BoxDecoration(
                                         borderRadius: BorderRadius.only(
                                             topRight: Radius.circular(Dimensions.radius20),
-                                            bottomRight: Radius.circular(Dimensions.radius20)
+                                            bottomRight: Radius.circular(Dimensions.radius20),
                                         ),
-
                                       ),
-                                      child:
-                                      Padding(padding: EdgeInsets.only(left: Dimensions.width10, right: Dimensions.width10,),
+                                      child: Padding(padding: EdgeInsets.only(left: Dimensions.width10, right: Dimensions.width10, ),
                                         child: Column(
                                           crossAxisAlignment: CrossAxisAlignment.start,
                                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -97,12 +96,12 @@ class _FoodListState extends State<FoodList> {
                                             Column(
                                               crossAxisAlignment: CrossAxisAlignment.start,
                                               children: [
-                                                BigText(text: "₱"+vendor.vendorMenu[index].foodPrice!.toStringAsFixed(2), size: Dimensions.font16*.9),
+                                                BigText(text: "₱"+vendor.vendorMenu[index].foodPrice.toStringAsFixed(2), size: Dimensions.font16*.9),
                                                 SizedBox(height: Dimensions.height10/2,),
                                                 Row(
                                                   children: [
-                                                    RectangleIconWidget(text: "NEW", iconColor: AppColors.isNew, isActivated: true),
-                                                    SizedBox(width: Dimensions.width10/2,),
+                                                    RectangleIconWidget(text: "NEW", iconColor: AppColors.isNew, isActivated: isNew(vendor.vendorMenu[index].food_created!)?true:false),
+                                                    isNew(vendor.vendorMenu[index].food_created!)? SizedBox(width: Dimensions.width10/2,):SizedBox(),
                                                     vendor.vendorMenu[index].isSpicy=="true"?RectangleIconWidget(text: "SPICY", iconColor: Colors.red[900]!, isActivated: vendor.vendorMenu[index].isSpicy=="true"?true:false):Text(""),
                                                   ],
                                                 ),

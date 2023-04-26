@@ -18,6 +18,7 @@ import '../../data/hardcoded_data.dart';
 import '../../routes/route_helper.dart';
 import '../../utils/colors.dart';
 import '../../utils/dimensions.dart';
+import '../../utils/is_new.dart';
 import '../../widgets/big_text.dart';
 import '../../widgets/icon_and_text_widget.dart';
 import '../../widgets/small_text.dart';
@@ -125,8 +126,8 @@ class VendorList extends StatelessWidget {
                                             SizedBox(height: Dimensions.height10/2,),
                                             Row(
                                               children: [
-                                                RectangleIconWidget(text: "NEW", iconColor: AppColors.isNew, isActivated: true),
-                                                SizedBox(width: Dimensions.width10/2,),
+                                                RectangleIconWidget(text: "NEW", iconColor: AppColors.isNew, isActivated: isNew(vendor.vendors[index].account_created!)?true:false),
+                                                isNew(vendor.vendors[index].account_created!)? SizedBox(width: Dimensions.width10/2,) : SizedBox(),
                                                 RectangleIconWidget(text: "GCASH", iconColor: Colors.blueAccent, isActivated: vendor.vendors[index].is_gcash=="true"?true:false)
                                               ],
                                             ),

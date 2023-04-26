@@ -178,7 +178,17 @@ class _VendorDetailState extends State<VendorDetail> {
                       builder: (context, snapshot){
                         if (snapshot.connectionState == ConnectionState.done){
                           VendorData user = snapshot.data as VendorData;
-                          return CachedNetworkImage(
+                          return user.vendor_img==""?Container(
+                            color: AppColors.mainColor,
+                            width: double.maxFinite,
+                            height: double.maxFinite,
+                            child: Icon(
+                              Icons.storefront,
+                              color: Colors.white,
+                              size: Dimensions.width30,
+                            ),
+                          )
+                              :CachedNetworkImage(
                             imageUrl: user.vendor_img!,
                             imageBuilder: (context, imageProvider) => Container(
                               decoration: BoxDecoration(

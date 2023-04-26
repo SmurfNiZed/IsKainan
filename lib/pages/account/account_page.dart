@@ -79,12 +79,12 @@ class _AccountPageState extends State<AccountPage> {
                               if (snapshot.connectionState == ConnectionState.done) {
                                 if (vendorImgSnapshot.hasData) {
                                   var imgUrl = vendorImgSnapshot.data?.data() as Map<String, dynamic>;
-                                  return imgUrl['vendor_img'] == ""?AppIcon(
-                                      icon: Icons.storefront,
-                                      backgroundColor: AppColors.mainColor,
-                                      iconColor: Colors.white,
-                                      iconSize: Dimensions.height30 + Dimensions.height45,
-                                      size: Dimensions.height15 * 10)
+                                    return imgUrl['vendor_img'] == ""?AppIcon(
+                                        icon: Icons.storefront,
+                                        backgroundColor: AppColors.mainColor,
+                                        iconColor: Colors.white,
+                                        iconSize: Dimensions.height30 + Dimensions.height45,
+                                        size: Dimensions.height15 * 10)
                                       : GestureDetector(
                                     onTap: (){
                                       AwesomeDialog(
