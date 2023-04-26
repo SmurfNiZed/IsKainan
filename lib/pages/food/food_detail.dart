@@ -101,12 +101,12 @@ class _RecommendedFoodDetailState extends State<RecommendedFoodDetail> {
                         if (permission == LocationPermission.denied) {
                           print('Location permission is denied');
                         } else {
-                          _showCircularProgressIndicator();
+                          // _showCircularProgressIndicator();
                           Position position = await Geolocator.getCurrentPosition();
                           _navigateToFindVendor(position);
                         }
                       } else {
-                        _showCircularProgressIndicator();
+                        // _showCircularProgressIndicator();
                         Position position = await Geolocator.getCurrentPosition();
                         _navigateToFindVendor(position);
                       }

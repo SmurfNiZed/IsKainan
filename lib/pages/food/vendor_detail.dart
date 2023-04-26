@@ -110,12 +110,12 @@ class _VendorDetailState extends State<VendorDetail> {
               if (permission == LocationPermission.denied) {
 
               } else {
-                _showCircularProgressIndicator();
+                // _showCircularProgressIndicator();
                 Position position = await Geolocator.getCurrentPosition();
                 _navigateToFindVendor(position);
               }
             } else {
-              _showCircularProgressIndicator();
+              // _showCircularProgressIndicator();
               Position position = await Geolocator.getCurrentPosition();
               _navigateToFindVendor(position);
             }
@@ -136,6 +136,7 @@ class _VendorDetailState extends State<VendorDetail> {
       body: CustomScrollView(
         slivers: [
           SliverAppBar(
+
             elevation: 0,
             automaticallyImplyLeading: false,
             toolbarHeight: 70,
@@ -167,10 +168,11 @@ class _VendorDetailState extends State<VendorDetail> {
             ),
             pinned: true,
             backgroundColor: AppColors.mainColor,
-            expandedHeight: Dimensions.screenHeight*2/5,
+            expandedHeight: Dimensions.screenHeight*2/4,
             flexibleSpace: FlexibleSpaceBar(
               background: Container(
                   width: double.maxFinite,
+                  color: Colors.white,
                   child: FutureBuilder(
                       future: controller.getVendorData(widget.vendorId),
                       builder: (context, snapshot){
@@ -228,7 +230,7 @@ class _VendorDetailState extends State<VendorDetail> {
                             child: Opacity(
                               opacity: data[index].isAvailable=="true"?1:0.2,
                               child: Container(
-                                margin: EdgeInsets.only(left: Dimensions.width20, right: Dimensions.width20, bottom: Dimensions.height10),
+                                margin: EdgeInsets.only(left: Dimensions.width20, right: Dimensions.width20, top: Dimensions.height10, bottom: Dimensions.height10),
                                 child: Row(
                                   children: [
                                     // image section
@@ -258,19 +260,27 @@ class _VendorDetailState extends State<VendorDetail> {
                                         Padding(padding: EdgeInsets.only(left: Dimensions.width10, right: Dimensions.width10),
                                           child: Column(
                                             crossAxisAlignment: CrossAxisAlignment.start,
-                                            mainAxisAlignment: MainAxisAlignment.start,
+                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                             children: [
-                                              SmallText(text: data[index].foodName!, size: Dimensions.font20,),
-                                              SizedBox(height: Dimensions.height10),
-                                              BigText(text: "₱" + data[index].foodPrice!.toString(), size: Dimensions.font16,),
-                                              SizedBox(height: Dimensions.height10),
-                                              Row(
-                                                mainAxisAlignment: MainAxisAlignment.start,
+                                              BigText(text: data[index].foodName!, size: Dimensions.font20,),
+                                              Column(
                                                 children: [
-                                                  RectangleIconWidget(text: "NEW", iconColor: Colors.yellow[600]!, isActivated: true),
-                                                  SizedBox(width: Dimensions.width10/2,),
-                                                  data[index].isSpicy=="true"?RectangleIconWidget(text: "SPICY", iconColor: Colors.red[900]!, isActivated: data[index].isSpicy=="true"?true:false):SmallText(text: ""),
-                                                  data[index].isSpicy=="true"?SizedBox(width: Dimensions.width10,):SmallText(text: ""),
+                                                  Row(
+                                                    mainAxisAlignment: MainAxisAlignment.start,
+                                                    children: [
+                                                      BigText(text: "₱" + data[index].foodPrice.toStringAsFixed(2), size: Dimensions.font16,),
+                                                      SizedBox(width: Dimensions.width10/2),
+                                                    ],
+                                                  ),
+                                                  SizedBox(height: Dimensions.height10,),
+                                                  Row(
+                                                    children: [
+                                                      RectangleIconWidget(text: "NEW", iconColor: Colors.yellow[600]!, isActivated: true),
+                                                      SizedBox(width: Dimensions.width10/2,),
+                                                      data[index].isSpicy=="true"?RectangleIconWidget(text: "SPICY", iconColor: Colors.red[900]!, isActivated: data[index].isSpicy=="true"?true:false):SmallText(text: ""),
+                                                      data[index].isSpicy=="true"?SizedBox(width: Dimensions.width10,):SmallText(text: ""),
+                                                    ],
+                                                  )
                                                 ],
                                               )
                                             ],

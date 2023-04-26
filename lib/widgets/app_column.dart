@@ -10,6 +10,7 @@ import 'package:progress_indicators/progress_indicators.dart';
 import '../controllers/vendor_controller.dart';
 import '../utils/colors.dart';
 import '../utils/dimensions.dart';
+import '../utils/is_new.dart';
 import 'big_text.dart';
 import 'icon_and_text_widget.dart';
 
@@ -92,8 +93,15 @@ class _AppColumnState extends State<AppColumn> {
                 }
               },
             ),
-            IconAndTextWidget(icon: Icons.location_on, text: "203 m", iconColor: AppColors.mainColor,),
-            RectangleIconWidget(text: "GCASH", iconColor: Colors.blueAccent, isActivated: vendorProfile.is_gcash=="true"?true:false)
+            // IconAndTextWidget(icon: Icons.location_on, text: "203 m", iconColor: AppColors.mainColor,),
+            Row(
+              children: [
+                RectangleIconWidget(text: "NEW", iconColor: AppColors.isNew, isActivated: isNew(vendorProfile.account_created)?true:false),
+                vendorProfile.is_gcash=="true"?SizedBox(width: Dimensions.width10/2,):SizedBox(),
+                RectangleIconWidget(text: "GCASH", iconColor: Colors.blueAccent, isActivated: vendorProfile.is_gcash=="true"?true:false)
+              ],
+            ),
+
           ],
         ),
       ],
