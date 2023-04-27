@@ -1,6 +1,4 @@
 import 'dart:async';
-
-import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -8,23 +6,13 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:iskainan/controllers/profile_controller.dart';
-import 'package:iskainan/widgets/small_text.dart';
-// import 'package:iskainan/controllers/profile_controller.dart';
-
 import '../../base/show_custom_snackbar.dart';
-import '../../controllers/auth_controller.dart';
-import '../../models/user_model.dart';
 import '../../models/vendor_data_model.dart';
-import '../../routes/route_helper.dart';
 import '../../utils/colors.dart';
 import '../../utils/dimensions.dart';
 import '../../widgets/AppTextFieldv2.dart';
-import '../../widgets/account_widget.dart';
 import '../../widgets/app_icon.dart';
-import '../../widgets/app_text_field.dart';
 import '../../widgets/big_text.dart';
-import 'account_page.dart';
-
 
 class AccountDetailsPage extends StatelessWidget {
 
@@ -50,10 +38,9 @@ class AccountDetailsPage extends StatelessWidget {
       }else{
 
         try{
-
+          await FirebaseFirestore.instance.collection('vendors').doc(id).update({'email': email, 'password': password});// Updates Email and Password in Firebase Firestore
           await FirebaseAuth.instance.currentUser!.updateEmail(email);                                                    // Updates email in Firebase Authentication
           await FirebaseAuth.instance.currentUser!.updatePassword(password);                                              // Updates password in Firebase Authentication
-          await FirebaseFirestore.instance.collection('vendors').doc(id).update({'email': email, 'password': password});// Updates Email and Password in Firebase Firestore
           showCustomerSnackBar("Account details updated", title: "Success", color: Colors.green);
           // Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => AccountPage()));
           // Get.offAll(() => AccountPage());
