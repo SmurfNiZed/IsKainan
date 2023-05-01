@@ -20,6 +20,7 @@ import '../../data/repository/user_repo.dart';
 import '../../models/vendor_data_model.dart';
 import '../../utils/colors.dart';
 import '../../utils/dimensions.dart';
+import '../../widgets/AppNumField.dart';
 import '../../widgets/AppTextFieldv2.dart';
 import '../../widgets/app_icon.dart';
 import '../../widgets/app_text_field.dart';
@@ -301,10 +302,10 @@ class _MenuManagementPageState extends State<MenuManagementPage> {
                                     ),
                                     SizedBox(height: Dimensions.height20),
 
-                                    AppTextFieldv2(
+                                    AppNumField(
                                       textController: foodPriceController,
                                       hintText: "Price",
-                                      icon: Icons.attach_money_rounded,
+                                      icon: Icons.money,
                                       backgroundColor: AppColors.iconColor1,
                                     ),
                                     SizedBox(height: Dimensions.height20),
