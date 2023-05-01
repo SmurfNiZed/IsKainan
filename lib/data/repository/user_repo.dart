@@ -71,5 +71,4 @@ class UserRepository extends GetxController {
     await _db.collection("vendors").doc(user.vendor_id).update(user.toJson());
   }
 
-
 }

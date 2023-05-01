@@ -52,6 +52,12 @@ class VendorSignUpPage extends StatelessWidget {
       }else if(phone.isEmpty){
         showCustomerSnackBar("Type in your phone number.", title: "Phone Number");
       }else{
+        List<String> newTag = [];
+
+        (vendorName).split(" ").forEach((word) {
+          newTag.add(word.toLowerCase());
+        });
+
         final user = VendorData(
           email: email,
           phone: phone,
@@ -66,8 +72,8 @@ class VendorSignUpPage extends StatelessWidget {
           is_open: "false",
           account_created: Timestamp.now(),
           approved: "false",
+          tags: newTag.toSet().toList(),
         );
-
         AuthController.instance.register(user);
       }
     }
