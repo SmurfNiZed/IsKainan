@@ -23,132 +23,257 @@ import '../../widgets/big_text.dart';
 import '../../widgets/icon_and_text_widget.dart';
 import '../../widgets/small_text.dart';
 
-class VendorList extends StatelessWidget {
+class VendorList extends StatefulWidget {
   const VendorList({Key? key}) : super(key: key);
 
   @override
+  State<VendorList> createState() => _VendorListState();
+}
+
+class _VendorListState extends State<VendorList> {
+  String name = "";
+
+  @override
   Widget build(BuildContext context) {
-    return Container(
-      color: Colors.white,
-      padding: EdgeInsets.only(top: Dimensions.height20),
-      child: Column(
-        children: [
-          GetBuilder<VendorController>(builder: (vendor){
-            return Container(
-              child: ListView.builder(
-                  physics: AlwaysScrollableScrollPhysics(),
-                  shrinkWrap: true,
-                  itemCount: vendor.vendors.length,
-                  itemBuilder: (context, index) {
-                    Future<List<double>> getFoodPrices() async {
-                      QuerySnapshot foodSnapshot = await FirebaseFirestore.instance
-                          .collection('vendors')
-                          .doc(vendor.vendors[index].vendor_id)
-                          .collection('foodList')
-                          .orderBy("food_created", descending: true)
-                          .get();
-                      List<double> prices = foodSnapshot.docs.map((doc) {
-                        return (doc['food_price'] as num).toDouble();
-                      }).toList();
-                      return prices;
-                    }
+    return Scaffold(
+      appBar: AppBar(
+        elevation: 0,
+        backgroundColor: AppColors.mainColor,
+        title: Card(
+          child: TextField(
+            decoration: InputDecoration(
+                prefixIcon: Icon(
+                  Icons.search,
+                  color: AppColors.mainColor,
+                ), hintText: 'Search...'
+            ),
+            onChanged: (val) {
+              setState(() {
+                name = val;
+              });
+            },
+          ),
+        ),
+      ),
+      body: Container(
+        color: Colors.white,
+        padding: EdgeInsets.only(top: Dimensions.height20),
+        child: Column(
+          children: [
+            GetBuilder<VendorController>(builder: (vendor){
+              return Container(
+                child: ListView.builder(
+                    physics: AlwaysScrollableScrollPhysics(),
+                    shrinkWrap: true,
+                    itemCount: vendor.vendors.length,
+                    itemBuilder: (context, index) {
+                      var data = vendor.vendors[index];
 
-                    late String startTime = '${(vendor.vendors[index].operating_hours![0]~/60)%12}:${((vendor.vendors[index].operating_hours![0]%60)).toString().padLeft(2, '0')} ${(vendor.vendors[index].operating_hours![0]~/60) < 12 ? 'AM' : 'PM'}';
-                    late String endTime = '${(vendor.vendors[index].operating_hours![1]~/60)%12}:${((vendor.vendors[index].operating_hours![1]%60)).toString().padLeft(2, '0')} ${(vendor.vendors[index].operating_hours![1]~/60) < 12 ? 'AM' : 'PM'}';
+                      Future<List<double>> getFoodPrices() async {
+                        QuerySnapshot foodSnapshot = await FirebaseFirestore.instance
+                            .collection('vendors')
+                            .doc(vendor.vendors[index].vendor_id)
+                            .collection('foodList')
+                            .orderBy("food_created", descending: true)
+                            .get();
+                        List<double> prices = foodSnapshot.docs.map((doc) {
+                          return (doc['food_price'] as num).toDouble();
+                        }).toList();
+                        return prices;
+                      }
 
-                    return GestureDetector(
-                      onTap: (){
-                        Get.toNamed(RouteHelper.getVendorDetail(vendor.vendors[index].vendor_id!));
-                      },
-                      child: Opacity(
-                        opacity: vendor.vendors[index].is_open=="true"?1:0.2,
-                        child: Container(
-                          margin: EdgeInsets.only(left: Dimensions.width20, right: Dimensions.width20, bottom: Dimensions.height20),
-                          child: Row(
-                            children: [
-                              // image section
-                              Container(
-                                width: Dimensions.listViewImgSize,
-                                height: Dimensions.listViewImgSize,
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(Dimensions.radius20),
-                                    color: Colors.white38,
-                                    image: DecorationImage(
-                                      fit: BoxFit.cover,
-                                      image: CachedNetworkImageProvider(vendor.vendors[index].vendor_img!),
-                                    )
-                                ),
-                              ),
-                              Expanded(
-                                child: Container(
-                                  height: Dimensions.listViewImgSize,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.only(
-                                        topRight: Radius.circular(Dimensions.radius20),
-                                        bottomRight: Radius.circular(Dimensions.radius20)
+                      late String startTime = '${(vendor.vendors[index].operating_hours![0]~/60)%12}:${((vendor.vendors[index].operating_hours![0]%60)).toString().padLeft(2, '0')} ${(vendor.vendors[index].operating_hours![0]~/60) < 12 ? 'AM' : 'PM'}';
+                      late String endTime = '${(vendor.vendors[index].operating_hours![1]~/60)%12}:${((vendor.vendors[index].operating_hours![1]%60)).toString().padLeft(2, '0')} ${(vendor.vendors[index].operating_hours![1]~/60) < 12 ? 'AM' : 'PM'}';
+
+                      if (name.isEmpty){
+                        return GestureDetector(
+                          onTap: (){
+                            Get.toNamed(RouteHelper.getVendorDetail(vendor.vendors[index].vendor_id!));
+                          },
+                          child: Opacity(
+                            opacity: vendor.vendors[index].is_open=="true"?1:0.2,
+                            child: Container(
+                              margin: EdgeInsets.only(left: Dimensions.width20, right: Dimensions.width20, bottom: Dimensions.height20),
+                              child: Row(
+                                children: [
+                                  // image section
+                                  Container(
+                                    width: Dimensions.listViewImgSize,
+                                    height: Dimensions.listViewImgSize,
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(Dimensions.radius20),
+                                        color: Colors.white38,
+                                        image: DecorationImage(
+                                          fit: BoxFit.cover,
+                                          image: CachedNetworkImageProvider(vendor.vendors[index].vendor_img!),
+                                        )
                                     ),
-                                    color: Colors.white,
                                   ),
-                                  child:
-                                  Padding(padding: EdgeInsets.only(left: Dimensions.width10, right: Dimensions.width10, bottom: Dimensions.height10),
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: [
-                                            BigText(text: vendor.vendors[index].vendor_name!, size: Dimensions.font20,),
-                                            SizedBox(height: Dimensions.height10/2,),
-                                            SmallText(text: startTime + " - " + endTime+ "   " + vendor.vendors[index].vendor_location!, size: Dimensions.font16*0.8, isOneLine: true,),
-                                          ],
+                                  Expanded(
+                                    child: Container(
+                                      height: Dimensions.listViewImgSize,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.only(
+                                            topRight: Radius.circular(Dimensions.radius20),
+                                            bottomRight: Radius.circular(Dimensions.radius20)
                                         ),
-                                        Column(
+                                        color: Colors.white,
+                                      ),
+                                      child:
+                                      Padding(padding: EdgeInsets.only(left: Dimensions.width10, right: Dimensions.width10, bottom: Dimensions.height10),
+                                        child: Column(
                                           crossAxisAlignment: CrossAxisAlignment.start,
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                           children: [
-                                            FutureBuilder<List<double>>(
-                                              future: getFoodPrices(),
-                                              builder: (BuildContext context, AsyncSnapshot<List<double>> snapshot) {
-                                                if (snapshot.hasData) {
-                                                  List<double> prices = snapshot.data!;
-                                                  return BigText(text: prices.length > 1?"₱"+((prices).reduce((a, b) => a < b ? a : b).toStringAsFixed(2) + " - ₱" + (prices).reduce((a, b) => a > b ? a : b).toStringAsFixed(2)):"₱"+(prices).reduce((a, b) => a < b ? a : b).toStringAsFixed(2), size: Dimensions.font16*.9);
-                                                } else if (snapshot.hasError) {
-                                                  return Center(
-                                                    child: Text('Error fetching prices: ${snapshot.error}'),
-                                                  );
-                                                } else {
-                                                  return Center(
-                                                    child: JumpingDotsProgressIndicator(),
-                                                  );
-                                                }
-                                              },
-                                            ),
-                                            SizedBox(height: Dimensions.height10/2,),
-                                            Row(
+                                            Column(
+                                              crossAxisAlignment: CrossAxisAlignment.start,
                                               children: [
-                                                RectangleIconWidget(text: "NEW", iconColor: AppColors.isNew, isActivated: isNew(vendor.vendors[index].account_created!)?true:false),
-                                                isNew(vendor.vendors[index].account_created!)? SizedBox(width: Dimensions.width10/2,) : SizedBox(),
-                                                RectangleIconWidget(text: "GCASH", iconColor: Colors.blueAccent, isActivated: vendor.vendors[index].is_gcash=="true"?true:false)
+                                                BigText(text: vendor.vendors[index].vendor_name!, size: Dimensions.font20,),
+                                                SizedBox(height: Dimensions.height10/2,),
+                                                SmallText(text: startTime + " - " + endTime+ "   " + vendor.vendors[index].vendor_location!, size: Dimensions.font16*0.8, isOneLine: true,),
                                               ],
                                             ),
-                                            SizedBox(height: Dimensions.height10/2,)
+                                            Column(
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              children: [
+                                                FutureBuilder<List<double>>(
+                                                  future: getFoodPrices(),
+                                                  builder: (BuildContext context, AsyncSnapshot<List<double>> snapshot) {
+                                                    if (snapshot.hasData) {
+                                                      List<double> prices = snapshot.data!;
+                                                      return BigText(text: prices.length > 1?"₱"+((prices).reduce((a, b) => a < b ? a : b).toStringAsFixed(2) + " - ₱" + (prices).reduce((a, b) => a > b ? a : b).toStringAsFixed(2)):"₱"+(prices).reduce((a, b) => a < b ? a : b).toStringAsFixed(2), size: Dimensions.font16*.9);
+                                                    } else if (snapshot.hasError) {
+                                                      return Center(
+                                                        child: Text('Error fetching prices: ${snapshot.error}'),
+                                                      );
+                                                    } else {
+                                                      return Center(
+                                                        child: JumpingDotsProgressIndicator(),
+                                                      );
+                                                    }
+                                                  },
+                                                ),
+                                                SizedBox(height: Dimensions.height10/2,),
+                                                Row(
+                                                  children: [
+                                                    RectangleIconWidget(text: "NEW", iconColor: AppColors.isNew, isActivated: isNew(vendor.vendors[index].account_created!)?true:false),
+                                                    isNew(vendor.vendors[index].account_created!)? SizedBox(width: Dimensions.width10/2,) : SizedBox(),
+                                                    RectangleIconWidget(text: "GCASH", iconColor: Colors.blueAccent, isActivated: vendor.vendors[index].is_gcash=="true"?true:false)
+                                                  ],
+                                                ),
+                                                SizedBox(height: Dimensions.height10/2,)
+                                              ],
+                                            )
                                           ],
-                                        )
-                                      ],
+                                        ),
+                                      ),
                                     ),
                                   ),
-                                ),
+                                ],
                               ),
-                            ],
+                            ),
                           ),
-                        ),
-                      ),
-                    );
-                  }
+                        );
+                      } else if (data.vendor_name.toString().isCaseInsensitiveContainsAny(name)){
+                        return GestureDetector(
+                          onTap: (){
+                            Get.toNamed(RouteHelper.getVendorDetail(vendor.vendors[index].vendor_id!));
+                          },
+                          child: Opacity(
+                            opacity: vendor.vendors[index].is_open=="true"?1:0.2,
+                            child: Container(
+                              margin: EdgeInsets.only(left: Dimensions.width20, right: Dimensions.width20, bottom: Dimensions.height20),
+                              child: Row(
+                                children: [
+                                  // image section
+                                  Container(
+                                    width: Dimensions.listViewImgSize,
+                                    height: Dimensions.listViewImgSize,
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(Dimensions.radius20),
+                                        color: Colors.white38,
+                                        image: DecorationImage(
+                                          fit: BoxFit.cover,
+                                          image: CachedNetworkImageProvider(vendor.vendors[index].vendor_img!),
+                                        )
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: Container(
+                                      height: Dimensions.listViewImgSize,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.only(
+                                            topRight: Radius.circular(Dimensions.radius20),
+                                            bottomRight: Radius.circular(Dimensions.radius20)
+                                        ),
+                                        color: Colors.white,
+                                      ),
+                                      child:
+                                      Padding(padding: EdgeInsets.only(left: Dimensions.width10, right: Dimensions.width10, bottom: Dimensions.height10),
+                                        child: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Column(
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              children: [
+                                                BigText(text: vendor.vendors[index].vendor_name!, size: Dimensions.font20,),
+                                                SizedBox(height: Dimensions.height10/2,),
+                                                SmallText(text: startTime + " - " + endTime+ "   " + vendor.vendors[index].vendor_location!, size: Dimensions.font16*0.8, isOneLine: true,),
+                                              ],
+                                            ),
+                                            Column(
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              children: [
+                                                FutureBuilder<List<double>>(
+                                                  future: getFoodPrices(),
+                                                  builder: (BuildContext context, AsyncSnapshot<List<double>> snapshot) {
+                                                    if (snapshot.hasData) {
+                                                      List<double> prices = snapshot.data!;
+                                                      return BigText(text: prices.length > 1?"₱"+((prices).reduce((a, b) => a < b ? a : b).toStringAsFixed(2) + " - ₱" + (prices).reduce((a, b) => a > b ? a : b).toStringAsFixed(2)):"₱"+(prices).reduce((a, b) => a < b ? a : b).toStringAsFixed(2), size: Dimensions.font16*.9);
+                                                    } else if (snapshot.hasError) {
+                                                      return Center(
+                                                        child: Text('Error fetching prices: ${snapshot.error}'),
+                                                      );
+                                                    } else {
+                                                      return Center(
+                                                        child: JumpingDotsProgressIndicator(),
+                                                      );
+                                                    }
+                                                  },
+                                                ),
+                                                SizedBox(height: Dimensions.height10/2,),
+                                                Row(
+                                                  children: [
+                                                    RectangleIconWidget(text: "NEW", iconColor: AppColors.isNew, isActivated: isNew(vendor.vendors[index].account_created!)?true:false),
+                                                    isNew(vendor.vendors[index].account_created!)? SizedBox(width: Dimensions.width10/2,) : SizedBox(),
+                                                    RectangleIconWidget(text: "GCASH", iconColor: Colors.blueAccent, isActivated: vendor.vendors[index].is_gcash=="true"?true:false)
+                                                  ],
+                                                ),
+                                                SizedBox(height: Dimensions.height10/2,)
+                                              ],
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        );
+                      } else {
+                        return Container();
+                      }
+
+
+                    }
                 ),
-            );
-          })
-        ],
+              );
+            })
+          ],
+        ),
       ),
     );
   }
