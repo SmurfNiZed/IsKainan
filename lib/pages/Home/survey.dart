@@ -144,9 +144,7 @@ class ChoicePage extends StatelessWidget {
                     child: GestureDetector(
                       onTap: (){
                         if (chosenLocation != LatLng(0,0) && !_searchController.text.isEmpty && !_budgetController.text.isEmpty){
-                          // Get.toNamed(RouteHelper.getInitial(_searchController.text.trim(), double.parse(_budgetController.text.trim()), "${chosenLocation.latitude},${chosenLocation.longitude}"));
                           Get.offAll(() => SplashScreen(searchString: _searchController.text.trim(), budget: double.parse(_budgetController.text.trim()), position: chosenLocation,));
-                          // Navigator.pushReplacementNamed(context, RouteHelper.getInitial(_searchController.text.trim(), double.parse(_budgetController.text.trim()), "${chosenLocation.latitude},${chosenLocation.longitude}"));
                         } else {
                           print("Fields are incomplete");
                         }
