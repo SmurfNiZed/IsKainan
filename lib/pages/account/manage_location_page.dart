@@ -35,7 +35,6 @@ class _ManageLocationPage extends State<ManageLocationPage> {
   }
 
 
-
   Widget build(BuildContext context) {
     Future<void> _updateVendorLocation(GeoPoint vendor_location, String? id) async {
       try{
