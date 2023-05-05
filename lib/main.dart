@@ -5,6 +5,7 @@ import 'package:flutter_displaymode/flutter_displaymode.dart';
 import 'package:get/get.dart';
 
 import 'package:get/get_navigation/src/root/get_material_app.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:iskainan/controllers/auth_controller.dart';
 import 'package:iskainan/controllers/vendor_controller.dart';
 import 'package:iskainan/firebase_options.dart';
@@ -43,7 +44,7 @@ class Home extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'IsKainan: Campus Food App',
 
-      home: SplashScreen(),
+      home: SplashScreen(searchString: "", budget: 10000, position: LatLng(0,0),),
       // initialRoute: FirebaseAuth.instance.currentUser == null
       //               ? RouteHelper.getInitial()
       //               : RouteHelper.getAccountPage(),

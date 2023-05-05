@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/src/routes/get_route.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:iskainan/pages/Home/home_page.dart';
 import 'package:iskainan/pages/food/food_detail.dart';
 import '../pages/Home/sign_in_page.dart';
@@ -28,7 +29,7 @@ class RouteHelper{
 
 
   static String getSplashPage()=>'$splashPage';
-  static String getInitial()=>'$initial';
+  static String getInitial(String searchString, num budget, String position)=>'$initial?searchString=$searchString&budget=$budget&position=$position';
   static String getChoicePage()=>'$choicePage';
   static String getVendorSignUpPage()=>'$vendorSignUpPage';
   static String getVendorSignInPage()=>'$vendorSignInPage';
@@ -41,9 +42,20 @@ class RouteHelper{
   // static String getGeneralInformationPage(UserModel user)=>'$generalInformationPage?user=$user';
 
   static List<GetPage> routes=[
-    GetPage(name: splashPage, page: ()=>SplashScreen()),
+    // GetPage(name: splashPage, page: ()=>SplashScreen()),
 
-    GetPage(name: initial, page: ()=> HomePage()),
+    GetPage(name: initial, page: (){
+      var searchString = Get.parameters['searchString'] as String;
+      var budget = Get.parameters['budget'] as String;
+      var position = Get.parameters['position'] as String;
+
+      List<String> components = position.split(",");
+
+      double latitude = double.parse(components[0]);
+      double longitude = double.parse(components[1]);
+
+      return SplashScreen(searchString: searchString, budget: double.parse(budget), position: LatLng(latitude,longitude),);
+    }),
 
     GetPage(name: choicePage, page: ()=> ChoicePage()),
 

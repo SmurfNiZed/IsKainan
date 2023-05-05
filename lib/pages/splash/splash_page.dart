@@ -3,8 +3,10 @@ import 'dart:async';
 import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import '../../controllers/vendor_controller.dart';
 import '../../routes/route_helper.dart';
@@ -12,8 +14,14 @@ import '../../utils/dimensions.dart';
 import '../Home/home_page.dart';
 
 class SplashScreen extends StatefulWidget {
-  final int time;
-  SplashScreen({Key? key, this.time = 1000}) : super(key: key);
+  String searchString;
+  double budget;
+  LatLng position;
+
+  SplashScreen({Key? key,
+    required this.searchString,
+    required this.budget,
+    required this.position}) : super(key: key);
 
   @override
   State<SplashScreen> createState() => _SplashScreenState();
@@ -29,6 +37,7 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
     await Get.find<VendorController>().getVendorMenu();
     await Get.find<VendorController>().getCheapVendorMenu();
   }
+
 
   @override
   void initState(){
@@ -50,8 +59,8 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
           ),
         ),
       ),
-      duration: widget.time,
-      nextScreen: HomePage(),
+      duration: 3,
+      nextScreen: HomePage(searchString: widget.searchString, budget: widget.budget, position: widget.position,),
       splashTransition: SplashTransition.fadeTransition,
     );
   }

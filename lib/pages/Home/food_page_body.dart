@@ -4,6 +4,7 @@ import 'package:dots_indicator/dots_indicator.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_state_manager/src/simple/get_state.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:iskainan/controllers/vendor_controller.dart';
 import 'package:iskainan/models/vendors_model.dart';
 import 'package:iskainan/widgets/big_text.dart';
@@ -21,7 +22,15 @@ import 'package:get/get.dart';
 // Eto yung featured portion sa baba ny search button
 
 class FoodPageBody extends StatefulWidget {
-  FoodPageBody({Key? key}) : super(key: key);
+  String searchString;
+  num budget;
+  LatLng position;
+
+  FoodPageBody({Key? key,
+
+  required this.searchString,
+  required this.budget,
+  required this.position}) : super(key: key);
 
   @override
   State<FoodPageBody> createState() => _FoodPageBodyState();

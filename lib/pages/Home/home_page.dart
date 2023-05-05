@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:iskainan/main.dart';
 import 'package:iskainan/pages/Home/food_list.dart';
 import 'package:iskainan/pages/Home/vendor_list.dart';
@@ -10,14 +11,21 @@ import '../../utils/colors.dart';
 import 'main_page.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
+  String searchString;
+  num budget;
+  LatLng position;
+
+  HomePage({Key? key,
+    required this.searchString,
+    required this.budget,
+    required this.position
+  }): super(key: key);
 
   @override
   State<HomePage> createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
-
   int _selectedIndex = 0;
   late PersistentTabController _controller;
 
@@ -34,7 +42,7 @@ class _HomePageState extends State<HomePage> {
 
   List<Widget> _buildScreens() {
     return [
-      MainPage(),
+      MainPage(searchString: widget.searchString, budget: widget.budget, position: widget.position,),
       VendorList(),
       FoodList(),
     ];

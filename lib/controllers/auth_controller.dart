@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_state_manager/src/simple/get_controllers.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:iskainan/base/show_custom_snackbar.dart';
 import 'package:iskainan/models/user_model.dart';
 import 'package:iskainan/pages/Home/sign_in_page.dart';
@@ -34,7 +35,7 @@ class AuthController extends GetxController{
   }
 
   _initialScreen(User? user){
-    Get.offAll(() => SplashScreen());
+    Get.offAll(() => SplashScreen(searchString: "", budget: 10000, position: LatLng(0,0)));
   }
 
   void register(VendorData user) async {

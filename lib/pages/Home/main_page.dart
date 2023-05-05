@@ -1,24 +1,28 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:iskainan/pages/Home/survey.dart';
-import 'package:iskainan/widgets/app_icon.dart';
 
 import '../../routes/route_helper.dart';
 import '../../utils/colors.dart';
 import '../../utils/dimensions.dart';
-import '../../widgets/big_text.dart';
-import '../../widgets/small_text.dart';
 
 import 'food_page_body.dart';
 
 class MainPage extends StatefulWidget {
-  MainPage({Key? key}) : super(key: key);
+  String searchString;
+  num budget;
+  LatLng position;
+
+  MainPage({Key? key,
+    required this.searchString,
+    required this.budget,
+    required this.position
+  }) : super(key: key);
 
   @override
   State<MainPage> createState() => _MainPageState();
@@ -52,20 +56,12 @@ class _MainPageState extends State<MainPage> {
                             child:FittedBox(
                                 child:FloatingActionButton(
                                   onPressed: (){
+
                                     AwesomeDialog(
                                       context: context,
                                       dialogType: DialogType.noHeader,
                                       animType: AnimType.topSlide,
-                                      btnOkIcon: Icons.search,
-                                      btnOkColor: AppColors.iconColor1,
-                                      btnOkText: 'Search',
                                       dismissOnTouchOutside: false,
-                                      btnCancelIcon: Icons.cancel,
-                                      btnCancelText: "Cancel",
-                                      btnCancelColor: AppColors.mainColor,
-                                      btnCancelOnPress: (){},
-                                      btnOkOnPress: (){
-                                      },
                                       body: ChoicePage(),
                                     ).show();
                                   },
@@ -108,7 +104,7 @@ class _MainPageState extends State<MainPage> {
           ),
           // Showing the Body
           Expanded(child: SingleChildScrollView(
-            child: FoodPageBody(),
+            child: FoodPageBody(searchString: widget.searchString, budget: widget.budget, position: widget.position,),
           )),
         ],
       ),

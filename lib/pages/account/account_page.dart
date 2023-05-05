@@ -9,6 +9,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:iskainan/base/show_custom_snackbar.dart';
 import 'package:iskainan/data/repository/user_repo.dart';
@@ -60,7 +61,7 @@ class _AccountPageState extends State<AccountPage> {
               elevation: 0,
               title: GestureDetector(
                   onTap: () {
-                    Get.offAll(() => SplashScreen(time: 50,));
+                    Get.offAll(() => SplashScreen(searchString: "", budget: 10000, position: LatLng(0,0)));
                   },
                   child: AppIcon(icon: Icons.arrow_back,
                     backgroundColor: AppColors.mainColor,
