@@ -27,39 +27,32 @@ class _ManageLocationPage extends State<ManageLocationPage> {
   late GeoPoint chosenLocation;
   late Future<String?> chosenAddress;
 
-  Future<String?> getLocalAddress(double latitude, double longitude) async {
-
-    if(14.65910932070817 < latitude && latitude < 14.660944555603638 && 121.06675129383801 < longitude && longitude < 121.06887694448234){
-      return "Area 2";
-    } else if (14.657473995747297 < latitude && latitude < 14.656195962035602 && 121.07060829428076 < longitude && longitude < 121.06859822127993){
-      return "Melchor Bldg.";
-    } else {
-      return "None";
-    }
-  }
+  // Future<String?> getLocalAddress(double latitude, double longitude) async {
+  //
+  //   if(14.65910932070817 < latitude && latitude < 14.660944555603638 && 121.06675129383801 < longitude && longitude < 121.06887694448234){
+  //     return "Area 2";
+  //   } else if (14.657473995747297 < latitude && latitude < 14.656195962035602 && 121.07060829428076 < longitude && longitude < 121.06859822127993){
+  //     return "Melchor Bldg.";
+  //   } else {
+  //     return "None";
+  //   }
+  // }
 
   @override
   void initState(){
     super.initState();
     chosenLocation = widget.startSpot;
-    getLocalAddress(chosenLocation.latitude, chosenLocation.longitude).then((value) {
-      if (value != "None") {
-        chosenAddress = getLocalAddress(chosenLocation.latitude, chosenLocation.longitude);
-      } else {
-        chosenAddress = getAddressFromLatLng(chosenLocation.latitude, chosenLocation.longitude);
-      }
-    });
+    chosenAddress = getAddressFromLatLng(chosenLocation.latitude, chosenLocation.longitude);
   }
 
 
 
   Widget build(BuildContext context) {
     Future<void> _updateVendorLocation(GeoPoint vendor_location, String? id) async {
-
       try{
         String newLocation;
-        late String? getLocation;
-        getLocation = await getAddressFromLatLng(vendor_location.latitude, vendor_location.longitude);
+
+        var getLocation = await getAddressFromLatLng(vendor_location.latitude, vendor_location.longitude);
 
         await FirebaseFirestore.instance.collection('vendors').doc(id).update({'latitude': vendor_location.latitude,
                                                                               'longitude': vendor_location.longitude,
@@ -125,13 +118,7 @@ class _ManageLocationPage extends State<ManageLocationPage> {
             },
             onCameraMove: (position) {
               chosenLocation = GeoPoint(position.target.latitude, position.target.longitude);
-              getLocalAddress(chosenLocation.latitude, chosenLocation.longitude).then((value) {
-                if (value != "None") {
-                  chosenAddress = getLocalAddress(chosenLocation.latitude, chosenLocation.longitude);
-                } else {
-                  chosenAddress = getAddressFromLatLng(chosenLocation.latitude, chosenLocation.longitude);
-                }
-              });
+              chosenAddress = getAddressFromLatLng(chosenLocation.latitude, chosenLocation.longitude);
 
               setState(() {
                 _markers.first =
@@ -241,42 +228,43 @@ class _ManageLocationPage extends State<ManageLocationPage> {
                     );
                   }
                 } else {
+
                   return Positioned(
                     top: Dimensions.height45 + Dimensions.height10,
                     left: Dimensions.width20,
                     right: Dimensions.width20,
                     child: Container(
-                        padding: EdgeInsets.symmetric(horizontal: Dimensions.width10),
-                        height: 50,
-                        decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(Dimensions.radius20/2),
-                            boxShadow: [
-                              BoxShadow(
-                                  blurRadius: 10,
-                                  spreadRadius: 7,
-                                  offset: Offset(1, 10),
-                                  color: Colors.grey.withOpacity(0.2)
-                              )
-                            ]
-                        ),
-                        child: Stack(
-                          children: [
-                            Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Icon(Icons.storefront, size: 25, color: AppColors.iconColor1),
-                              ],
+                      padding: EdgeInsets.symmetric(horizontal: Dimensions.width10),
+                      height: 50,
+                      decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(Dimensions.radius20/2),
+                          boxShadow: [
+                            BoxShadow(
+                                blurRadius: 10,
+                                spreadRadius: 7,
+                                offset: Offset(1, 10),
+                                color: Colors.grey.withOpacity(0.2)
+                            )
+                          ]
+                      ),
+                      child: Stack(
+                        children: [
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Icon(Icons.storefront, size: 25, color: AppColors.iconColor1),
+                            ],
+                          ),
+                          Center(
+                            child: JumpingDotsProgressIndicator(
+                              color: AppColors.iconColor1,
+                              fontSize: Dimensions.font26,
                             ),
-                            Center(
-                              child: JumpingDotsProgressIndicator(
-                                color: AppColors.iconColor1,
-                                fontSize: Dimensions.font26,
-                              ),
-                            ),
-                          ],
-                        ),
+                          ),
+                        ],
+                      ),
                     ),
                   );
                 }

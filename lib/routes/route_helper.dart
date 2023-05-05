@@ -2,12 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/src/routes/get_route.dart';
-import 'package:iskainan/pages/Home/allergies_page.dart';
 import 'package:iskainan/pages/Home/home_page.dart';
 import 'package:iskainan/pages/food/food_detail.dart';
-
-import '../pages/Home/address_page.dart';
-import '../pages/Home/budget_page.dart';
 import '../pages/Home/sign_in_page.dart';
 import '../pages/Home/survey.dart';
 import '../pages/Home/sign_up_page.dart';
@@ -20,9 +16,6 @@ class RouteHelper{
   static const String splashPage = "/splash-page";
   static const String initial = "/";                // homepage
   static const String choicePage = '/search-page';      // survey
-  static const String budgetPage = '/budget-page';  // budget page
-  static const String addressPage = '/address-page'; // address page
-  static const String allergiesPage = '/allergies-page'; // allergiespage
   static const String vendorSignUpPage = '/vendor-signup-page'; //vendor login page
   static const String vendorSignInPage = '/vendor-signin-page'; //vendor login page
   static const String foodDetail = "/food-detail";  // food detail
@@ -37,9 +30,6 @@ class RouteHelper{
   static String getSplashPage()=>'$splashPage';
   static String getInitial()=>'$initial';
   static String getChoicePage()=>'$choicePage';
-  static String getBudgetPage()=>'$budgetPage';
-  static String getAddressPage()=>'$addressPage';
-  static String getAllergiesPage()=>'$allergiesPage';
   static String getVendorSignUpPage()=>'$vendorSignUpPage';
   static String getVendorSignInPage()=>'$vendorSignInPage';
   static String getVendorDetail(String vendorId)=>'$vendorDetail?vendorId=$vendorId';
@@ -56,12 +46,6 @@ class RouteHelper{
     GetPage(name: initial, page: ()=> HomePage()),
 
     GetPage(name: choicePage, page: ()=> ChoicePage()),
-
-    GetPage(name: budgetPage, page: ()=> BudgetPage()),
-
-    GetPage(name: addressPage, page: ()=> AddressPage()),
-
-    GetPage(name: allergiesPage, page: ()=>AllergiesPage()),
 
     GetPage(name: vendorSignUpPage, page: ()=>VendorSignUpPage()),
 

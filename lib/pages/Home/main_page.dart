@@ -1,3 +1,4 @@
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -5,6 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
+import 'package:iskainan/pages/Home/survey.dart';
 import 'package:iskainan/widgets/app_icon.dart';
 
 import '../../routes/route_helper.dart';
@@ -50,7 +52,22 @@ class _MainPageState extends State<MainPage> {
                             child:FittedBox(
                                 child:FloatingActionButton(
                                   onPressed: (){
-                                    Get.toNamed(RouteHelper.choicePage);
+                                    AwesomeDialog(
+                                      context: context,
+                                      dialogType: DialogType.noHeader,
+                                      animType: AnimType.topSlide,
+                                      btnOkIcon: Icons.search,
+                                      btnOkColor: AppColors.iconColor1,
+                                      btnOkText: 'Search',
+                                      dismissOnTouchOutside: false,
+                                      btnCancelIcon: Icons.cancel,
+                                      btnCancelText: "Cancel",
+                                      btnCancelColor: AppColors.mainColor,
+                                      btnCancelOnPress: (){},
+                                      btnOkOnPress: (){
+                                      },
+                                      body: ChoicePage(),
+                                    ).show();
                                   },
                                   backgroundColor: AppColors.mainColor,
                                   elevation: 0,
