@@ -23,7 +23,7 @@ class ChoicePage extends StatefulWidget {
 
 class _ChoicePageState extends State<ChoicePage> {
   late StreamSubscription<Position> _locationSubscription;
-
+  bool isMyLoc = true;
   late Stream<Position> _locationStream;
   late List<Marker> vendorsLocation = [];
 
@@ -48,6 +48,12 @@ class _ChoicePageState extends State<ChoicePage> {
     return vendorMarkers;
   }
 
+  void _changeMap() {
+    setState(() {
+      isMyLoc = !isMyLoc;
+    });
+  }
+
   @override
   void initState(){
     super.initState();
@@ -65,7 +71,6 @@ class _ChoicePageState extends State<ChoicePage> {
   Widget build(BuildContext context) {
     final TextEditingController _searchController = TextEditingController();
     final TextEditingController _budgetController = TextEditingController();
-
     final List<Marker> _markers = [];
 
     var chosenLocation = LatLng(0,0);
@@ -77,19 +82,65 @@ class _ChoicePageState extends State<ChoicePage> {
         child: Column(
           children: [
             AppTextFieldv2(textController: _searchController, hintText: "Food/Shop", icon: Icons.fastfood_rounded, backgroundColor: AppColors.mainColor),
-            SizedBox(height: Dimensions.height10,),
+            SizedBox(height: Dimensions.height20,),
             AppNumField(textController: _budgetController, hintText: "Budget", icon: Icons.money, backgroundColor: AppColors.mainColor),
-            SizedBox(height: Dimensions.height10,),
+            SizedBox(height: Dimensions.height20,),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: Padding(
+                    padding: EdgeInsets.only(left: Dimensions.width10),
+                    child: GestureDetector(
+                      onTap: (){
+                        setState(() {
+                          if(!isMyLoc) {
+                            _changeMap();
+                          }
+                        });
+                      },
+                      child: Container(
+                        height: Dimensions.height45,
+                        decoration: BoxDecoration(
+                          color: isMyLoc?Colors.grey[100]:Colors.grey[300],
+                          borderRadius: BorderRadius.only(topLeft: Radius.circular(Dimensions.radius15/3)),
+                        ),
+                        child: Center(child: SmallText(text: 'My Location', size: Dimensions.font16,)),
+                      ),
+                    ),
+                  )
+                ),
+                Expanded(
+                    child: Padding(
+                      padding: EdgeInsets.only(right: Dimensions.width10),
+                      child: GestureDetector(
+                        onTap: (){
+                          setState(() {
+                            if(isMyLoc) {
+                              _changeMap();
+                            }
+                          });
+                        },
+                        child: Container(
+                          height: Dimensions.height45,
+                          decoration: BoxDecoration(
+                            color: isMyLoc?Colors.grey[300]:Colors.grey[100],
+                            borderRadius: BorderRadius.only(topRight: Radius.circular(Dimensions.radius15/3)),
+                          ),
+                          child: Center(child: SmallText(text: 'Choose Location', size: Dimensions.font16)),
+                        ),
+                      ),
+                    )
+                ),
+              ],
+            ),
             Container(
               height: 140,
               width: MediaQuery.of(context).size.width,
-              margin: const EdgeInsets.only(left: 10, right: 10, top: 5),
+              margin: const EdgeInsets.only(left: 10, right: 10),
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(5),
-                border: Border.all(
-                  width: 2,
-                  color: AppColors.mainColor
-                )
+                  borderRadius: BorderRadius.only(bottomRight: Radius.circular(Dimensions.radius15/3), bottomLeft: Radius.circular(Dimensions.radius15/3)),
+
               ),
               child: Stack(
                 children: [

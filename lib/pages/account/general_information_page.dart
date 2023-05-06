@@ -353,7 +353,6 @@ class _GeneralInformationPageState extends State<GeneralInformationPage> {
                                                 selectedFillColor: AppColors.iconColor1,
 
                                                 onChanged: (v) {
-                                                  // printIntAsDay(v);
                                                   setState(() {
                                                     values[v % 7] = !values[v % 7]!;
                                                   });
