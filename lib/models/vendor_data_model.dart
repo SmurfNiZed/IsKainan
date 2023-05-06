@@ -144,3 +144,17 @@ class VendorMenu {
     };
   }
 }
+
+class VendorWithDistance{
+  final VendorData vendorData;
+  final double distance;
+
+  VendorWithDistance({required this.vendorData, required this.distance});
+}
+
+class VendorMenuWithDistance{
+  final VendorMenu menuData;
+  final double distance;
+
+  VendorMenuWithDistance({required this.menuData, required this.distance});
+}

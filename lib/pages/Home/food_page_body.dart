@@ -18,6 +18,7 @@ import '../../models/vendor_data_model.dart';
 import '../../routes/route_helper.dart';
 import '../../utils/colors.dart';
 import '../../utils/dimensions.dart';
+import '../../utils/distance.dart';
 import '../../utils/shimmer.dart';
 import '../../widgets/app_column.dart';
 import 'package:get/get.dart';
@@ -57,6 +58,8 @@ class _FoodPageBodyState extends State<FoodPageBody> {
   Future<QuerySnapshot> getData() {
     return vendorCollection.get();
   }
+
+
 
   Future<String?> _getUserLocation() async {
     bool locationEnabled = await Geolocator.isLocationServiceEnabled();
@@ -99,8 +102,10 @@ class _FoodPageBodyState extends State<FoodPageBody> {
 
   @override
   Widget build(BuildContext context) {
+
     var queryVendorNames = [];
-    List<VendorData> queryVendors = [];
+    List<VendorWithDistance> queryVendors = [];
+    List<VendorMenuWithDistance> queryVendorMenu = [];
 
     for(var i = 0; i < _vendorController.vendorMenu.length; i++){
       if(!queryVendorNames.contains(_vendorController.vendorMenu[i].vendorName) &&
@@ -111,12 +116,15 @@ class _FoodPageBodyState extends State<FoodPageBody> {
         for(var j = 0; j < _vendorController.vendors.length; j++){
           if(_vendorController.vendors[j].is_open=="true" &&
             _vendorController.vendors[j].vendor_id == _vendorController.vendorMenu[i].vendorId){
-            queryVendors.add(_vendorController.vendors[j]);
+            queryVendors.add(VendorWithDistance(vendorData: _vendorController.vendors[j], distance: getDistance(LatLng(_vendorController.vendors[j].latitude!, _vendorController.vendors[j].longitude!), widget.position)));
             break;
           }
         }
       }
     }
+
+    queryVendors.sort((a, b) => a.distance.compareTo(b.distance));
+
     return Column(
       children: [
         GetBuilder<VendorController>(builder: (_){
@@ -132,7 +140,7 @@ class _FoodPageBodyState extends State<FoodPageBody> {
                         controller: pageController,
                         itemCount: queryVendors.length,                                                 // Ilang ididisplay sa relevant food
                         itemBuilder: (context, position){
-                          return _buildPageItem(position,  queryVendors[position]);
+                          return _buildPageItem(position,  queryVendors[position].vendorData);
                         })
                 ),
               ],
@@ -187,26 +195,33 @@ class _FoodPageBodyState extends State<FoodPageBody> {
                       ],
                     )));
           } else {
+            for(var i = 0; i < _vendorController.vendorMenu.length; i++){
+              for(var j = 0; j < queryVendors.length; j++){
+                if(_vendorController.vendorMenu[i].vendorId == queryVendors[j].vendorData.vendor_id){
+                  queryVendorMenu.add(VendorMenuWithDistance(menuData: _vendorController.vendorMenu[i], distance: queryVendors[j].distance));
+                }
+              }
+            }
+
+            queryVendorMenu.sort((a, b) => a.distance.compareTo(b.distance));
             return Column(
               children: [
                 Container(
                     child: ListView.builder(
                         physics: NeverScrollableScrollPhysics(),
                         shrinkWrap: true,
-                        itemCount: _vendorController.vendorMenu.length,
+                        itemCount: queryVendorMenu.length,
                         itemBuilder: (context, index) {
-                          if(widget.budget >= _vendorController.vendorMenu[index].foodPrice &&
-                            (_vendorController.vendorMenu[index].foodName.toString().toLowerCase().isCaseInsensitiveContainsAny(widget.searchString.toLowerCase()) || _vendorController.vendorMenu[index].vendorName.toString().toLowerCase().isCaseInsensitiveContainsAny(widget.searchString.toLowerCase()))
-                              && _vendorController.vendorMenu[index].isAvailable=="true"
+                          if(widget.budget >= queryVendorMenu[index].menuData.foodPrice &&
+                            (queryVendorMenu[index].menuData.foodName.toString().toLowerCase().isCaseInsensitiveContainsAny(widget.searchString.toLowerCase()) || queryVendorMenu[index].menuData.foodName.toString().toLowerCase().isCaseInsensitiveContainsAny(widget.searchString.toLowerCase()))
+                              && queryVendorMenu[index].menuData.isAvailable=="true"
                           ){
-
                             return GestureDetector(
                                   onTap: () async {
-                                    QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collectionGroup('foodList').get();
-                                    Get.toNamed(RouteHelper.getFoodDetail(querySnapshot.docs[index].reference.parent.parent!.id, _vendorController.vendorMenu[index].foodId!));
+                                    Get.toNamed(RouteHelper.getFoodDetail(queryVendorMenu[index].menuData.vendorId!, queryVendorMenu[index].menuData.foodId!));
                                   },
                                   child: Opacity(
-                                    opacity: (_vendorController.vendorMenu[index].isAvailable=="true")?1:0.4,
+                                    opacity: (queryVendorMenu[index].menuData.isAvailable=="true")?1:0.4,
                                     child: Container(
                                       margin: EdgeInsets.only(left: Dimensions.width20, right: Dimensions.width20, bottom: Dimensions.height20),
                                       child: Row(
@@ -219,7 +234,7 @@ class _FoodPageBodyState extends State<FoodPageBody> {
                                                 borderRadius: BorderRadius.circular(Dimensions.radius20),
                                                 image: DecorationImage(
                                                   fit: BoxFit.cover,
-                                                  image: NetworkImage(_vendorController.vendorMenu[index].foodImg!),
+                                                  image: NetworkImage(queryVendorMenu[index].menuData.foodImg!),
                                                 )
                                             ),
                                           ),
@@ -242,21 +257,21 @@ class _FoodPageBodyState extends State<FoodPageBody> {
                                                     Column(
                                                       crossAxisAlignment: CrossAxisAlignment.start,
                                                       children: [
-                                                        BigText(text: _vendorController.vendorMenu[index].foodName!, size: Dimensions.font20,),
+                                                        BigText(text: queryVendorMenu[index].menuData.foodName!, size: Dimensions.font20,),
                                                         SizedBox(height: Dimensions.height10/2,),
-                                                        SmallText(text: _vendorController.vendorMenu[index].vendorName! + ", " + _vendorController.vendorMenu[index].vendorLoc!, size: Dimensions.font16*0.8, isOneLine: true,)
+                                                        SmallText(text: queryVendorMenu[index].menuData.vendorName! + ", " + queryVendorMenu[index].menuData.vendorLoc!, size: Dimensions.font16*0.8, isOneLine: true,)
                                                       ],
                                                     ),
                                                     Column(
                                                       crossAxisAlignment: CrossAxisAlignment.start,
                                                       children: [
-                                                        BigText(text: "₱"+_vendorController.vendorMenu[index].foodPrice.toStringAsFixed(2), size: Dimensions.font16*.9),
+                                                        BigText(text: "₱"+queryVendorMenu[index].menuData.foodPrice.toStringAsFixed(2), size: Dimensions.font16*.9),
                                                         SizedBox(height: Dimensions.height10/2,),
                                                         Row(
                                                           children: [
                                                             RectangleIconWidget(text: "NEW", iconColor: AppColors.isNew, isActivated: true),
                                                             SizedBox(width: Dimensions.width10/2,),
-                                                            _vendorController.vendorMenu[index].isSpicy=="true"?RectangleIconWidget(text: "SPICY", iconColor: Colors.red[900]!, isActivated: _vendorController.vendorMenu[index].isSpicy=="true"?true:false):Text(""),
+                                                            queryVendorMenu[index].menuData.isSpicy=="true"?RectangleIconWidget(text: "SPICY", iconColor: Colors.red[900]!, isActivated: queryVendorMenu[index].menuData.isSpicy=="true"?true:false):Text(""),
                                                           ],
                                                         ),
                                                         SizedBox(height: Dimensions.height10/2,)

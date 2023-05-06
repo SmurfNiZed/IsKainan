@@ -7,6 +7,8 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:iskainan/utils/shimmer.dart';
 import 'package:iskainan/widgets/AppNumField.dart';
 import 'package:iskainan/widgets/small_text.dart';
+import 'package:progress_indicators/progress_indicators.dart';
+import '../../controllers/address_name_controller.dart';
 import '../../controllers/vendor_controller.dart';
 import '../../models/vendor_data_model.dart';
 import '../../utils/colors.dart';
@@ -26,12 +28,20 @@ class _ChoicePageState extends State<ChoicePage> {
   bool isMyLoc = true;
   late Stream<Position> _locationStream;
   late List<Marker> vendorsLocation = [];
+  var chosenLocation_mine = LatLng(0,0);
+  var chosenLocation_chosen = LatLng(0,0);
 
   void _getUserLocation() async {
     _locationStream = Geolocator.getPositionStream();
     _locationSubscription = _locationStream.listen((position) {
       // handle location updates here
     });
+  }
+
+  Future<Position> getCurrentLocation() async {
+    Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high);
+    return position;
   }
 
   List<Marker> createMarkers() {
@@ -73,7 +83,6 @@ class _ChoicePageState extends State<ChoicePage> {
     final TextEditingController _budgetController = TextEditingController();
     final List<Marker> _markers = [];
 
-    var chosenLocation = LatLng(0,0);
 
     return Container(
         color: Colors.white,
@@ -134,12 +143,12 @@ class _ChoicePageState extends State<ChoicePage> {
                 ),
               ],
             ),
-            Container(
+            isMyLoc?Container(
               height: 140,
               width: MediaQuery.of(context).size.width,
               margin: const EdgeInsets.only(left: 10, right: 10),
               decoration: BoxDecoration(
-                  borderRadius: BorderRadius.only(bottomRight: Radius.circular(Dimensions.radius15/3), bottomLeft: Radius.circular(Dimensions.radius15/3)),
+                borderRadius: BorderRadius.only(bottomRight: Radius.circular(Dimensions.radius15/3), bottomLeft: Radius.circular(Dimensions.radius15/3)),
 
               ),
               child: Stack(
@@ -150,11 +159,11 @@ class _ChoicePageState extends State<ChoicePage> {
                       if (snapshot.hasData) {
                         Position position = snapshot.data!;
 
-                        chosenLocation = LatLng(position.latitude, position.longitude);
+                        chosenLocation_mine = LatLng(position.latitude, position.longitude);
 
                         final marker = Marker(
                           markerId: MarkerId('0'),
-                          position: chosenLocation,
+                          position: chosenLocation_mine,
                         );
 
                         _markers.add(marker);
@@ -169,7 +178,7 @@ class _ChoicePageState extends State<ChoicePage> {
                           compassEnabled: false,
                           zoomControlsEnabled: false,
                           initialCameraPosition: CameraPosition(
-                              target: chosenLocation,
+                              target: chosenLocation_mine,
                               zoom: 17
                           ),
                         );
@@ -180,6 +189,62 @@ class _ChoicePageState extends State<ChoicePage> {
                       }
                     },
                   ),
+                ],
+              ),
+            ):
+            Container(
+              height: 140,
+              width: MediaQuery.of(context).size.width,
+              margin: const EdgeInsets.only(left: 10, right: 10),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.only(bottomRight: Radius.circular(Dimensions.radius15/3), bottomLeft: Radius.circular(Dimensions.radius15/3)),
+              ),
+              child: Stack(
+                children: [
+                  FutureBuilder(
+                    future: getCurrentLocation(),
+                    builder: (context, snapshot){
+                      if (snapshot.hasData) {
+                        Position position = snapshot.data!;
+                        for (var vendor in vendorsLocation) {
+                          _markers.add(vendor);
+                        }
+                        return GoogleMap(
+                          tiltGesturesEnabled: false,
+                          rotateGesturesEnabled: false,
+                          markers: _markers.toSet(),
+                          mapToolbarEnabled: false,
+                          compassEnabled: false,
+                          zoomControlsEnabled: false,
+                          initialCameraPosition: CameraPosition(
+                              target: LatLng(position.latitude, position.longitude),
+                              zoom: 17
+                          ),
+                          onCameraMove: (position){
+                            setState(() {
+                              chosenLocation_chosen = position.target;
+                            });
+                          },
+                        );
+                      } else if (snapshot.hasError) {
+                        return Center(
+                          child: Icon(Icons.error_outline_outlined, color: AppColors.mainColor,)
+                        );
+                      } else {
+                        return shimmer(width: MediaQuery.of(context).size.width, height: 140, radius: 5,);
+                      }
+                    }
+                  ),
+                  Center(
+                    child:Padding(
+                      padding: const EdgeInsets.only(bottom: 42),
+                      child: Icon(
+                        Icons.location_on,
+                        color: AppColors.mainColor,
+                        size: 50,
+                      ),
+                    ),
+                  )
                 ],
               ),
             ),
@@ -217,8 +282,8 @@ class _ChoicePageState extends State<ChoicePage> {
                   Expanded(
                     child: GestureDetector(
                       onTap: (){
-                        if (chosenLocation != LatLng(0,0) && !_searchController.text.isEmpty && !_budgetController.text.isEmpty){
-                          Get.offAll(() => SplashScreen(searchString: _searchController.text.trim(), budget: double.parse(_budgetController.text.trim()), position: chosenLocation,));
+                        if (/*chosenLocation_mine != LatLng(0,0) && chosenLocation_chosen != LatLng(0,0) && */ !_searchController.text.isEmpty && !_budgetController.text.isEmpty){
+                          Get.offAll(() => SplashScreen(searchString: _searchController.text.trim(), budget: double.parse(_budgetController.text.trim()), position: isMyLoc?chosenLocation_mine:chosenLocation_chosen,));
                         } else {
                           print("Fields are incomplete");
                         }
