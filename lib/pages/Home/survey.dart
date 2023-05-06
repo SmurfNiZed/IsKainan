@@ -1,35 +1,45 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:iskainan/widgets/AppNumField.dart';
-import 'package:iskainan/widgets/app_text_field.dart';
 import 'package:iskainan/widgets/small_text.dart';
-import '../../routes/route_helper.dart';
 import '../../utils/colors.dart';
 import '../../utils/dimensions.dart';
 import '../../widgets/AppTextFieldv2.dart';
-import '../../widgets/big_text.dart';
-import '../../widgets/icon_and_text_widget.dart';
 import '../splash/splash_page.dart';
 
-class ChoicePage extends StatelessWidget {
-  const ChoicePage({Key? key}) : super(key: key);
+class ChoicePage extends StatefulWidget {
+  ChoicePage({Key? key}) : super(key: key);
 
-  Future<LatLng> _getUserLocation() async {
-    bool locationEnabled = await Geolocator.isLocationServiceEnabled();
+  @override
+  State<ChoicePage> createState() => _ChoicePageState();
+}
 
-    LocationPermission permission = await Geolocator.checkPermission();
-    if (permission == LocationPermission.denied) {
-      permission = await Geolocator.requestPermission();
-      Position position = await Geolocator.getCurrentPosition();
-      return LatLng(position.latitude, position.longitude);
-    } else {
-      Position position = await Geolocator.getCurrentPosition();
-      return LatLng(position.latitude, position.longitude);
-    }
+class _ChoicePageState extends State<ChoicePage> {
+  late StreamSubscription<Position> _locationSubscription;
+
+  late Stream<Position> _locationStream;
+
+  void _getUserLocation() async {
+    _locationStream = Geolocator.getPositionStream();
+    _locationSubscription = _locationStream.listen((position) {
+      // handle location updates here
+    });
+  }
+
+  @override
+  void initState(){
+    super.initState();
+    _getUserLocation();
+  }
+
+  @override
+  void dispose() {
+    _locationSubscription?.cancel();
+    super.dispose();
   }
 
   @override
@@ -64,29 +74,17 @@ class ChoicePage extends StatelessWidget {
               ),
               child: Stack(
                 children: [
-                  FutureBuilder(
-                    future: _getUserLocation(),
-                    builder: (BuildContext context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return Center(
-                          child: CircularProgressIndicator(
-                            color: AppColors.mainColor,
-                          ),
-                        );
-                      } else if (snapshot.hasError) {
-                        return Center(
-                          child: Icon(
-                            Icons.error_outline,
-                            color: AppColors.mainColor,
-                          )
-                        );
-                      } else {
+                  StreamBuilder<Position>(
+                    stream: _locationStream,
+                    builder: (BuildContext context, AsyncSnapshot<Position> snapshot) {
+                      if (snapshot.hasData) {
+                        Position position = snapshot.data!;
 
-                        chosenLocation = snapshot.data!;
+                        chosenLocation = LatLng(position.latitude, position.longitude);
 
                         final marker = Marker(
                           markerId: MarkerId('0'),
-                          position: snapshot.data!,
+                          position: chosenLocation,
                         );
 
                         _markers.add(marker);
@@ -94,18 +92,23 @@ class ChoicePage extends StatelessWidget {
                         return GoogleMap(
                           tiltGesturesEnabled: false,
                           rotateGesturesEnabled: false,
-                          scrollGesturesEnabled: false,
                           markers: _markers.toSet(),
                           mapToolbarEnabled: false,
                           zoomControlsEnabled: false,
                           initialCameraPosition: CameraPosition(
-                              target: snapshot.data!,
+                              target: chosenLocation,
                               zoom: 17
+                          ),
+                        );
+                      } else {
+                        return Center(
+                          child: CircularProgressIndicator(
+                            color: AppColors.mainColor,
                           ),
                         );
                       }
                     },
-                  )
+                  ),
                 ],
               ),
             ),
