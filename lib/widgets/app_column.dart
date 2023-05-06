@@ -6,15 +6,13 @@ import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:iskainan/widgets/rectangle_icon_widget.dart';
 import 'package:iskainan/widgets/small_text.dart';
-import 'package:progress_indicators/progress_indicators.dart';
-import 'package:shimmer/shimmer.dart';
 import '../controllers/vendor_controller.dart';
 import '../utils/colors.dart';
 import '../utils/dimensions.dart';
 import '../utils/is_new.dart';
 import '../utils/shimmer.dart';
 import 'big_text.dart';
-import 'icon_and_text_widget.dart';
+
 
 class AppColumn extends StatefulWidget {
   final String vendorId;

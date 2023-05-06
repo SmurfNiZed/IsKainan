@@ -19,9 +19,12 @@ import '../../routes/route_helper.dart';
 import '../../utils/colors.dart';
 import '../../utils/dimensions.dart';
 import '../../utils/distance.dart';
+import '../../utils/is_new.dart';
 import '../../utils/shimmer.dart';
 import '../../widgets/app_column.dart';
 import 'package:get/get.dart';
+
+import '../../widgets/fake_app_column.dart';
 
 // Eto yung featured portion sa baba ny search button
 
@@ -122,14 +125,61 @@ class _FoodPageBodyState extends State<FoodPageBody> {
         }
       }
     }
-
     queryVendors.sort((a, b) => a.distance.compareTo(b.distance));
-
     return Column(
       children: [
         GetBuilder<VendorController>(builder: (_){
-          if (_vendorController.vendorMenu.isEmpty) {
-            return Center(child: CircularProgressIndicator());
+          if (queryVendors.isEmpty) {
+            return Column(
+              children: [
+                Stack(
+                  children: [
+                    Container(                                                      // Food pics
+                      height: Dimensions.pageViewContainer,
+                      margin: EdgeInsets.only(left: Dimensions.width20*2, right: Dimensions.width20*2, top: Dimensions.width10/2, bottom: Dimensions.height20*2),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(Dimensions.radius30),
+                        color: Colors.grey.withOpacity(0.02),
+                      ),
+                      child: shimmer(radius: Dimensions.radius30,),
+                    ),
+                    Positioned(
+                      bottom: -Dimensions.height30,
+                      left: Dimensions.width30,
+                      right: Dimensions.width30,
+                      child: Container(                                             // Food details
+                        height: Dimensions.pageViewTextContainer+5,
+                        margin: EdgeInsets.only(left: Dimensions.width30, right: Dimensions.width30, bottom: Dimensions.height30),
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(Dimensions.radius20),
+                            color: Colors.white,
+                            boxShadow: [                                                              // Drop Shadow
+                              BoxShadow(
+                                  color: Color(0xFFe8e8e8),
+                                  blurRadius: 5.0,
+                                  offset: Offset(0, 5)
+                              ),
+                              BoxShadow(
+                                  color: Colors.white,
+                                  offset: Offset(-5, 0)
+                              ),
+                              BoxShadow(
+                                  color: Colors.white,
+                                  offset: Offset(5, 0)
+                              )
+                            ]
+                        ),
+                        child: Container(
+                          padding: EdgeInsets.only(top: Dimensions.height10, left: Dimensions.width15, right: Dimensions.width15, bottom: Dimensions.height10),
+                          child: FakeAppColumn(),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: Dimensions.height30,)
+              ],
+            );
           } else {
             return Column(
               children: [
@@ -173,37 +223,91 @@ class _FoodPageBodyState extends State<FoodPageBody> {
                 child: BigText(text: ".", color: Colors.black26),
               ),
               SizedBox(width: Dimensions.width10,),
-              Container(
-                margin: const EdgeInsets.only(bottom: 2),
-                child: _userLocation!=null?SmallText(text: widget.searchString==""?_userLocation!:"${widget.searchString}/₱${widget.budget.toStringAsFixed(2)}/${_userLocation??"..."}", isOneLine: true,):shimmer(width: Dimensions.width30*4, height: Dimensions.height15,),
-
+              Expanded(
+                child: Container(
+                  margin: EdgeInsets.only(bottom: 2, right: Dimensions.width10),
+                  child: _userLocation!=null?SmallText(text: widget.searchString==""?_userLocation!:"${widget.searchString}/₱${widget.budget.toStringAsFixed(2)}/${_userLocation??"..."}", isOneLine: true,):shimmer(width: Dimensions.width30*4, height: Dimensions.height15,),
+                ),
               )
             ],
           ),
         ),
         // Recommended Food scroll
         GetBuilder<VendorController>(builder: (_){
-          if (_vendorController.vendorMenu.isEmpty) {
-            return Center(
-                child: Container(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        CircularProgressIndicator(
-                          color: AppColors.mainColor,
-                        ),
-                      ],
-                    )));
-          } else {
-            for(var i = 0; i < _vendorController.vendorMenu.length; i++){
-              for(var j = 0; j < queryVendors.length; j++){
-                if(_vendorController.vendorMenu[i].vendorId == queryVendors[j].vendorData.vendor_id){
-                  queryVendorMenu.add(VendorMenuWithDistance(menuData: _vendorController.vendorMenu[i], distance: queryVendors[j].distance));
-                }
+          for(var i = 0; i < _vendorController.vendorMenu.length; i++){
+            for(var j = 0; j < queryVendors.length; j++){
+              if(_vendorController.vendorMenu[i].vendorId == queryVendors[j].vendorData.vendor_id){
+                queryVendorMenu.add(VendorMenuWithDistance(menuData: _vendorController.vendorMenu[i], distance: queryVendors[j].distance));
               }
             }
+          }
 
-            queryVendorMenu.sort((a, b) => a.distance.compareTo(b.distance));
+          queryVendorMenu.sort((a, b) => a.distance.compareTo(b.distance));
+          if (queryVendorMenu.isEmpty) {
+            return Column(
+              children: [
+                Container(
+                    child: ListView.builder(
+                        physics: NeverScrollableScrollPhysics(),
+                        shrinkWrap: true,
+                        itemCount: 2,
+                        itemBuilder: (context, index) {
+                          return Container(
+                            margin: EdgeInsets.only(left: Dimensions.width20, right: Dimensions.width20, bottom: Dimensions.height20),
+                            child: Row(
+                              children: [
+                                // image section
+                                Container(
+                                  width: Dimensions.listViewImgSize,
+                                  height: Dimensions.listViewImgSize,
+                                  child: shimmer(),
+                                ),
+                                Expanded(
+                                  child: Container(
+                                    height: Dimensions.listViewTextContSize,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.only(
+                                          topRight: Radius.circular(Dimensions.radius20),
+                                          bottomRight: Radius.circular(Dimensions.radius20)
+                                      ),
+
+                                    ),
+                                    child:
+                                    Padding(padding: EdgeInsets.only(left: Dimensions.width10, right: Dimensions.width10),
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              shimmer(height: Dimensions.font20, width: Dimensions.width30*5,),
+                                              SizedBox(height: Dimensions.height10/2,),
+                                              shimmer(height:Dimensions.font16, width: Dimensions.width30*2,),
+                                            ],
+                                          ),
+                                          Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              shimmer(height: Dimensions.font16, width: Dimensions.width30*1.5,),
+                                              SizedBox(height: Dimensions.height10/2,),
+                                              shimmer(height: Dimensions.font20, width: Dimensions.width30*3,),
+                                              SizedBox(height: Dimensions.height10/2,)
+                                            ],
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          );
+                        })
+                ),
+              ],
+            );
+          } else {
             return Column(
               children: [
                 Container(
@@ -269,7 +373,7 @@ class _FoodPageBodyState extends State<FoodPageBody> {
                                                         SizedBox(height: Dimensions.height10/2,),
                                                         Row(
                                                           children: [
-                                                            RectangleIconWidget(text: "NEW", iconColor: AppColors.isNew, isActivated: true),
+                                                            RectangleIconWidget(text: "NEW", iconColor: AppColors.isNew, isActivated: isNew(queryVendorMenu[index].menuData.food_created!)),
                                                             SizedBox(width: Dimensions.width10/2,),
                                                             queryVendorMenu[index].menuData.isSpicy=="true"?RectangleIconWidget(text: "SPICY", iconColor: Colors.red[900]!, isActivated: queryVendorMenu[index].menuData.isSpicy=="true"?true:false):Text(""),
                                                           ],

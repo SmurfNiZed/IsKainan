@@ -56,7 +56,6 @@ class _MainPageState extends State<MainPage> {
                             child:FittedBox(
                                 child:FloatingActionButton(
                                   onPressed: (){
-
                                     AwesomeDialog(
                                       context: context,
                                       dialogType: DialogType.noHeader,

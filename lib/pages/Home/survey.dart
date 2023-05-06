@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
@@ -30,6 +31,8 @@ class _ChoicePageState extends State<ChoicePage> {
   late List<Marker> vendorsLocation = [];
   var chosenLocation_mine = LatLng(0,0);
   var chosenLocation_chosen = LatLng(0,0);
+  final TextEditingController _searchController = TextEditingController();
+  final TextEditingController _budgetController = TextEditingController();
 
   void _getUserLocation() async {
     _locationStream = Geolocator.getPositionStream();
@@ -79,8 +82,6 @@ class _ChoicePageState extends State<ChoicePage> {
 
   @override
   Widget build(BuildContext context) {
-    final TextEditingController _searchController = TextEditingController();
-    final TextEditingController _budgetController = TextEditingController();
     final List<Marker> _markers = [];
 
 
@@ -100,21 +101,22 @@ class _ChoicePageState extends State<ChoicePage> {
                 Expanded(
                   child: Padding(
                     padding: EdgeInsets.only(left: Dimensions.width10),
-                    child: GestureDetector(
-                      onTap: (){
-                        setState(() {
-                          if(!isMyLoc) {
+                    child: IgnorePointer(
+                      ignoring: isMyLoc,
+                      child: GestureDetector(
+                        onTap: (){
+                          setState(() {
                             _changeMap();
-                          }
-                        });
-                      },
-                      child: Container(
-                        height: Dimensions.height45,
-                        decoration: BoxDecoration(
-                          color: isMyLoc?Colors.grey[100]:Colors.grey[300],
-                          borderRadius: BorderRadius.only(topLeft: Radius.circular(Dimensions.radius15/3)),
+                          });
+                        },
+                        child: Container(
+                          height: Dimensions.height45,
+                          decoration: BoxDecoration(
+                            color: isMyLoc?Colors.grey[100]:Colors.grey[300],
+                            borderRadius: BorderRadius.only(topLeft: Radius.circular(Dimensions.radius15/3)),
+                          ),
+                          child: Center(child: SmallText(text: 'My Location', size: Dimensions.font16,)),
                         ),
-                        child: Center(child: SmallText(text: 'My Location', size: Dimensions.font16,)),
                       ),
                     ),
                   )
@@ -122,21 +124,22 @@ class _ChoicePageState extends State<ChoicePage> {
                 Expanded(
                     child: Padding(
                       padding: EdgeInsets.only(right: Dimensions.width10),
-                      child: GestureDetector(
-                        onTap: (){
-                          setState(() {
-                            if(isMyLoc) {
+                      child: IgnorePointer(
+                        ignoring: !isMyLoc,
+                        child: GestureDetector(
+                          onTap: (){
+                            setState(() {
                               _changeMap();
-                            }
-                          });
-                        },
-                        child: Container(
-                          height: Dimensions.height45,
-                          decoration: BoxDecoration(
-                            color: isMyLoc?Colors.grey[300]:Colors.grey[100],
-                            borderRadius: BorderRadius.only(topRight: Radius.circular(Dimensions.radius15/3)),
+                            });
+                          },
+                          child: Container(
+                            height: Dimensions.height45,
+                            decoration: BoxDecoration(
+                              color: isMyLoc?Colors.grey[300]:Colors.grey[100],
+                              borderRadius: BorderRadius.only(topRight: Radius.circular(Dimensions.radius15/3)),
+                            ),
+                            child: Center(child: SmallText(text: 'Choose Location', size: Dimensions.font16)),
                           ),
-                          child: Center(child: SmallText(text: 'Choose Location', size: Dimensions.font16)),
                         ),
                       ),
                     )
@@ -285,7 +288,14 @@ class _ChoicePageState extends State<ChoicePage> {
                         if (/*chosenLocation_mine != LatLng(0,0) && chosenLocation_chosen != LatLng(0,0) && */ !_searchController.text.isEmpty && !_budgetController.text.isEmpty){
                           Get.offAll(() => SplashScreen(searchString: _searchController.text.trim(), budget: double.parse(_budgetController.text.trim()), position: isMyLoc?chosenLocation_mine:chosenLocation_chosen,));
                         } else {
-                          print("Fields are incomplete");
+                          AwesomeDialog(
+                            context: context,
+                            dialogType: DialogType.noHeader,
+                            animType: AnimType.topSlide,
+                            title: "Some fields are empty!",
+                            autoDismiss: true,
+                            autoHide: Duration(seconds: 2),
+                          ).show();
                         }
                       },
                       child: Container(
