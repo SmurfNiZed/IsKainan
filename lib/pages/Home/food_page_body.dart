@@ -18,6 +18,7 @@ import '../../models/vendor_data_model.dart';
 import '../../routes/route_helper.dart';
 import '../../utils/colors.dart';
 import '../../utils/dimensions.dart';
+import '../../utils/shimmer.dart';
 import '../../widgets/app_column.dart';
 import 'package:get/get.dart';
 
@@ -166,7 +167,8 @@ class _FoodPageBodyState extends State<FoodPageBody> {
               SizedBox(width: Dimensions.width10,),
               Container(
                 margin: const EdgeInsets.only(bottom: 2),
-                child: SmallText(text: widget.searchString==""?_userLocation??"...":"${widget.searchString}/₱${widget.budget.toStringAsFixed(2)}/${_userLocation??"..."}", isOneLine: true,),
+                child: _userLocation!=null?SmallText(text: widget.searchString==""?_userLocation!:"${widget.searchString}/₱${widget.budget.toStringAsFixed(2)}/${_userLocation??"..."}", isOneLine: true,):shimmer(width: Dimensions.width30*4, height: Dimensions.height15,),
+
               )
             ],
           ),
@@ -305,7 +307,7 @@ class _FoodPageBodyState extends State<FoodPageBody> {
       matrix = Matrix4.diagonal3Values(1, currScale, 1)..setTranslationRaw(0, _height*(1-_scaleFactor)/2, 0);
     }
 
-    return RefreshIndicator(child: Transform(
+    return Transform(
       transform: matrix,
       child: Stack(
         children: [
@@ -320,7 +322,7 @@ class _FoodPageBodyState extends State<FoodPageBody> {
                   margin: EdgeInsets.only(left: Dimensions.width10, right: Dimensions.width10),
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(Dimensions.radius30),
-                      color: index.isEven?Color(0xFF69c5df):Color(0xFF9294cc),
+                      color: Colors.grey.withOpacity(0.04),
                       image: DecorationImage(
                           fit: BoxFit.cover,
                           image: CachedNetworkImageProvider(vendor.vendor_img!)
@@ -364,6 +366,6 @@ class _FoodPageBodyState extends State<FoodPageBody> {
           ),
         ],
       ),
-    ), onRefresh: _loadResource);
+    );
   }
 }

@@ -4,8 +4,11 @@ import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:iskainan/utils/shimmer.dart';
 import 'package:iskainan/widgets/AppNumField.dart';
 import 'package:iskainan/widgets/small_text.dart';
+import '../../controllers/vendor_controller.dart';
+import '../../models/vendor_data_model.dart';
 import '../../utils/colors.dart';
 import '../../utils/dimensions.dart';
 import '../../widgets/AppTextFieldv2.dart';
@@ -22,6 +25,7 @@ class _ChoicePageState extends State<ChoicePage> {
   late StreamSubscription<Position> _locationSubscription;
 
   late Stream<Position> _locationStream;
+  late List<Marker> vendorsLocation = [];
 
   void _getUserLocation() async {
     _locationStream = Geolocator.getPositionStream();
@@ -30,15 +34,30 @@ class _ChoicePageState extends State<ChoicePage> {
     });
   }
 
+  List<Marker> createMarkers() {
+    List<Marker> vendorMarkers = [];
+    VendorController _vendorController = Get.put(VendorController());
+    for (var vendor in _vendorController.vendors) {
+      vendorMarkers.add(
+        Marker(
+          markerId: MarkerId('${vendor.latitude}-${vendor.longitude}'),
+          position: LatLng(vendor.latitude!, vendor.longitude!),
+        ),
+      );
+    }
+    return vendorMarkers;
+  }
+
   @override
   void initState(){
     super.initState();
     _getUserLocation();
+    vendorsLocation = createMarkers();
   }
 
   @override
   void dispose() {
-    _locationSubscription?.cancel();
+    _locationSubscription.cancel();
     super.dispose();
   }
 
@@ -54,7 +73,7 @@ class _ChoicePageState extends State<ChoicePage> {
     return Container(
         color: Colors.white,
         padding: EdgeInsets.only(top: Dimensions.height10, bottom: Dimensions.height20, left: 5, right: 5),
-        width: 300,
+        width: Dimensions.width30*10,
         child: Column(
           children: [
             AppTextFieldv2(textController: _searchController, hintText: "Food/Shop", icon: Icons.fastfood_rounded, backgroundColor: AppColors.mainColor),
@@ -88,12 +107,15 @@ class _ChoicePageState extends State<ChoicePage> {
                         );
 
                         _markers.add(marker);
-
+                        for (var vendor in vendorsLocation) {
+                          _markers.add(vendor);
+                        }
                         return GoogleMap(
                           tiltGesturesEnabled: false,
                           rotateGesturesEnabled: false,
                           markers: _markers.toSet(),
                           mapToolbarEnabled: false,
+                          compassEnabled: false,
                           zoomControlsEnabled: false,
                           initialCameraPosition: CameraPosition(
                               target: chosenLocation,
@@ -102,9 +124,7 @@ class _ChoicePageState extends State<ChoicePage> {
                         );
                       } else {
                         return Center(
-                          child: CircularProgressIndicator(
-                            color: AppColors.mainColor,
-                          ),
+                          child: shimmer(width: MediaQuery.of(context).size.width, height: 140, radius: 5,),
                         );
                       }
                     },

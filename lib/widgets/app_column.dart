@@ -7,10 +7,12 @@ import 'package:get/get_core/src/get_main.dart';
 import 'package:iskainan/widgets/rectangle_icon_widget.dart';
 import 'package:iskainan/widgets/small_text.dart';
 import 'package:progress_indicators/progress_indicators.dart';
+import 'package:shimmer/shimmer.dart';
 import '../controllers/vendor_controller.dart';
 import '../utils/colors.dart';
 import '../utils/dimensions.dart';
 import '../utils/is_new.dart';
+import '../utils/shimmer.dart';
 import 'big_text.dart';
 import 'icon_and_text_widget.dart';
 
@@ -88,7 +90,12 @@ class _AppColumnState extends State<AppColumn> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-          BigText(text: _priceRange??"", size: Dimensions.font16,),
+            _priceRange!=null?
+            BigText(text: _priceRange!, size: Dimensions.font16,):Row(
+              children: [
+                shimmer(width: Dimensions.width30*5,),
+              ],
+            ),
             Row(
               children: [
                 RectangleIconWidget(text: "NEW", iconColor: AppColors.isNew, isActivated: isNew(vendorProfile.account_created)?true:false),
@@ -96,10 +103,10 @@ class _AppColumnState extends State<AppColumn> {
                 RectangleIconWidget(text: "GCASH", iconColor: Colors.blueAccent, isActivated: vendorProfile.is_gcash=="true"?true:false)
               ],
             ),
-
           ],
         ),
       ],
     );
   }
 }
+
