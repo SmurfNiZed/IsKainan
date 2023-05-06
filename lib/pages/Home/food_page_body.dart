@@ -71,10 +71,18 @@ class _FoodPageBodyState extends State<FoodPageBody> {
     }
   }
 
+  String? _userLocation;
+
   @override
   void initState(){
     super.initState();
     _loadResource;
+    _getUserLocation().then((value) {
+      setState(() {
+        _userLocation = value;
+      });
+    });
+
     pageController.addListener(() {
       setState(() {
         _currPageValue = pageController.page!;
@@ -158,25 +166,7 @@ class _FoodPageBodyState extends State<FoodPageBody> {
               SizedBox(width: Dimensions.width10,),
               Container(
                 margin: const EdgeInsets.only(bottom: 2),
-                child: FutureBuilder(
-                  future: _getUserLocation(),
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return Center(
-                        child: JumpingDotsProgressIndicator(
-                          fontSize: Dimensions.font16,
-                        ),
-                      );
-                    } else if (snapshot.hasError) {
-                      return Center(
-                        child: JumpingDotsProgressIndicator(
-                          fontSize: Dimensions.font16,
-                        ),
-                      );
-                    } else {
-                      return SmallText(text: widget.searchString==""?snapshot.data!:"${widget.searchString}, ₱${widget.budget.toStringAsFixed(2)}, ${snapshot.data}", isOneLine: true,);
-                    }
-                  })
+                child: SmallText(text: widget.searchString==""?_userLocation??"...":"${widget.searchString}/₱${widget.budget.toStringAsFixed(2)}/${_userLocation??"..."}", isOneLine: true,),
               )
             ],
           ),
@@ -204,12 +194,11 @@ class _FoodPageBodyState extends State<FoodPageBody> {
                         itemCount: _vendorController.vendorMenu.length,
                         itemBuilder: (context, index) {
                           if(widget.budget >= _vendorController.vendorMenu[index].foodPrice &&
-                            (_vendorController.vendorMenu[index].foodName.toString().toLowerCase().isCaseInsensitiveContainsAny(widget.searchString.toLowerCase()) || _vendorController.vendorMenu[index].vendorName.toString().toLowerCase().isCaseInsensitiveContainsAny(widget.searchString.toLowerCase())) &&
-                            _vendorController.vendorMenu[index].isAvailable=="true"
+                            (_vendorController.vendorMenu[index].foodName.toString().toLowerCase().isCaseInsensitiveContainsAny(widget.searchString.toLowerCase()) || _vendorController.vendorMenu[index].vendorName.toString().toLowerCase().isCaseInsensitiveContainsAny(widget.searchString.toLowerCase()))
+                              && _vendorController.vendorMenu[index].isAvailable=="true"
                           ){
-                            for(var i = 0; i < queryVendors.length; i++) {
-                              if (_vendorController.vendorMenu[index].vendorName == queryVendors[i].vendor_name && queryVendors[i].is_open=="true"){
-                                return GestureDetector(
+
+                            return GestureDetector(
                                   onTap: () async {
                                     QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collectionGroup('foodList').get();
                                     Get.toNamed(RouteHelper.getFoodDetail(querySnapshot.docs[index].reference.parent.parent!.id, _vendorController.vendorMenu[index].foodId!));
@@ -280,11 +269,8 @@ class _FoodPageBodyState extends State<FoodPageBody> {
                                       ),
                                     ),
                                   ),
-                                );
-                              } else {
-                                return Container();
-                              }
-                            }
+                          );
+
                           } else {
                             return Container();
                           }

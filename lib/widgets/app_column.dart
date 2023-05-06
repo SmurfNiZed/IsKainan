@@ -28,6 +28,34 @@ class _AppColumnState extends State<AppColumn> {
   late String endTime;
 
   late List<bool> values;
+
+  Future<String> _getPriceRange() async {
+    QuerySnapshot foodSnapshot = await FirebaseFirestore.instance
+        .collection('vendors')
+        .doc(widget.vendorId)
+        .collection('foodList')
+        .orderBy("food_created", descending: true)
+        .get();
+
+    List<double> prices = foodSnapshot.docs.map((doc) {
+      return (doc['food_price'] as num).toDouble();
+    }).toList();
+    return prices.length > 1?"₱"+((prices).reduce((a, b) => a < b ? a : b).toStringAsFixed(2) + " - ₱" + (prices).reduce((a, b) => a > b ? a : b).toStringAsFixed(2)):"₱"+(prices).reduce((a, b) => a < b ? a : b).toStringAsFixed(2);
+  }
+
+  String? _priceRange;
+
+  @override
+  void initState(){
+    super.initState();
+
+    _getPriceRange().then((value) {
+      setState(() {
+        _priceRange = value;
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     var vendorProfile;
@@ -41,19 +69,7 @@ class _AppColumnState extends State<AppColumn> {
     late String startTime = '${(vendorProfile.operating_hours![0]~/60)%12}:${((vendorProfile.operating_hours![0]%60)).toString().padLeft(2, '0')} ${(vendorProfile.operating_hours![0]~/60) < 12 ? 'AM' : 'PM'}';
     late String endTime = '${(vendorProfile.operating_hours![1]~/60)%12}:${((vendorProfile.operating_hours![1]%60)).toString().padLeft(2, '0')} ${(vendorProfile.operating_hours![1]~/60) < 12 ? 'AM' : 'PM'}';
 
-    Future<List<double>> getFoodPrices() async {
-      QuerySnapshot foodSnapshot = await FirebaseFirestore.instance
-          .collection('vendors')
-          .doc(vendorProfile.vendor_id)
-          .collection('foodList')
-          .orderBy("food_created", descending: true)
-          .get();
 
-      List<double> prices = foodSnapshot.docs.map((doc) {
-        return (doc['food_price'] as num).toDouble();
-      }).toList();
-      return prices;
-    }
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -72,28 +88,7 @@ class _AppColumnState extends State<AppColumn> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            FutureBuilder<List<double>>(
-              future: getFoodPrices(),
-              builder: (BuildContext context, AsyncSnapshot<List<double>> snapshot) {
-                if (snapshot.hasData) {
-                  List<double> prices = snapshot.data!;
-
-                  // Build your ListView.builder using prices
-                  return BigText(text: prices.length > 1?"₱"+((prices).reduce((a, b) => a < b ? a : b).toStringAsFixed(2) + " - ₱" + (prices).reduce((a, b) => a > b ? a : b).toStringAsFixed(2)):"₱"+(prices).reduce((a, b) => a < b ? a : b).toStringAsFixed(2), size: Dimensions.font16*.9);
-                } else if (snapshot.hasError) {
-                  // Handle the case where there was an error fetching prices
-                  return Center(
-                    child: Text('Error fetching prices: ${snapshot.error}'),
-                  );
-                } else {
-                  // Handle the case where prices haven't finished loading yet
-                  return Center(
-                    child: JumpingDotsProgressIndicator(),
-                  );
-                }
-              },
-            ),
-            // IconAndTextWidget(icon: Icons.location_on, text: "203 m", iconColor: AppColors.mainColor,),
+          BigText(text: _priceRange??"", size: Dimensions.font16,),
             Row(
               children: [
                 RectangleIconWidget(text: "NEW", iconColor: AppColors.isNew, isActivated: isNew(vendorProfile.account_created)?true:false),
