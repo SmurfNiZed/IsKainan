@@ -223,12 +223,23 @@ class _FoodPageBodyState extends State<FoodPageBody> {
                 child: BigText(text: ".", color: Colors.black26),
               ),
               SizedBox(width: Dimensions.width10,),
-              Expanded(
+              _userLocation!=null?Expanded(
                 child: Container(
                   margin: EdgeInsets.only(bottom: 2, right: Dimensions.width10),
-                  child: _userLocation!=null?SmallText(text: widget.searchString==""?_userLocation!:"${widget.searchString}/₱${widget.budget.toStringAsFixed(2)}/${_userLocation??"..."}", isOneLine: true,):shimmer(width: Dimensions.width30*4, height: Dimensions.height15,),
-                ),
-              )
+                  child: widget.searchString==""?SmallText(text: _userLocation!):
+                  FutureBuilder(
+                      future: getAddressFromLatLng(widget.position.latitude, widget.position.longitude),
+                      builder: (context, snapshot){
+                        if(snapshot.connectionState == ConnectionState.waiting){
+                          return shimmer();
+                        } else {
+                          return  SmallText(text: "${widget.searchString}/₱${widget.budget.toStringAsFixed(2)}/${snapshot.data}", isOneLine: true,);
+                        }
+                      }
+                  )
+                  ),
+                )
+              :shimmer(width: Dimensions.width30*4, height: Dimensions.height15,)
             ],
           ),
         ),
@@ -391,7 +402,6 @@ class _FoodPageBodyState extends State<FoodPageBody> {
                                     ),
                                   ),
                           );
-
                           } else {
                             return Container();
                           }

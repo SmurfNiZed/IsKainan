@@ -72,7 +72,6 @@ class VendorSignUpPage extends StatelessWidget {
           is_open: "false",
           account_created: Timestamp.now(),
           approved: "false",
-          tags: newTag.toSet().toList(),
         );
         AuthController.instance.register(user);
       }

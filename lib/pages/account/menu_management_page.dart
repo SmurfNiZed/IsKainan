@@ -58,16 +58,6 @@ class _MenuManagementPageState extends State<MenuManagementPage> {
         food_created: Timestamp.now(),
       );
 
-      var newTag = user.tags!;
-
-      (entry.foodName!).split(" ").forEach((word) {
-        newTag.add(word.toLowerCase());
-      });
-      newTag.toSet().toList();
-
-      FirebaseFirestore.instance.collection('vendors').doc(user.vendor_id!).update({
-        'tags': newTag
-      });
 
       String result = await userRepo.addVendorMenu(menuInitial, user.vendor_id!);
 
@@ -89,16 +79,6 @@ class _MenuManagementPageState extends State<MenuManagementPage> {
         food_created: entry.food_created
       );
 
-      var newTag = user.tags!;
-
-      (entry.foodName!).split(" ").forEach((word) {
-        newTag.add(word.toLowerCase());
-      });
-      newTag.toSet().toList();
-
-      FirebaseFirestore.instance.collection('vendors').doc(user.vendor_id!).update({
-        'tags': newTag
-      });
       await userRepo.updateVendorMenu(user.vendor_id!, entry.foodId!, newMenu);
     }
 

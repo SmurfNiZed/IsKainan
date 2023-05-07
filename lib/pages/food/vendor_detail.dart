@@ -19,6 +19,7 @@ import '../../models/vendor_data_model.dart';
 import '../../routes/route_helper.dart';
 import '../../utils/colors.dart';
 import '../../utils/dimensions.dart';
+import '../../utils/is_new.dart';
 import '../../widgets/app_column.dart';
 import '../../widgets/app_icon.dart';
 import '../../widgets/big_text.dart';
@@ -148,7 +149,6 @@ class _VendorDetailState extends State<VendorDetail> {
                       Navigator.pop(context);
                     },
                     child: AppIcon(icon: Icons.clear)),
-                AppIcon(icon: Icons.hotel_class_rounded)
               ],
             ),
             bottom: PreferredSize(
@@ -285,7 +285,7 @@ class _VendorDetailState extends State<VendorDetail> {
                                                   SizedBox(height: Dimensions.height10,),
                                                   Row(
                                                     children: [
-                                                      RectangleIconWidget(text: "NEW", iconColor: Colors.yellow[600]!, isActivated: true),
+                                                      RectangleIconWidget(text: "NEW", iconColor: Colors.yellow[600]!, isActivated: isNew(data[index].food_created!)),
                                                       SizedBox(width: Dimensions.width10/2,),
                                                       data[index].isSpicy=="true"?RectangleIconWidget(text: "SPICY", iconColor: Colors.red[900]!, isActivated: data[index].isSpicy=="true"?true:false):SmallText(text: ""),
                                                       data[index].isSpicy=="true"?SizedBox(width: Dimensions.width10,):SmallText(text: ""),

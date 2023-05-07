@@ -19,7 +19,6 @@ class VendorData {
   String? is_open;
   Timestamp? account_created;
   String? approved;
-  List<String>? tags;
 
   VendorData(
       {this.vendor_id,
@@ -36,8 +35,7 @@ class VendorData {
         this.operating_days,
         this.is_open,
         this.account_created,
-        this.approved,
-        this.tags}) {
+        this.approved}) {
     late Future<String?> getLocation;
     getLocation = getAddressFromLatLng(latitude!, longitude!);
 
@@ -62,7 +60,6 @@ class VendorData {
       'is_gcash': is_gcash,
       'vendor_img': vendor_img,
       'approved': approved,
-      'tags': tags,
     };
   }
 
@@ -82,7 +79,6 @@ class VendorData {
       is_gcash: data['is_gcash'].toString(),
       operating_hours: List<int>.from(data['operating_hours'] ?? []),
       operating_days: List<bool>.from(data['operating_days'] ?? []),
-      tags: List<String>.from(data['tags'] ?? []),
       is_open: data['is_open'].toString(),
       account_created: data['account_created'],
       approved: data['approved'] ?? "false",
