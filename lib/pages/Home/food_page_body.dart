@@ -49,7 +49,6 @@ class _FoodPageBodyState extends State<FoodPageBody> {
     Get.find<VendorController>().getVendors();
     Get.find<VendorController>().getVendorMenu();
   }
-
   PageController pageController = PageController(viewportFraction: 0.85);
   VendorController _vendorController = Get.put(VendorController());
   var _currPageValue = 0.0;
@@ -66,17 +65,22 @@ class _FoodPageBodyState extends State<FoodPageBody> {
 
 
   Future<String?> _getUserLocation() async {
-    bool locationEnabled = await Geolocator.isLocationServiceEnabled();
+    if(widget.position.latitude == 0 && widget.position.longitude == 0){
+      bool locationEnabled = await Geolocator.isLocationServiceEnabled();
 
-    LocationPermission permission = await Geolocator.checkPermission();
-    if (permission == LocationPermission.denied) {
-      permission = await Geolocator.requestPermission();
-      Position position = await Geolocator.getCurrentPosition();
-      return getAddressFromLatLng(position.latitude, position.longitude);
+      LocationPermission permission = await Geolocator.checkPermission();
+      if (permission == LocationPermission.denied) {
+        permission = await Geolocator.requestPermission();
+        Position position = await Geolocator.getCurrentPosition();
+        return getAddressFromLatLng(position.latitude, position.longitude);
+      } else {
+        Position position = await Geolocator.getCurrentPosition();
+        return getAddressFromLatLng(position.latitude, position.longitude);
+      }
     } else {
-      Position position = await Geolocator.getCurrentPosition();
-      return getAddressFromLatLng(position.latitude, position.longitude);
+      return getAddressFromLatLng(widget.position.latitude, widget.position.longitude);
     }
+
   }
 
   String? _userLocation;
@@ -88,6 +92,7 @@ class _FoodPageBodyState extends State<FoodPageBody> {
     _getUserLocation().then((value) {
       setState(() {
         _userLocation = value;
+        chosenLocLoaded = true;
       });
     });
 
@@ -103,6 +108,9 @@ class _FoodPageBodyState extends State<FoodPageBody> {
     pageController.dispose();
     super.dispose();          // dispose include child pages that gets loaded in this page
   }
+
+  bool chosenLocLoaded = false;
+
 
   @override
   Widget build(BuildContext context) {
@@ -127,6 +135,7 @@ class _FoodPageBodyState extends State<FoodPageBody> {
         }
       }
     }
+
     queryVendors.sort((a, b) => a.distance.compareTo(b.distance));
     return Column(
       children: [
@@ -233,7 +242,7 @@ class _FoodPageBodyState extends State<FoodPageBody> {
                       future: getAddressFromLatLng(widget.position.latitude, widget.position.longitude),
                       builder: (context, snapshot){
                         if(snapshot.connectionState == ConnectionState.waiting){
-                          return shimmer();
+                          return shimmer(width: Dimensions.width30*3,);
                         } else {
                           return  SmallText(text: "${widget.searchString}/₱${widget.budget.toStringAsFixed(2)}/${snapshot.data}", isOneLine: true,);
                         }
@@ -241,7 +250,7 @@ class _FoodPageBodyState extends State<FoodPageBody> {
                   )
                   ),
                 )
-              :shimmer(width: Dimensions.width30*4, height: Dimensions.height15,)
+              :shimmer(width: Dimensions.width30*3,),
             ],
           ),
         ),
@@ -256,7 +265,7 @@ class _FoodPageBodyState extends State<FoodPageBody> {
           }
 
           queryVendorMenu.sort((a, b) => a.distance.compareTo(b.distance));
-          if (queryVendorMenu.isEmpty) {
+          if (queryVendorMenu.isEmpty || !chosenLocLoaded) {
             return Column(
               children: [
                 Container(
