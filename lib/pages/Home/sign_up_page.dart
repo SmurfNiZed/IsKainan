@@ -5,16 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:iskainan/base/show_custom_snackbar.dart';
-import 'package:iskainan/controllers/address_name_controller.dart';
 import 'package:iskainan/models/vendor_data_model.dart';
-import 'package:iskainan/pages/Home/survey.dart';
-import 'package:iskainan/pages/account/account_page.dart';
-import 'package:iskainan/utils/app_constants.dart';
 import 'package:iskainan/widgets/app_text_field.dart';
 import '../../controllers/auth_controller.dart';
-import '../../models/signup_body_model.dart';
-import '../../models/user_model.dart';
-import '../../routes/route_helper.dart';
 import '../../utils/dimensions.dart';
 import '../../widgets/big_text.dart';
 import '../../utils/colors.dart';
@@ -72,6 +65,7 @@ class VendorSignUpPage extends StatelessWidget {
           is_open: "false",
           account_created: Timestamp.now(),
           approved: "false",
+          vendor_description: "",
         );
         AuthController.instance.register(user);
       }

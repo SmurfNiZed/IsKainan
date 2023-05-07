@@ -5,12 +5,14 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iskainan/controllers/profile_controller.dart';
+import 'package:iskainan/widgets/AppNumField.dart';
 import 'package:time_range_picker/time_range_picker.dart';
 import 'package:weekday_selector/weekday_selector.dart';
 import '../../base/show_custom_snackbar.dart';
 import '../../models/vendor_data_model.dart';
 import '../../utils/colors.dart';
 import '../../utils/dimensions.dart';
+import '../../widgets/AppTextFieldLong.dart';
 import '../../widgets/AppTextFieldv2.dart';
 import '../../widgets/app_icon.dart';
 import '../../widgets/big_text.dart';
@@ -41,13 +43,16 @@ class _GeneralInformationPageState extends State<GeneralInformationPage> {
     Future<void> _updateGeneralInformation(
         TextEditingController vendorNameController,
         TextEditingController phoneController,
+        TextEditingController vendorDescriptionController,
         bool isGcash,
         bool isOpen,
         List<int> operatingHours,
         List<bool> operatingDays,
         String? id) async {
+
       String vendorName = vendorNameController.text.trim();
       String phone = phoneController.text.trim();
+      String vendorDescription = vendorDescriptionController.text.trim();
 
       if (vendorName.isEmpty) {
         showCustomerSnackBar("Type in the name of your establishment.",
@@ -64,6 +69,7 @@ class _GeneralInformationPageState extends State<GeneralInformationPage> {
             'is_open': (isOpen ? "true" : "false"),
             'operating_hours': operatingHours,
             'operating_days': operatingDays,
+            'vendor_description': vendorDescription,
           }).whenComplete(() => AwesomeDialog(
             context: context,
             title: "All Set!",
@@ -107,6 +113,8 @@ class _GeneralInformationPageState extends State<GeneralInformationPage> {
                 TextEditingController(text: user.vendor_name.toString());
             late TextEditingController phoneController =
                 TextEditingController(text: user.phone.toString());
+            late TextEditingController vendorDescriptionController =
+                TextEditingController(text: user.vendor_description.toString());
             return Scaffold(
                 body: Stack(
                   children: [
@@ -138,7 +146,7 @@ class _GeneralInformationPageState extends State<GeneralInformationPage> {
                                     SizedBox(height: Dimensions.height20),
 
                                     // Contact Number
-                                    AppTextFieldv2(
+                                    AppNumField(
                                       textController: phoneController,
                                       hintText: "Contact Number",
                                       icon: Icons.phone,
@@ -351,7 +359,6 @@ class _GeneralInformationPageState extends State<GeneralInformationPage> {
                                               WeekdaySelector(
                                                 firstDayOfWeek: 7,
                                                 selectedFillColor: AppColors.iconColor1,
-
                                                 onChanged: (v) {
                                                   setState(() {
                                                     values[v % 7] = !values[v % 7]!;
@@ -364,7 +371,10 @@ class _GeneralInformationPageState extends State<GeneralInformationPage> {
                                         );
                                       },
                                     ),
-
+                                    SizedBox(height: Dimensions.height20),
+                                    Container(
+                                      margin: EdgeInsets.symmetric(horizontal: Dimensions.height10),
+                                      child: AppTextFieldLong(vendorDescriptionController: vendorDescriptionController)),
                                     SizedBox(height: Dimensions.height20),
                                     RichText(text: TextSpan(
                                       text: "This vendor is ",
@@ -436,6 +446,7 @@ class _GeneralInformationPageState extends State<GeneralInformationPage> {
                                         _updateGeneralInformation(
                                             vendorNameController,
                                             phoneController,
+                                            vendorDescriptionController,
                                             _checkBoxGCash!,
                                             _checkBoxOpen!,
                                             user.operating_hours!,
