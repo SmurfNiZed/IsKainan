@@ -99,7 +99,7 @@ class _AccountPageState extends State<AccountPage> {
                                         btnCancelText: "Delete",
                                         btnCancelOnPress: () async {
                                           try{
-                                            await FirebaseStorage.instance.ref('vendors/${user.vendor_name}(${user.vendor_id})/vendorImage')
+                                            await FirebaseStorage.instance.ref('vendors/${user.vendor_id}/vendorImage')
                                                 .listAll().then((value) {
                                               FirebaseStorage.instance.ref(value.items.first.fullPath).delete().whenComplete(() => AwesomeDialog(
                                                 context: context,
@@ -220,7 +220,7 @@ class _AccountPageState extends State<AccountPage> {
                                   String uniqueFileName = "VendorProfilePic";
 
                                   Reference referenceRoot = FirebaseStorage.instance.ref();
-                                  Reference referenceDirImages = referenceRoot.child("vendors/${user.vendor_name}(${user.vendor_id})/vendorImage");
+                                  Reference referenceDirImages = referenceRoot.child("vendors/${user.vendor_id}/vendorImage");
 
                                   Reference referenceImageToUpload = referenceDirImages.child(uniqueFileName);
 
@@ -259,7 +259,7 @@ class _AccountPageState extends State<AccountPage> {
                                   String uniqueFileName = "VendorProfilePic";
 
                                   Reference referenceRoot = FirebaseStorage.instance.ref();
-                                  Reference referenceDirImages = referenceRoot.child("vendors/${user.vendor_name}(${user.vendor_id})/vendorImage");
+                                  Reference referenceDirImages = referenceRoot.child("vendors/${user.vendor_id}/vendorImage");
 
                                   Reference referenceImageToUpload = referenceDirImages.child(uniqueFileName);
 

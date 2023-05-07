@@ -14,6 +14,7 @@ import 'package:iskainan/widgets/rectangle_icon_widget.dart';
 import 'package:iskainan/widgets/small_text.dart';
 import 'package:progress_indicators/progress_indicators.dart';
 import '../../controllers/address_name_controller.dart';
+import '../../controllers/auth_controller.dart';
 import '../../models/vendor_data_model.dart';
 import '../../routes/route_helper.dart';
 import '../../utils/colors.dart';
@@ -105,6 +106,7 @@ class _FoodPageBodyState extends State<FoodPageBody> {
 
   @override
   Widget build(BuildContext context) {
+    // AuthController.instance.logout();
 
     var queryVendorNames = [];
     List<VendorWithDistance> queryVendors = [];

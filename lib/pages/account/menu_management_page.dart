@@ -91,7 +91,7 @@ class _MenuManagementPageState extends State<MenuManagementPage> {
       await userRepo.deleteVendorMenu(vendorId, foodId);
       try{
         final FirebaseStorage storage = FirebaseStorage.instance;
-        final Reference reference = storage.ref().child('vendors/${vendorName}(${vendorId})/FoodList/${foodId}');
+        final Reference reference = storage.ref().child('vendors/${vendorId}/FoodList/${foodId}');
         reference.delete();
       }catch(e){
 
@@ -177,7 +177,7 @@ class _MenuManagementPageState extends State<MenuManagementPage> {
 
                               if (_imageFile != null){
                                 Reference referenceRoot = FirebaseStorage.instance.ref();
-                                Reference referenceDirImages = referenceRoot.child("vendors/${widget.user.vendor_name}(${widget.user.vendor_id})/FoodList");
+                                Reference referenceDirImages = referenceRoot.child("vendors/${widget.user.vendor_id}/FoodList");
 
                                 Reference referenceImageToUpload = referenceDirImages.child(uniqueFileName);
                                 await referenceImageToUpload.putFile(File(_imageFile!.path));
@@ -468,7 +468,7 @@ class _MenuManagementPageState extends State<MenuManagementPage> {
                                                 if(_imageFile != null){
                                                   String uniqueFileName = foodId;
                                                   Reference referenceRoot = FirebaseStorage.instance.ref();
-                                                  Reference referenceDirImages = referenceRoot.child("vendors/${widget.user.vendor_name}(${widget.user.vendor_id})/FoodList");
+                                                  Reference referenceDirImages = referenceRoot.child("vendors/${widget.user.vendor_id}/FoodList");
                                                   Reference referenceImageToUpload = referenceDirImages.child(uniqueFileName);
                                                   await referenceImageToUpload.putFile(File(_imageFile!.path));
                                                   imageUrl = await referenceImageToUpload.getDownloadURL();
