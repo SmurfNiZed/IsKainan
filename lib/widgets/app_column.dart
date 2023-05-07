@@ -12,6 +12,7 @@ import '../utils/dimensions.dart';
 import '../utils/is_new.dart';
 import '../utils/shimmer.dart';
 import 'big_text.dart';
+import 'fake_app_column.dart';
 
 
 class AppColumn extends StatefulWidget {
@@ -71,7 +72,7 @@ class _AppColumnState extends State<AppColumn> {
 
 
 
-    return Column(
+    return _priceRange==null?FakeAppColumn():Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -88,12 +89,7 @@ class _AppColumnState extends State<AppColumn> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            _priceRange!=null?
-            BigText(text: _priceRange!, size: Dimensions.font16,):Row(
-              children: [
-                shimmer(width: Dimensions.width30*5,),
-              ],
-            ),
+            BigText(text: _priceRange!, size: Dimensions.font16,),
             Row(
               children: [
                 RectangleIconWidget(text: "NEW", iconColor: AppColors.isNew, isActivated: isNew(vendorProfile.account_created)?true:false),

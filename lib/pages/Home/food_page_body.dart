@@ -141,7 +141,56 @@ class _FoodPageBodyState extends State<FoodPageBody> {
       children: [
         GetBuilder<VendorController>(builder: (_){
           if (queryVendors.isEmpty) {
-            return ShimmerFoodList();
+            return Column(
+              children: [
+                Stack(
+                  children: [
+                    Container(                                                      // Food pics
+                      height: Dimensions.pageViewContainer,
+                      margin: EdgeInsets.only(left: Dimensions.width20*2, right: Dimensions.width20*2, top: Dimensions.width10/2, bottom: Dimensions.height10*6 + Dimensions.height10/2),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(Dimensions.radius30),
+                        color: Colors.grey.withOpacity(0.02),
+                      ),
+                      child: shimmer(radius: Dimensions.radius30,),
+                    ),
+                    Positioned(
+                      bottom: -Dimensions.height30,
+                      left: Dimensions.width30,
+                      right: Dimensions.width30,
+                      child: Container(                                             // Food details
+                        height: Dimensions.pageViewTextContainer+5,
+                        margin: EdgeInsets.only(left: Dimensions.width30, right: Dimensions.width30, bottom: Dimensions.height30),
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(Dimensions.radius20),
+                            color: Colors.white,
+                            boxShadow: [                                                              // Drop Shadow
+                              BoxShadow(
+                                  color: Color(0xFFe8e8e8),
+                                  blurRadius: 5.0,
+                                  offset: Offset(0, 5)
+                              ),
+                              BoxShadow(
+                                  color: Colors.white,
+                                  offset: Offset(-5, 0)
+                              ),
+                              BoxShadow(
+                                  color: Colors.white,
+                                  offset: Offset(5, 0)
+                              )
+                            ]
+                        ),
+                        child: Container(
+                          padding: EdgeInsets.only(top: Dimensions.height10, left: Dimensions.width15, right: Dimensions.width15, bottom: Dimensions.height10),
+                          child: FakeAppColumn(),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: Dimensions.height30,)
+              ],
+            );
           } else {
             return Column(
               children: [
