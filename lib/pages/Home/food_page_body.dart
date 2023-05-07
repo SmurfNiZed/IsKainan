@@ -285,7 +285,7 @@ class _FoodPageBodyState extends State<FoodPageBody> {
                                                         Row(
                                                           children: [
                                                             RectangleIconWidget(text: "NEW", iconColor: AppColors.isNew, isActivated: isNew(queryVendorMenu[index].menuData.food_created!)),
-                                                            SizedBox(width: Dimensions.width10/2,),
+                                                            isNew(queryVendorMenu[index].menuData.food_created!)?SizedBox(width: Dimensions.width10/2,):SizedBox(),
                                                             queryVendorMenu[index].menuData.isSpicy=="true"?RectangleIconWidget(text: "SPICY", iconColor: Colors.red[900]!, isActivated: queryVendorMenu[index].menuData.isSpicy=="true"?true:false):Text(""),
                                                           ],
                                                         ),

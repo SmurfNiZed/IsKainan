@@ -140,9 +140,12 @@ class _AppColumnDetailedState extends State<AppColumnDetailed> {
             SizedBox(height: Dimensions.height10,),
             Text(
               vendorProfile.vendor_description,
+              textAlign: TextAlign.end,
               maxLines: 4,
               style: TextStyle(
-
+                color: Colors.grey[500],
+                fontWeight: FontWeight.w400,
+                fontStyle: FontStyle.italic,
               ),
             )
           ],

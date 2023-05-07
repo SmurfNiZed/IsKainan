@@ -9,6 +9,8 @@ import 'package:iskainan/models/vendor_data_model.dart';
 import 'package:iskainan/widgets/app_text_field.dart';
 import '../../controllers/auth_controller.dart';
 import '../../utils/dimensions.dart';
+import '../../widgets/AppNumField.dart';
+import '../../widgets/app_phone_field.dart';
 import '../../widgets/big_text.dart';
 import '../../utils/colors.dart';
 
@@ -17,13 +19,10 @@ class VendorSignUpPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // final controller = Get.put(SignUpController());
     var emailController = TextEditingController();
     var passwordController = TextEditingController();
     var vendorNameController = TextEditingController();
     var phoneController = TextEditingController();
-
-    var signUpImages = ["f.png", "g.png"];
 
     void _registration(){
 
@@ -100,7 +99,7 @@ class VendorSignUpPage extends StatelessWidget {
                   SizedBox(height: Dimensions.height20),
 
                   // Contact Number
-                  AppTextField(textController: phoneController, hintText: "Contact Number", icon: Icons.phone, backgroundColor: AppColors.mainColor),
+                  AppPhoneField(textController: phoneController, hintText: "Contact Number", icon: Icons.phone, backgroundColor: AppColors.mainColor),
                   SizedBox(height: Dimensions.height20*2),
 
 
@@ -134,31 +133,7 @@ class VendorSignUpPage extends StatelessWidget {
                         fontSize: Dimensions.font16
                       ),
                     )
-                  ,),
-                  SizedBox(height: Dimensions.screenHeight*0.05),
-                  RichText(text: TextSpan(
-
-                      text: "Sign up another way",
-                      style:
-                      TextStyle(
-                          color: Colors.grey[500],
-                          fontSize: Dimensions.font16
-                      )
-                    )
-                  ,),
-                  Wrap(
-                    children: List.generate(2, (index) => Padding(
-                      padding: EdgeInsets.all(10.0),
-                      child: CircleAvatar(
-                        radius: Dimensions.radius30*2/3,
-                        backgroundColor: Colors.white,
-                        backgroundImage: AssetImage(
-                          "assets/images/"+signUpImages[index]
-                        )
-                      ),
-                    ))
-                  )
-
+                  ,)
                 ],
               ),
             ),
