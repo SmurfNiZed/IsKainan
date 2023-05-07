@@ -20,10 +20,13 @@ import '../../routes/route_helper.dart';
 import '../../utils/colors.dart';
 import '../../utils/dimensions.dart';
 import '../../utils/is_new.dart';
+import '../../utils/shimmer.dart';
 import '../../widgets/app_column.dart';
+import '../../widgets/app_column_detailed.dart';
 import '../../widgets/app_icon.dart';
 import '../../widgets/big_text.dart';
 import '../../widgets/icon_and_text_widget.dart';
+import '../../widgets/shimmer_food_list.dart';
 import '../../widgets/small_text.dart';
 import 'find_vendor.dart';
 
@@ -137,7 +140,6 @@ class _VendorDetailState extends State<VendorDetail> {
       body: CustomScrollView(
         slivers: [
           SliverAppBar(
-
             elevation: 0,
             automaticallyImplyLeading: false,
             toolbarHeight: 70,
@@ -154,7 +156,7 @@ class _VendorDetailState extends State<VendorDetail> {
             bottom: PreferredSize(
                 preferredSize: Size.fromHeight(90),
                 child: Container(
-                  child: AppColumn(vendorId: widget.vendorId,),
+                  child: AppColumnDetailed(vendorId: widget.vendorId,),
                   width: double.maxFinite,
                   padding: EdgeInsets.only(top: Dimensions.width20, left: Dimensions.width20, right: Dimensions.width20, bottom: Dimensions.width15),
                   decoration: BoxDecoration(
@@ -168,7 +170,8 @@ class _VendorDetailState extends State<VendorDetail> {
             ),
             pinned: true,
             backgroundColor: AppColors.mainColor,
-            expandedHeight: Dimensions.screenHeight*2/4,
+            expandedHeight: Dimensions.screenHeight/2,
+            collapsedHeight: kToolbarHeight+54,
             flexibleSpace: FlexibleSpaceBar(
               background: Container(
                   width: double.maxFinite,
@@ -180,15 +183,15 @@ class _VendorDetailState extends State<VendorDetail> {
                           VendorData user = snapshot.data as VendorData;
                           return user.vendor_img==""?Container(
                             color: AppColors.mainColor,
-                            width: double.maxFinite,
-                            height: double.maxFinite,
+                            width: Dimensions.screenWidth,
+                            height: Dimensions.screenHeight,
                             child: Icon(
                               Icons.storefront,
                               color: Colors.white,
-                              size: Dimensions.width30,
+                              size: Dimensions.width30*5,
                             ),
                           )
-                              :CachedNetworkImage(
+                            :CachedNetworkImage(
                             imageUrl: user.vendor_img!,
                             imageBuilder: (context, imageProvider) => Container(
                               decoration: BoxDecoration(
@@ -201,11 +204,7 @@ class _VendorDetailState extends State<VendorDetail> {
                             ),
                           );
                         } else {
-                          return Center(
-                            child: CircularProgressIndicator(
-                              color: Colors.white,
-                            ),
-                          );
+                          return shimmer();
                         }
                       }
                   )
@@ -217,16 +216,74 @@ class _VendorDetailState extends State<VendorDetail> {
                 future: FirebaseFirestore.instance.collection('vendors').doc(widget.vendorId!).collection('foodList').get(),
                 builder: (context, snapshot){
                   if(snapshot.connectionState == ConnectionState.waiting){
-                    return Center(
-                      child: CircularProgressIndicator(
-                        color: AppColors.mainColor,
-                      ),
+                    return Column(
+                      children: [
+                        Container(
+                            child: ListView.builder(
+                                physics: NeverScrollableScrollPhysics(),
+                                shrinkWrap: true,
+                                padding: EdgeInsets.zero,
+                                itemCount: 3,
+                                itemBuilder: (context, index) {
+                                  return Container(
+                                    margin: EdgeInsets.only(left: Dimensions.width20, right: Dimensions.width20, bottom: Dimensions.height20),
+                                    child: Row(
+                                      children: [
+                                        // image section
+                                        Container(
+                                          width: Dimensions.listViewImgSize,
+                                          height: Dimensions.listViewImgSize,
+                                          child: shimmer(),
+                                        ),
+                                        Expanded(
+                                          child: Container(
+                                            height: Dimensions.listViewTextContSize,
+                                            decoration: BoxDecoration(
+                                              borderRadius: BorderRadius.only(
+                                                  topRight: Radius.circular(Dimensions.radius20),
+                                                  bottomRight: Radius.circular(Dimensions.radius20)
+                                              ),
+
+                                            ),
+                                            child:
+                                            Padding(padding: EdgeInsets.only(left: Dimensions.width10, right: Dimensions.width10),
+                                              child: Column(
+                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                children: [
+                                                  Column(
+                                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                                    children: [
+                                                      shimmer(height: Dimensions.font20, width: Dimensions.width30*5,),
+                                                      SizedBox(height: Dimensions.height10/2,),
+                                                      shimmer(height:Dimensions.font16, width: Dimensions.width30*2,),
+                                                    ],
+                                                  ),
+                                                  Column(
+                                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                                    children: [
+                                                      shimmer(height: Dimensions.font16, width: Dimensions.width30*1.5,),
+                                                      SizedBox(height: Dimensions.height10/2,),
+                                                      shimmer(height: Dimensions.font20, width: Dimensions.width30*3,),
+                                                      SizedBox(height: Dimensions.height10/2,)
+                                                    ],
+                                                  )
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                })
+                        ),
+                      ],
                     );
                   } else {
                     var data = snapshot.data!.docs.map((DocumentSnapshot document) {
                       return VendorMenu.fromSnapshot(document as DocumentSnapshot<Map<String, dynamic>>);
                     }).toList();
-
                     return ListView.builder(
                         padding: EdgeInsets.zero,
                         physics: NeverScrollableScrollPhysics(),

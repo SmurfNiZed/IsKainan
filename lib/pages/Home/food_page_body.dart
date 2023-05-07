@@ -11,6 +11,7 @@ import 'package:iskainan/models/vendors_model.dart';
 import 'package:iskainan/widgets/big_text.dart';
 import 'package:iskainan/widgets/icon_and_text_widget.dart';
 import 'package:iskainan/widgets/rectangle_icon_widget.dart';
+import 'package:iskainan/widgets/shimmer_food_list.dart';
 import 'package:iskainan/widgets/small_text.dart';
 import 'package:progress_indicators/progress_indicators.dart';
 import '../../controllers/address_name_controller.dart';
@@ -61,7 +62,6 @@ class _FoodPageBodyState extends State<FoodPageBody> {
   Future<QuerySnapshot> getData() {
     return vendorCollection.get();
   }
-
 
 
   Future<String?> _getUserLocation() async {
@@ -141,56 +141,7 @@ class _FoodPageBodyState extends State<FoodPageBody> {
       children: [
         GetBuilder<VendorController>(builder: (_){
           if (queryVendors.isEmpty) {
-            return Column(
-              children: [
-                Stack(
-                  children: [
-                    Container(                                                      // Food pics
-                      height: Dimensions.pageViewContainer,
-                      margin: EdgeInsets.only(left: Dimensions.width20*2, right: Dimensions.width20*2, top: Dimensions.width10/2, bottom: Dimensions.height20*2),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(Dimensions.radius30),
-                        color: Colors.grey.withOpacity(0.02),
-                      ),
-                      child: shimmer(radius: Dimensions.radius30,),
-                    ),
-                    Positioned(
-                      bottom: -Dimensions.height30,
-                      left: Dimensions.width30,
-                      right: Dimensions.width30,
-                      child: Container(                                             // Food details
-                        height: Dimensions.pageViewTextContainer+5,
-                        margin: EdgeInsets.only(left: Dimensions.width30, right: Dimensions.width30, bottom: Dimensions.height30),
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(Dimensions.radius20),
-                            color: Colors.white,
-                            boxShadow: [                                                              // Drop Shadow
-                              BoxShadow(
-                                  color: Color(0xFFe8e8e8),
-                                  blurRadius: 5.0,
-                                  offset: Offset(0, 5)
-                              ),
-                              BoxShadow(
-                                  color: Colors.white,
-                                  offset: Offset(-5, 0)
-                              ),
-                              BoxShadow(
-                                  color: Colors.white,
-                                  offset: Offset(5, 0)
-                              )
-                            ]
-                        ),
-                        child: Container(
-                          padding: EdgeInsets.only(top: Dimensions.height10, left: Dimensions.width15, right: Dimensions.width15, bottom: Dimensions.height10),
-                          child: FakeAppColumn(),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: Dimensions.height30,)
-              ],
-            );
+            return ShimmerFoodList();
           } else {
             return Column(
               children: [
@@ -266,69 +217,7 @@ class _FoodPageBodyState extends State<FoodPageBody> {
 
           queryVendorMenu.sort((a, b) => a.distance.compareTo(b.distance));
           if (queryVendorMenu.isEmpty || !chosenLocLoaded) {
-            return Column(
-              children: [
-                Container(
-                    child: ListView.builder(
-                        physics: NeverScrollableScrollPhysics(),
-                        shrinkWrap: true,
-                        itemCount: 2,
-                        itemBuilder: (context, index) {
-                          return Container(
-                            margin: EdgeInsets.only(left: Dimensions.width20, right: Dimensions.width20, bottom: Dimensions.height20),
-                            child: Row(
-                              children: [
-                                // image section
-                                Container(
-                                  width: Dimensions.listViewImgSize,
-                                  height: Dimensions.listViewImgSize,
-                                  child: shimmer(),
-                                ),
-                                Expanded(
-                                  child: Container(
-                                    height: Dimensions.listViewTextContSize,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.only(
-                                          topRight: Radius.circular(Dimensions.radius20),
-                                          bottomRight: Radius.circular(Dimensions.radius20)
-                                      ),
-
-                                    ),
-                                    child:
-                                    Padding(padding: EdgeInsets.only(left: Dimensions.width10, right: Dimensions.width10),
-                                      child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Column(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                            children: [
-                                              shimmer(height: Dimensions.font20, width: Dimensions.width30*5,),
-                                              SizedBox(height: Dimensions.height10/2,),
-                                              shimmer(height:Dimensions.font16, width: Dimensions.width30*2,),
-                                            ],
-                                          ),
-                                          Column(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                            children: [
-                                              shimmer(height: Dimensions.font16, width: Dimensions.width30*1.5,),
-                                              SizedBox(height: Dimensions.height10/2,),
-                                              shimmer(height: Dimensions.font20, width: Dimensions.width30*3,),
-                                              SizedBox(height: Dimensions.height10/2,)
-                                            ],
-                                          )
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          );
-                        })
-                ),
-              ],
-            );
+            return ShimmerFoodList();
           } else {
             return Column(
               children: [
