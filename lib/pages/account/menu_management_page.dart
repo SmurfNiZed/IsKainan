@@ -15,12 +15,14 @@ import 'package:iskainan/controllers/auth_controller.dart';
 import 'package:iskainan/utils/app_constants.dart';
 import 'package:progress_indicators/progress_indicators.dart';
 
+import '../../base/show_custom_snackbar.dart';
 import '../../controllers/profile_controller.dart';
 import '../../data/repository/user_repo.dart';
 import '../../models/vendor_data_model.dart';
 import '../../utils/colors.dart';
 import '../../utils/dimensions.dart';
 import '../../widgets/AppNumField.dart';
+import '../../widgets/AppTextFieldLong.dart';
 import '../../widgets/AppTextFieldv2.dart';
 import '../../widgets/app_icon.dart';
 import '../../widgets/app_text_field.dart';
@@ -56,6 +58,7 @@ class _MenuManagementPageState extends State<MenuManagementPage> {
         isAvailable: entry.isAvailable,
         isSpicy: entry.isSpicy,
         food_created: Timestamp.now(),
+        food_description: entry.food_description
       );
 
 
@@ -76,7 +79,8 @@ class _MenuManagementPageState extends State<MenuManagementPage> {
         foodImg: entry.foodImg,
         isAvailable: entry.isAvailable,
         isSpicy: entry.isSpicy,
-        food_created: entry.food_created
+        food_created: entry.food_created,
+        food_description: entry.food_description,
       );
 
       await userRepo.updateVendorMenu(user.vendor_id!, entry.foodId!, newMenu);
@@ -136,6 +140,7 @@ class _MenuManagementPageState extends State<MenuManagementPage> {
                     onTap: (){
                       late TextEditingController foodNameController = TextEditingController();
                       late TextEditingController foodPriceController = TextEditingController();
+                      late TextEditingController foodDescriptionController = TextEditingController();
                       late String is_available = "false";
                       late String is_spicy = "false";
                       XFile? _imageFile;
@@ -149,46 +154,53 @@ class _MenuManagementPageState extends State<MenuManagementPage> {
                           dismissOnBackKeyPress: true,
                           showCloseIcon: true,
                           btnOkOnPress: () async {
-                            final entry = VendorMenu(
-                              foodName: foodNameController.text.trim(),
-                              foodPrice: double.parse(foodPriceController.text.trim()),
-                              vendorName: widget.user.vendor_name,
-                              vendorId: widget.user.vendor_id,
-                              vendorLoc: widget.user.vendor_location,
-                              foodImg: "",
-                              isAvailable: is_available,
-                              isSpicy: is_spicy,
-                              food_created: Timestamp.now(),
-                            );
-                            String imageUrl;
-                            String uniqueFileName = await _addMenu(widget.user, entry);
+                            if (foodNameController.text.trim().isEmpty){
+                              showCustomerSnackBar("Type in the Product Name.", title: "Product Name");
+                            } else if (foodPriceController.text.trim().isEmpty){
+                              showCustomerSnackBar("Type in the Product Price.", title: "Product Price");
+                            } {
+                              final entry = VendorMenu(
+                                foodName: foodNameController.text.trim(),
+                                foodPrice: double.parse(foodPriceController.text.trim()),
+                                vendorName: widget.user.vendor_name,
+                                vendorId: widget.user.vendor_id,
+                                vendorLoc: widget.user.vendor_location,
+                                foodImg: "",
+                                isAvailable: is_available,
+                                isSpicy: is_spicy,
+                                food_created: Timestamp.now(),
+                                food_description: foodDescriptionController.text.trim(),
+                              );
 
-                            if (_imageFile != null){
-                              Reference referenceRoot = FirebaseStorage.instance.ref();
-                              Reference referenceDirImages = referenceRoot.child("vendors/${widget.user.vendor_name}(${widget.user.vendor_id})/FoodList");
+                              String imageUrl;
+                              String uniqueFileName = await _addMenu(widget.user, entry);
 
-                              Reference referenceImageToUpload = referenceDirImages.child(uniqueFileName);
-                              await referenceImageToUpload.putFile(File(_imageFile!.path));
-                              imageUrl = await referenceImageToUpload.getDownloadURL();
-                            } else {
-                              imageUrl = AppConstants.DEFAULT_FOOD_IMAGE;
+                              if (_imageFile != null){
+                                Reference referenceRoot = FirebaseStorage.instance.ref();
+                                Reference referenceDirImages = referenceRoot.child("vendors/${widget.user.vendor_name}(${widget.user.vendor_id})/FoodList");
+
+                                Reference referenceImageToUpload = referenceDirImages.child(uniqueFileName);
+                                await referenceImageToUpload.putFile(File(_imageFile!.path));
+                                imageUrl = await referenceImageToUpload.getDownloadURL();
+                              } else {
+                                imageUrl = AppConstants.DEFAULT_FOOD_IMAGE;
+                              }
+
+                              final entry2 = VendorMenu(
+                                foodName: foodNameController.text.trim(),
+                                foodPrice: double.parse(foodPriceController.text.trim()),
+                                vendorName: widget.user.vendor_name,
+                                vendorId: widget.user.vendor_id,
+                                vendorLoc: widget.user.vendor_location,
+                                foodImg: imageUrl,
+                                isAvailable: is_available,
+                                isSpicy: is_spicy,
+                                food_created: Timestamp.now(),
+                                food_description: foodDescriptionController.text.trim()
+                              );
+
+                              await FirebaseFirestore.instance.collection('vendors').doc(widget.user.vendor_id).collection('foodList').doc(uniqueFileName).update(entry2.toJson());
                             }
-
-                            final entry2 = VendorMenu(
-                              foodName: foodNameController.text.trim(),
-                              foodPrice: double.parse(foodPriceController.text.trim()),
-                              vendorName: widget.user.vendor_name,
-                              vendorId: widget.user.vendor_id,
-                              vendorLoc: widget.user.vendor_location,
-                              foodImg: imageUrl,
-                              isAvailable: is_available,
-                              isSpicy: is_spicy,
-                              food_created: Timestamp.now(),
-                            );
-
-                            await FirebaseFirestore.instance.collection('vendors').doc(widget.user.vendor_id).collection('foodList').doc(uniqueFileName).update(entry2.toJson());
-
-
                           },
                           btnOkColor: AppColors.iconColor1,
                           btnOkText: 'Create',
@@ -347,6 +359,10 @@ class _MenuManagementPageState extends State<MenuManagementPage> {
                                     ),
                                     SizedBox(height: Dimensions.height20),
                                     Container(
+                                        margin: EdgeInsets.symmetric(horizontal: Dimensions.height10),
+                                        child: AppTextFieldLong(vendorDescriptionController: foodDescriptionController)),
+                                    SizedBox(height: Dimensions.height20),
+                                    Container(
                                       padding: EdgeInsets.symmetric(horizontal: Dimensions.width10),
                                       child: Divider(
                                         height: 1, // Set the height of the divider
@@ -417,11 +433,14 @@ class _MenuManagementPageState extends State<MenuManagementPage> {
                                         var is_available = foodItem['is_available'];
                                         var is_spicy = foodItem['is_spicy'];
                                         final food_created = foodItem['food_created'];
+                                        final foodDescription = foodItem['food_description'];
 
                                         late TextEditingController foodNameController =
                                         TextEditingController(text: foodName.toString());
                                         late TextEditingController foodPriceController =
                                         TextEditingController(text: foodPrice.toString());
+                                        late TextEditingController foodDescriptionController =
+                                        TextEditingController(text: foodDescription.toString());
 
                                         late String vendorId;
                                         late String vendorName;
@@ -465,6 +484,7 @@ class _MenuManagementPageState extends State<MenuManagementPage> {
                                                   isAvailable: is_available,
                                                   isSpicy: is_spicy,
                                                   food_created: food_created,
+                                                  food_description: foodDescriptionController.text.trim(),
                                                 );
 
                                                 _updateMenu(widget.user, updatedEntry);
@@ -581,8 +601,6 @@ class _MenuManagementPageState extends State<MenuManagementPage> {
                                                                   backgroundColor: AppColors.iconColor1,
                                                                 ),
                                                                 SizedBox(height: Dimensions.height20),
-
-// Contact Number
                                                                 AppTextFieldv2(
                                                                   textController: foodPriceController,
                                                                   hintText: "Price",
@@ -643,9 +661,14 @@ class _MenuManagementPageState extends State<MenuManagementPage> {
                                                                             )),
                                                                           ),
                                                                         ),
-                                                                      ),)
+                                                                      ),),
+
                                                                   ],
                                                                 ),
+                                                                SizedBox(height: Dimensions.height20),
+                                                                Container(
+                                                                    margin: EdgeInsets.symmetric(horizontal: Dimensions.height10),
+                                                                    child: AppTextFieldLong(vendorDescriptionController: foodDescriptionController)),
                                                                 SizedBox(height: Dimensions.height20),
                                                                 Container(
                                                                   padding: EdgeInsets.symmetric(horizontal: Dimensions.width10),
@@ -655,6 +678,7 @@ class _MenuManagementPageState extends State<MenuManagementPage> {
                                                                     thickness: 1, // Set the thickness of the divider
                                                                   ),
                                                                 ),
+
                                                               ],
                                                             ),
                                                           ],
