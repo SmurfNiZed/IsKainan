@@ -64,7 +64,6 @@ class _FoodPageBodyState extends State<FoodPageBody> {
     return vendorCollection.get();
   }
 
-
   Future<String?> _getUserLocation() async {
     if(widget.position.latitude == 0 && widget.position.longitude == 0){
       bool locationEnabled = await Geolocator.isLocationServiceEnabled();
@@ -85,12 +84,13 @@ class _FoodPageBodyState extends State<FoodPageBody> {
   }
 
   late Future<String?> _userLocation;
+  late int flag;
 
   @override
   void initState(){
     super.initState();
-    _loadResource;
     _userLocation = _getUserLocation();
+    _loadResource;
     pageController.addListener(() {
       setState(() {
         _currPageValue = pageController.page!;
