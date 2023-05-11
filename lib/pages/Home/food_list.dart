@@ -67,6 +67,10 @@ class _VendorListState extends State<VendorList> {
                           suffixIcon: _controller.text==""?null:IconButton(
                             icon: Icon(Icons.clear, color: AppColors.mainColor),
                             onPressed: clearField),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(20),
+                            borderSide:  BorderSide(color: AppColors.mainColor, width: 5),
+                          ),
                           focusColor: AppColors.mainColor,
                           focusedBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(20),
