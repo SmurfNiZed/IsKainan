@@ -108,8 +108,6 @@ class _FoodPageBodyState extends State<FoodPageBody> {
   @override
   Widget build(BuildContext context) {
     // AuthController.instance.logout();
-
-
     var queryVendorNames = [];
     List<VendorWithDistance> queryVendors = [];
     List<VendorMenuWithDistance> queryVendorMenu = [];

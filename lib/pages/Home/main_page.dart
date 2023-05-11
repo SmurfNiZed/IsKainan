@@ -11,6 +11,7 @@ import '../../routes/route_helper.dart';
 import '../../utils/colors.dart';
 import '../../utils/dimensions.dart';
 
+import '../splash/splash_page.dart';
 import 'food_page_body.dart';
 
 class MainPage extends StatefulWidget {
@@ -46,7 +47,11 @@ class _MainPageState extends State<MainPage> {
                       children: [
                         Container(
                             padding: EdgeInsets.only(left: Dimensions.width10),
-                            child: Image.asset('assets/images/logo.png', scale: 13,))
+                            child: GestureDetector(
+                              onTap: (){
+                                Get.offAll(() => SplashScreen(searchString: "", budget: 10000, position: widget.position,));
+                              },
+                              child: Image.asset('assets/images/logo.png', scale: 13,)))
                       ],
                     ),
                     Center(
