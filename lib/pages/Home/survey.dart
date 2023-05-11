@@ -26,6 +26,7 @@ class ChoicePage extends StatefulWidget {
 
 class _ChoicePageState extends State<ChoicePage> {
   late StreamSubscription<Position> _locationSubscription;
+  bool hideMap = false;
   bool isMyLoc = true;
   late Stream<Position> _locationStream;
   late List<Marker> vendorsLocation = [];
@@ -64,6 +65,12 @@ class _ChoicePageState extends State<ChoicePage> {
   void _changeMap() {
     setState(() {
       isMyLoc = !isMyLoc;
+    });
+  }
+
+  void _hideMap(){
+    setState(() {
+      hideMap = true;
     });
   }
 
@@ -146,7 +153,8 @@ class _ChoicePageState extends State<ChoicePage> {
                 ),
               ],
             ),
-            isMyLoc?Container(
+            !hideMap?(isMyLoc?
+            Container(
               height: 140,
               width: MediaQuery.of(context).size.width,
               margin: const EdgeInsets.only(left: 10, right: 10),
@@ -205,38 +213,38 @@ class _ChoicePageState extends State<ChoicePage> {
               child: Stack(
                 children: [
                   FutureBuilder(
-                    future: getCurrentLocation(),
-                    builder: (context, snapshot){
-                      if (snapshot.hasData) {
-                        Position position = snapshot.data!;
-                        for (var vendor in vendorsLocation) {
-                          _markers.add(vendor);
+                      future: getCurrentLocation(),
+                      builder: (context, snapshot){
+                        if (snapshot.hasData) {
+                          Position position = snapshot.data!;
+                          for (var vendor in vendorsLocation) {
+                            _markers.add(vendor);
+                          }
+                          return GoogleMap(
+                            tiltGesturesEnabled: false,
+                            rotateGesturesEnabled: false,
+                            markers: _markers.toSet(),
+                            mapToolbarEnabled: false,
+                            compassEnabled: false,
+                            zoomControlsEnabled: false,
+                            initialCameraPosition: CameraPosition(
+                                target: LatLng(position.latitude, position.longitude),
+                                zoom: 17
+                            ),
+                            onCameraMove: (position){
+                              setState(() {
+                                chosenLocation_chosen = position.target;
+                              });
+                            },
+                          );
+                        } else if (snapshot.hasError) {
+                          return Center(
+                              child: Icon(Icons.error_outline_outlined, color: AppColors.mainColor,)
+                          );
+                        } else {
+                          return shimmer(width: MediaQuery.of(context).size.width, height: 140, radius: 5,);
                         }
-                        return GoogleMap(
-                          tiltGesturesEnabled: false,
-                          rotateGesturesEnabled: false,
-                          markers: _markers.toSet(),
-                          mapToolbarEnabled: false,
-                          compassEnabled: false,
-                          zoomControlsEnabled: false,
-                          initialCameraPosition: CameraPosition(
-                              target: LatLng(position.latitude, position.longitude),
-                              zoom: 17
-                          ),
-                          onCameraMove: (position){
-                            setState(() {
-                              chosenLocation_chosen = position.target;
-                            });
-                          },
-                        );
-                      } else if (snapshot.hasError) {
-                        return Center(
-                          child: Icon(Icons.error_outline_outlined, color: AppColors.mainColor,)
-                        );
-                      } else {
-                        return shimmer(width: MediaQuery.of(context).size.width, height: 140, radius: 5,);
                       }
-                    }
                   ),
                   Center(
                     child:Padding(
@@ -250,7 +258,139 @@ class _ChoicePageState extends State<ChoicePage> {
                   )
                 ],
               ),
-            ),
+            )):
+            Container(
+                height: 140,
+                width: MediaQuery.of(context).size.width,
+                margin: const EdgeInsets.only(left: 10, right: 10),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.only(bottomRight: Radius.circular(Dimensions.radius15/3), bottomLeft: Radius.circular(Dimensions.radius15/3)),
+                ),
+                child: shimmer(width: MediaQuery.of(context).size.width, height: 140, radius: 5,)),
+            // FutureBuilder(
+            //   future: Future.delayed(Duration(seconds: 1)),
+            //   builder: (context, snapshot){
+            //     if (snapshot.connectionState == ConnectionState.done && !hideMap) {
+            //       if(isMyLoc){
+            //         return Container(
+            //           height: 140,
+            //           width: MediaQuery.of(context).size.width,
+            //           margin: const EdgeInsets.only(left: 10, right: 10),
+            //           decoration: BoxDecoration(
+            //             borderRadius: BorderRadius.only(bottomRight: Radius.circular(Dimensions.radius15/3), bottomLeft: Radius.circular(Dimensions.radius15/3)),
+            //
+            //           ),
+            //           child: Stack(
+            //             children: [
+            //               StreamBuilder<Position>(
+            //                 stream: _locationStream,
+            //                 builder: (BuildContext context, AsyncSnapshot<Position> snapshot) {
+            //                   if (snapshot.hasData) {
+            //                     Position position = snapshot.data!;
+            //
+            //                     chosenLocation_mine = LatLng(position.latitude, position.longitude);
+            //
+            //                     final marker = Marker(
+            //                       markerId: MarkerId('0'),
+            //                       position: chosenLocation_mine,
+            //                     );
+            //
+            //                     _markers.add(marker);
+            //                     for (var vendor in vendorsLocation) {
+            //                       _markers.add(vendor);
+            //                     }
+            //                     return GoogleMap(
+            //                       tiltGesturesEnabled: false,
+            //                       rotateGesturesEnabled: false,
+            //                       markers: _markers.toSet(),
+            //                       mapToolbarEnabled: false,
+            //                       compassEnabled: false,
+            //                       zoomControlsEnabled: false,
+            //                       initialCameraPosition: CameraPosition(
+            //                           target: chosenLocation_mine,
+            //                           zoom: 17
+            //                       ),
+            //                     );
+            //                   } else {
+            //                     return Center(
+            //                       child: shimmer(width: MediaQuery.of(context).size.width, height: 140, radius: 5,),
+            //                     );
+            //                   }
+            //                 },
+            //               ),
+            //             ],
+            //           ),
+            //         );
+            //       } else {
+            //         return Container(
+            //           height: 140,
+            //           width: MediaQuery.of(context).size.width,
+            //           margin: const EdgeInsets.only(left: 10, right: 10),
+            //           decoration: BoxDecoration(
+            //             borderRadius: BorderRadius.only(bottomRight: Radius.circular(Dimensions.radius15/3), bottomLeft: Radius.circular(Dimensions.radius15/3)),
+            //           ),
+            //           child: Stack(
+            //             children: [
+            //               FutureBuilder(
+            //                   future: getCurrentLocation(),
+            //                   builder: (context, snapshot){
+            //                     if (snapshot.hasData) {
+            //                       Position position = snapshot.data!;
+            //                       for (var vendor in vendorsLocation) {
+            //                         _markers.add(vendor);
+            //                       }
+            //                       return GoogleMap(
+            //                         tiltGesturesEnabled: false,
+            //                         rotateGesturesEnabled: false,
+            //                         markers: _markers.toSet(),
+            //                         mapToolbarEnabled: false,
+            //                         compassEnabled: false,
+            //                         zoomControlsEnabled: false,
+            //                         initialCameraPosition: CameraPosition(
+            //                             target: LatLng(position.latitude, position.longitude),
+            //                             zoom: 17
+            //                         ),
+            //                         onCameraMove: (position){
+            //                           setState(() {
+            //                             chosenLocation_chosen = position.target;
+            //                           });
+            //                         },
+            //                       );
+            //                     } else if (snapshot.hasError) {
+            //                       return Center(
+            //                           child: Icon(Icons.error_outline_outlined, color: AppColors.mainColor,)
+            //                       );
+            //                     } else {
+            //                       return shimmer(width: MediaQuery.of(context).size.width, height: 140, radius: 5,);
+            //                     }
+            //                   }
+            //               ),
+            //               Center(
+            //                 child:Padding(
+            //                   padding: const EdgeInsets.only(bottom: 42),
+            //                   child: Icon(
+            //                     Icons.location_on,
+            //                     color: AppColors.mainColor,
+            //                     size: 50,
+            //                   ),
+            //                 ),
+            //               )
+            //             ],
+            //           ),
+            //         );
+            //       }
+            //     } else {
+            //       return Container(
+            //           height: 140,
+            //           width: MediaQuery.of(context).size.width,
+            //           margin: const EdgeInsets.only(left: 10, right: 10),
+            //           decoration: BoxDecoration(
+            //             borderRadius: BorderRadius.only(bottomRight: Radius.circular(Dimensions.radius15/3), bottomLeft: Radius.circular(Dimensions.radius15/3)),
+            //           ),
+            //           child: shimmer(width: MediaQuery.of(context).size.width, height: 140, radius: 5,));
+            //     }
+            //   }
+            // ),
             SizedBox(height: Dimensions.height30,),
             Padding(
               padding: EdgeInsets.symmetric(horizontal: Dimensions.width10),
@@ -260,6 +400,7 @@ class _ChoicePageState extends State<ChoicePage> {
                   Expanded(
                     child: GestureDetector(
                       onTap: (){
+                        _hideMap();
                         Navigator.pop(context);
                       },
                       child: Container(
@@ -291,7 +432,7 @@ class _ChoicePageState extends State<ChoicePage> {
                           AwesomeDialog(
                             context: context,
                             dialogType: DialogType.noHeader,
-                            animType: AnimType.topSlide,
+                            animType: AnimType.scale,
                             title: "Some fields are empty!",
                             autoDismiss: true,
                             autoHide: Duration(seconds: 2),

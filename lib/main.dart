@@ -37,8 +37,6 @@ class Home extends StatelessWidget {
     return GetMaterialApp(
       theme: ThemeData(
           primaryColor: AppColors.mainColor,
-          accentColor: AppColors.mainColor,
-
           fontFamily: 'Roboto'
       ),
       debugShowCheckedModeBanner: false,

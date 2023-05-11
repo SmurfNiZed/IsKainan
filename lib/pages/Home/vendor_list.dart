@@ -36,30 +36,47 @@ class _VendorListState extends State<VendorList> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        elevation: 0,
-        backgroundColor: AppColors.mainColor,
-        title: Card(
-          child: TextField(
-            decoration: InputDecoration(
-                prefixIcon: Icon(
-                  Icons.search,
-                  color: AppColors.mainColor,
-                ), hintText: 'Search...'
-            ),
-            onChanged: (val) {
-              setState(() {
-                name = val;
-              });
-            },
-          ),
-        ),
-      ),
       body: Container(
         color: Colors.white,
         padding: EdgeInsets.only(top: Dimensions.height20),
         child: Column(
           children: [
+            Container(
+                margin: EdgeInsets.only(left: Dimensions.height10, right: Dimensions.height10, top: Dimensions.height30),
+                decoration: BoxDecoration(
+                  color: Colors.grey[100]!,
+                  borderRadius: BorderRadius.circular(Dimensions.radius30),
+                ),
+                child: TextField(
+                  cursorColor: AppColors.mainColor,
+                  decoration: InputDecoration(
+                      hintText: "Search",
+                      prefixIcon: Icon(Icons.search, color: AppColors.mainColor),
+                      focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(Dimensions.radius30),
+                          borderSide: BorderSide(
+                              width: 1.0,
+                              color: AppColors.mainColor
+                          )
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(Dimensions.radius30),
+                          borderSide: BorderSide(
+                              width: 1.0,
+                              color: Colors.grey[100]!
+                          )
+                      ),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(Dimensions.radius30),
+                      )
+                  ),
+                  onChanged: (val) {
+                    setState(() {
+                      name = val;
+                    });
+                  },
+                )
+            ),
             GetBuilder<VendorController>(builder: (vendor){
               return Container(
                 child: ListView.builder(

@@ -59,8 +59,8 @@ class _MainPageState extends State<MainPage> {
                                     AwesomeDialog(
                                       context: context,
                                       dialogType: DialogType.noHeader,
-                                      animType: AnimType.topSlide,
                                       dismissOnTouchOutside: false,
+                                      animType: AnimType.topSlide,
                                       body: ChoicePage(),
                                     ).show();
                                   },

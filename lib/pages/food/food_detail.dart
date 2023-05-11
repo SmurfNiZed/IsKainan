@@ -155,7 +155,8 @@ class _RecommendedFoodDetailState extends State<RecommendedFoodDetail> {
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
-                                  BigText(size: Dimensions.font26, text: food.foodName!),
+                                  Expanded(
+                                      child: SizedBox(child: BigText(size: Dimensions.font26, text: food.foodName!))),
                                   BigText(size: Dimensions.font26, text: "₱${food.foodPrice.toStringAsFixed(2)}")
                                 ],
                               ),
