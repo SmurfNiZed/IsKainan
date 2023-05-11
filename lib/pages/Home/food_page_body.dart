@@ -14,6 +14,7 @@ import 'package:iskainan/widgets/rectangle_icon_widget.dart';
 import 'package:iskainan/widgets/shimmer_food_list.dart';
 import 'package:iskainan/widgets/small_text.dart';
 import 'package:progress_indicators/progress_indicators.dart';
+import 'package:shimmer/shimmer.dart';
 import '../../controllers/address_name_controller.dart';
 import '../../controllers/auth_controller.dart';
 import '../../models/vendor_data_model.dart';
@@ -83,19 +84,13 @@ class _FoodPageBodyState extends State<FoodPageBody> {
 
   }
 
-  String? _userLocation;
+  late Future<String?> _userLocation;
 
   @override
   void initState(){
     super.initState();
     _loadResource;
-    _getUserLocation().then((value) {
-      setState(() {
-        _userLocation = value;
-        chosenLocLoaded = true;
-      });
-    });
-
+    _userLocation = _getUserLocation();
     pageController.addListener(() {
       setState(() {
         _currPageValue = pageController.page!;
@@ -109,12 +104,11 @@ class _FoodPageBodyState extends State<FoodPageBody> {
     super.dispose();          // dispose include child pages that gets loaded in this page
   }
 
-  bool chosenLocLoaded = false;
-
 
   @override
   Widget build(BuildContext context) {
     // AuthController.instance.logout();
+
 
     var queryVendorNames = [];
     List<VendorWithDistance> queryVendors = [];
@@ -152,7 +146,10 @@ class _FoodPageBodyState extends State<FoodPageBody> {
                         borderRadius: BorderRadius.circular(Dimensions.radius30),
                         color: Colors.grey.withOpacity(0.02),
                       ),
-                      child: shimmer(radius: Dimensions.radius30,),
+                      child: Stack(children: [
+                        shimmer(radius: Dimensions.radius30,),
+                        Center(child: Image.asset('assets/images/empty.png', height: Dimensions.width30*3, width: Dimensions.width30*3, color: Colors.grey,))
+                      ],),
                     ),
                     Positioned(
                       bottom: -Dimensions.height30,
@@ -234,23 +231,29 @@ class _FoodPageBodyState extends State<FoodPageBody> {
                 child: BigText(text: ".", color: Colors.black26),
               ),
               SizedBox(width: Dimensions.width10,),
-              _userLocation!=null?Expanded(
-                child: Container(
-                  margin: EdgeInsets.only(bottom: 2, right: Dimensions.width10),
-                  child: widget.searchString==""?SmallText(text: _userLocation!):
-                  FutureBuilder(
-                      future: getAddressFromLatLng(widget.position.latitude, widget.position.longitude),
-                      builder: (context, snapshot){
-                        if(snapshot.connectionState == ConnectionState.waiting){
-                          return shimmer(width: Dimensions.width30*3,);
-                        } else {
-                          return  SmallText(text: "${widget.searchString}/₱${widget.budget.toStringAsFixed(2)}/${snapshot.data}", isOneLine: true,);
-                        }
+              FutureBuilder(
+                  future: _userLocation,
+                  builder: (context, snapshot){
+                    if(snapshot.connectionState == ConnectionState.waiting){
+                      return shimmer(width: Dimensions.width30*3,);
+                    } else {
+                      var searchString = "";
+                      if(widget.searchString != ""){
+                        searchString += "${widget.searchString}/";
                       }
-                  )
-                  ),
-                )
-              :shimmer(width: Dimensions.width30*3,),
+
+                      if (widget.budget != 10000){
+                        searchString += "₱${widget.budget.toStringAsFixed(2)}/";
+                      }
+
+
+                      searchString += "${snapshot.data}";
+
+
+                      return  SmallText(text: searchString, isOneLine: true,);
+                    }
+                  }
+              )
             ],
           ),
         ),
@@ -265,22 +268,38 @@ class _FoodPageBodyState extends State<FoodPageBody> {
           }
 
           queryVendorMenu.sort((a, b) => a.distance.compareTo(b.distance));
-          if (queryVendorMenu.isEmpty || !chosenLocLoaded) {
-            return ShimmerFoodList();
-          } else {
-            return Column(
-              children: [
-                Container(
-                    child: ListView.builder(
-                        physics: NeverScrollableScrollPhysics(),
-                        shrinkWrap: true,
-                        itemCount: queryVendorMenu.length,
-                        itemBuilder: (context, index) {
-                          if(widget.budget >= queryVendorMenu[index].menuData.foodPrice &&
-                            (queryVendorMenu[index].menuData.foodName.toString().toLowerCase().isCaseInsensitiveContainsAny(widget.searchString.toLowerCase()) || queryVendorMenu[index].menuData.foodName.toString().toLowerCase().isCaseInsensitiveContainsAny(widget.searchString.toLowerCase()))
-                              && queryVendorMenu[index].menuData.isAvailable=="true"
-                          ){
-                            return GestureDetector(
+          return FutureBuilder(
+            future: _userLocation,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting)
+                {
+                  return ShimmerFoodList();
+                }
+              else if (queryVendorMenu.isEmpty) {
+                return Container(
+                  height: Dimensions.width30*8,
+                  child: Center(
+                      child: Shimmer.fromColors(
+                          baseColor: Colors.black.withOpacity(0.1),
+                          highlightColor: Colors.black.withOpacity(0.08),
+                          child: Image.asset('assets/images/empty.png', height: Dimensions.width30*4, width: Dimensions.width30*4)
+                      )
+                  ),
+                );
+              } else {
+                return Column(
+                  children: [
+                    Container(
+                        child: ListView.builder(
+                            physics: NeverScrollableScrollPhysics(),
+                            shrinkWrap: true,
+                            itemCount: queryVendorMenu.length,
+                            itemBuilder: (context, index) {
+                              if(widget.budget >= queryVendorMenu[index].menuData.foodPrice &&
+                                  (queryVendorMenu[index].menuData.foodName.toString().toLowerCase().isCaseInsensitiveContainsAny(widget.searchString.toLowerCase()) || queryVendorMenu[index].menuData.foodName.toString().toLowerCase().isCaseInsensitiveContainsAny(widget.searchString.toLowerCase()))
+                                  && queryVendorMenu[index].menuData.isAvailable=="true"
+                              ){
+                                return GestureDetector(
                                   onTap: () async {
                                     Get.toNamed(RouteHelper.getFoodDetail(queryVendorMenu[index].menuData.vendorId!, queryVendorMenu[index].menuData.foodId!));
                                   },
@@ -350,15 +369,16 @@ class _FoodPageBodyState extends State<FoodPageBody> {
                                       ),
                                     ),
                                   ),
-                          );
-                          } else {
-                            return Container();
-                          }
-                        })
-                ),
-              ],
-            );
-          }
+                                );
+                              } else {
+                                return Container();
+                              }
+                            })
+                    ),
+                  ],
+                );
+              }
+          });
         }),
       ],
     );

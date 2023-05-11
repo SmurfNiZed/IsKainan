@@ -95,12 +95,16 @@ class _ChoicePageState extends State<ChoicePage> {
 
     return Container(
         color: Colors.white,
-        padding: EdgeInsets.only(bottom: Dimensions.height20, left: 5, right: 5),
+        padding: EdgeInsets.only(bottom: Dimensions.height20, left: Dimensions.width10/2, right: Dimensions.width10/2),
         width: Dimensions.width30*10,
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            BigText(
-                text: "Let's Eat!"
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: Dimensions.width10/2),
+              child: BigText(
+                  text: "What are you craving?"
+              ),
             ),
             SizedBox(height: Dimensions.height20,),
             AppTextFieldv2(textController: _searchController, hintText: "Food/Shop", icon: Icons.fastfood_rounded, backgroundColor: AppColors.mainColor),
@@ -431,18 +435,7 @@ class _ChoicePageState extends State<ChoicePage> {
                   Expanded(
                     child: GestureDetector(
                       onTap: (){
-                        if (/*chosenLocation_mine != LatLng(0,0) && chosenLocation_chosen != LatLng(0,0) && */ !_searchController.text.isEmpty && !_budgetController.text.isEmpty){
-                          Get.offAll(() => SplashScreen(searchString: _searchController.text.trim(), budget: double.parse(_budgetController.text.trim()), position: isMyLoc?chosenLocation_mine:chosenLocation_chosen,));
-                        } else {
-                          AwesomeDialog(
-                            context: context,
-                            dialogType: DialogType.noHeader,
-                            animType: AnimType.scale,
-                            title: "Some fields are empty!",
-                            autoDismiss: true,
-                            autoHide: Duration(seconds: 2),
-                          ).show();
-                        }
+                        Get.offAll(() => SplashScreen(searchString: _searchController.text.trim(), budget: _budgetController.text.isEmpty?10000:double.parse(_budgetController.text.trim()), position: isMyLoc?chosenLocation_mine:chosenLocation_chosen,));
                       },
                       child: Container(
                         padding: EdgeInsets.all(Dimensions.width10),
