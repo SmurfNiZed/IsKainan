@@ -16,6 +16,7 @@ import '../../utils/colors.dart';
 import '../../utils/dimensions.dart';
 import '../../widgets/AppTextFieldv2.dart';
 import '../splash/splash_page.dart';
+import '../../widgets/big_text.dart';
 
 class ChoicePage extends StatefulWidget {
   ChoicePage({Key? key}) : super(key: key);
@@ -94,10 +95,14 @@ class _ChoicePageState extends State<ChoicePage> {
 
     return Container(
         color: Colors.white,
-        padding: EdgeInsets.only(top: Dimensions.height10, bottom: Dimensions.height20, left: 5, right: 5),
+        padding: EdgeInsets.only(bottom: Dimensions.height20, left: 5, right: 5),
         width: Dimensions.width30*10,
         child: Column(
           children: [
+            BigText(
+                text: "Let's Eat!"
+            ),
+            SizedBox(height: Dimensions.height20,),
             AppTextFieldv2(textController: _searchController, hintText: "Food/Shop", icon: Icons.fastfood_rounded, backgroundColor: AppColors.mainColor),
             SizedBox(height: Dimensions.height20,),
             AppNumField(textController: _budgetController, hintText: "Budget", icon: Icons.money, backgroundColor: AppColors.mainColor),
