@@ -52,28 +52,36 @@ class _VendorListState extends State<VendorList> {
         padding: EdgeInsets.only(top: Dimensions.height15),
         child: Column(
           children: [
-            SizedBox(
-              width: 380,
-              child: TextField(
-                controller: _controller,
-                decoration: InputDecoration(
-                    prefixIcon: Icon(Icons.search, color: AppColors.mainColor,),
-                    hintText: 'Search for a vendor...',
-                    suffixIcon: IconButton(
-                        icon: Icon(Icons.clear, color: AppColors.mainColor),
-                        onPressed: clearField),
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(20),
-                        borderSide:  BorderSide(color: AppColors.mainColor, width: 5)
-                    )
-
+            Row(
+              children: [
+                Expanded(
+                  child: SizedBox(
+                    child: Container(
+                      padding: EdgeInsets.symmetric(horizontal: Dimensions.width20),
+                      child: TextField(
+                        cursorColor: AppColors.mainColor,
+                        controller: _controller,
+                        decoration: InputDecoration(
+                          prefixIcon: Icon(Icons.search, color: AppColors.mainColor,),
+                          hintText: 'Search for a vendor...',
+                          suffixIcon: _controller.text==""?null:IconButton(
+                            icon: Icon(Icons.clear, color: AppColors.mainColor),
+                            onPressed: clearField),
+                          focusColor: AppColors.mainColor,
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                        ),
+                        onChanged: (val) {
+                          setState(() {
+                            name = val;
+                          });
+                        },
+                      ),
+                    ),
+                  ),
                 ),
-                onChanged: (val) {
-                  setState(() {
-                    name = val;
-                  });
-                },
-              ),
+              ],
             ),
             SizedBox(height: Dimensions.height10,),
             GetBuilder<VendorController>(builder: (vendor){
