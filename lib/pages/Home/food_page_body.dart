@@ -129,256 +129,337 @@ class _FoodPageBodyState extends State<FoodPageBody> {
     }
 
     queryVendors.sort((a, b) => a.distance.compareTo(b.distance));
-    return Column(
-      children: [
-        GetBuilder<VendorController>(builder: (_){
-          if (queryVendors.isEmpty) {
-            return Column(
-              children: [
-                Stack(
+    return FutureBuilder(
+      future: _userLocation,
+      builder: (context, snapshot) {
+        return Column(
+          children: [
+            GetBuilder<VendorController>(builder: (_){
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Column(
                   children: [
-                    Container(                                                      // Food pics
-                      height: Dimensions.pageViewContainer,
-                      margin: EdgeInsets.only(left: Dimensions.width20*2, right: Dimensions.width20*2, top: Dimensions.width10/2, bottom: Dimensions.height10*6 + Dimensions.height10/2),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(Dimensions.radius30),
-                        color: Colors.grey.withOpacity(0.02),
-                      ),
-                      child: Stack(children: [
-                        shimmer(radius: Dimensions.radius30,),
-                        Center(child: Image.asset('assets/images/empty.png', height: Dimensions.width30*3, width: Dimensions.width30*3, color: Colors.grey,))
-                      ],),
-                    ),
-                    Positioned(
-                      bottom: -Dimensions.height30,
-                      left: Dimensions.width30,
-                      right: Dimensions.width30,
-                      child: Container(                                             // Food details
-                        height: Dimensions.pageViewTextContainer+5,
-                        margin: EdgeInsets.only(left: Dimensions.width30, right: Dimensions.width30, bottom: Dimensions.height30),
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(Dimensions.radius20),
-                            color: Colors.white,
-                            boxShadow: [                                                              // Drop Shadow
-                              BoxShadow(
-                                  color: Color(0xFFe8e8e8),
-                                  blurRadius: 5.0,
-                                  offset: Offset(0, 5)
-                              ),
-                              BoxShadow(
-                                  color: Colors.white,
-                                  offset: Offset(-5, 0)
-                              ),
-                              BoxShadow(
-                                  color: Colors.white,
-                                  offset: Offset(5, 0)
-                              )
-                            ]
+                    Stack(
+                      children: [
+                        Container( // Food pics
+                          height: Dimensions.pageViewContainer,
+                          margin: EdgeInsets.only(left: Dimensions.width20 * 2,
+                              right: Dimensions.width20 * 2,
+                              top: Dimensions.width10 / 2,
+                              bottom: Dimensions.height10 * 6 +
+                                  Dimensions.height10 / 2),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(
+                                Dimensions.radius30),
+                            color: Colors.grey.withOpacity(0.02),
+                          ),
+                          child: shimmer(radius: Dimensions.radius30,)
                         ),
-                        child: Container(
-                          padding: EdgeInsets.only(top: Dimensions.height10, left: Dimensions.width15, right: Dimensions.width15, bottom: Dimensions.height10),
-                          child: FakeAppColumn(),
+                        Positioned(
+                          bottom: -Dimensions.height30,
+                          left: Dimensions.width30,
+                          right: Dimensions.width30,
+                          child: Container( // Food details
+                            height: Dimensions.pageViewTextContainer + 5,
+                            margin: EdgeInsets.only(left: Dimensions.width30,
+                                right: Dimensions.width30,
+                                bottom: Dimensions.height30),
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(
+                                    Dimensions.radius20),
+                                color: Colors.white,
+                                boxShadow: [ // Drop Shadow
+                                  BoxShadow(
+                                      color: Color(0xFFe8e8e8),
+                                      blurRadius: 5.0,
+                                      offset: Offset(0, 5)
+                                  ),
+                                  BoxShadow(
+                                      color: Colors.white,
+                                      offset: Offset(-5, 0)
+                                  ),
+                                  BoxShadow(
+                                      color: Colors.white,
+                                      offset: Offset(5, 0)
+                                  )
+                                ]
+                            ),
+                            child: Container(
+                              padding: EdgeInsets.only(top: Dimensions.height10,
+                                  left: Dimensions.width15,
+                                  right: Dimensions.width15,
+                                  bottom: Dimensions.height10),
+                              child: FakeAppColumn(),
+                            ),
+                          ),
                         ),
-                      ),
+                      ],
                     ),
+                    SizedBox(height: Dimensions.height30,)
                   ],
-                ),
-                SizedBox(height: Dimensions.height30,)
-              ],
-            );
-          } else {
-            return Column(
-              children: [
-                Container(
-                    height: Dimensions.pageView,
-                    // Press Transition
-                    child: PageView.builder(
-                        controller: pageController,
-                        itemCount: queryVendors.length,                                                 // Ilang ididisplay sa relevant food
-                        itemBuilder: (context, position){
-                          return _buildPageItem(position,  queryVendors[position].vendorData);
-                        })
-                ),
-              ],
-            );
-          }
-        },
-        ),
-        GetBuilder<VendorController>(builder: (_){
-          return DotsIndicator(// Page Dots animation
-            dotsCount: queryVendors.isEmpty?1:queryVendors.length,
-            position: _currPageValue,
-            decorator: DotsDecorator(
-              activeColor: AppColors.iconColor1,
-              size: const Size.square(9.0),
-              activeSize: const Size(18.0, 9.0),
-              activeShape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.0)),
-            ),
-          );
-        }),
-        SizedBox(height: Dimensions.height30,),
-        Container(
-          margin: EdgeInsets.only(left: Dimensions.width20),
-          child: Row(
-            crossAxisAlignment:CrossAxisAlignment.end ,
-            children: [
-              BigText(text: widget.searchString==""?"What's nearby?":"Searching"),
-              SizedBox(width: Dimensions.width10,),
-              Container(
-                margin: const EdgeInsets.only(bottom: 3),
-                child: BigText(text: ".", color: Colors.black26),
-              ),
-              SizedBox(width: Dimensions.width10,),
-              FutureBuilder(
-                  future: _userLocation,
-                  builder: (context, snapshot){
-                    if(snapshot.connectionState == ConnectionState.waiting){
-                      return shimmer(width: Dimensions.width30*3,);
-                    } else {
-                      var searchString = "";
-                      if(widget.searchString != ""){
-                        searchString += "${widget.searchString}/";
-                      }
-
-                      if (widget.budget != 10000){
-                        searchString += "₱${widget.budget.toStringAsFixed(2)}/";
-                      }
-
-
-                      searchString += "${snapshot.data}";
-
-
-                      return  SmallText(text: searchString, isOneLine: true,);
-                    }
-                  }
-              )
-            ],
-          ),
-        ),
-        // Recommended Food scroll
-        GetBuilder<VendorController>(builder: (_){
-          for(var i = 0; i < _vendorController.vendorMenu.length; i++){
-            for(var j = 0; j < queryVendors.length; j++){
-              if(_vendorController.vendorMenu[i].vendorId == queryVendors[j].vendorData.vendor_id){
-                queryVendorMenu.add(VendorMenuWithDistance(menuData: _vendorController.vendorMenu[i], distance: queryVendors[j].distance));
-              }
-            }
-          }
-
-          queryVendorMenu.sort((a, b) => a.distance.compareTo(b.distance));
-          return FutureBuilder(
-            future: _userLocation,
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting)
-                {
-                  return ShimmerFoodList();
-                }
-              else if (queryVendorMenu.isEmpty) {
-                return Container(
-                  height: Dimensions.width30*8,
-                  child: Center(
-                      child: Shimmer.fromColors(
-                          baseColor: Colors.black.withOpacity(0.1),
-                          highlightColor: Colors.black.withOpacity(0.08),
-                          child: Image.asset('assets/images/empty.png', height: Dimensions.width30*4, width: Dimensions.width30*4)
-                      )
-                  ),
+                );
+              }else if(queryVendors.isEmpty){
+                return Column(
+                  children: [
+                    Stack(
+                      children: [
+                        Container( // Food pics
+                          height: Dimensions.pageViewContainer,
+                          margin: EdgeInsets.only(left: Dimensions.width20 * 2,
+                              right: Dimensions.width20 * 2,
+                              top: Dimensions.width10 / 2,
+                              bottom: Dimensions.height10 * 6 +
+                                  Dimensions.height10 / 2),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(
+                                Dimensions.radius30),
+                            color: Colors.grey.withOpacity(0.02),
+                          ),
+                          child: Stack(children: [
+                            shimmer(radius: Dimensions.radius30,),
+                            Center(child: Image.asset('assets/images/empty.png',
+                              height: Dimensions.width30 * 3,
+                              width: Dimensions.width30 * 3,
+                              color: Colors.grey,))
+                          ],),
+                        ),
+                        Positioned(
+                          bottom: -Dimensions.height30,
+                          left: Dimensions.width30,
+                          right: Dimensions.width30,
+                          child: Container( // Food details
+                            height: Dimensions.pageViewTextContainer + 5,
+                            margin: EdgeInsets.only(left: Dimensions.width30,
+                                right: Dimensions.width30,
+                                bottom: Dimensions.height30),
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(
+                                    Dimensions.radius20),
+                                color: Colors.white,
+                                boxShadow: [ // Drop Shadow
+                                  BoxShadow(
+                                      color: Color(0xFFe8e8e8),
+                                      blurRadius: 5.0,
+                                      offset: Offset(0, 5)
+                                  ),
+                                  BoxShadow(
+                                      color: Colors.white,
+                                      offset: Offset(-5, 0)
+                                  ),
+                                  BoxShadow(
+                                      color: Colors.white,
+                                      offset: Offset(5, 0)
+                                  )
+                                ]
+                            ),
+                            child: Container(
+                              padding: EdgeInsets.only(top: Dimensions.height10,
+                                  left: Dimensions.width15,
+                                  right: Dimensions.width15,
+                                  bottom: Dimensions.height10),
+                              child: FakeAppColumn(),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: Dimensions.height30,)
+                  ],
                 );
               } else {
                 return Column(
                   children: [
                     Container(
-                        child: ListView.builder(
-                            physics: NeverScrollableScrollPhysics(),
-                            shrinkWrap: true,
-                            itemCount: queryVendorMenu.length,
-                            itemBuilder: (context, index) {
-                              if(widget.budget >= queryVendorMenu[index].menuData.foodPrice &&
-                                  (queryVendorMenu[index].menuData.foodName.toString().toLowerCase().isCaseInsensitiveContainsAny(widget.searchString.toLowerCase()) || queryVendorMenu[index].menuData.foodName.toString().toLowerCase().isCaseInsensitiveContainsAny(widget.searchString.toLowerCase()))
-                                  && queryVendorMenu[index].menuData.isAvailable=="true"
-                              ){
-                                return GestureDetector(
-                                  onTap: () async {
-                                    Get.toNamed(RouteHelper.getFoodDetail(queryVendorMenu[index].menuData.vendorId!, queryVendorMenu[index].menuData.foodId!));
-                                  },
-                                  child: Opacity(
-                                    opacity: (queryVendorMenu[index].menuData.isAvailable=="true")?1:0.4,
-                                    child: Container(
-                                      margin: EdgeInsets.only(left: Dimensions.width20, right: Dimensions.width20, bottom: Dimensions.height20),
-                                      child: Row(
-                                        children: [
-                                          // image section
-                                          Container(
-                                            width: Dimensions.listViewImgSize,
-                                            height: Dimensions.listViewImgSize,
-                                            decoration: BoxDecoration(
-                                                borderRadius: BorderRadius.circular(Dimensions.radius20),
-                                                image: DecorationImage(
-                                                  fit: BoxFit.cover,
-                                                  image: NetworkImage(queryVendorMenu[index].menuData.foodImg!),
-                                                )
-                                            ),
-                                          ),
-                                          Expanded(
-                                            child: Container(
-                                              height: Dimensions.listViewTextContSize,
-                                              decoration: BoxDecoration(
-                                                borderRadius: BorderRadius.only(
-                                                    topRight: Radius.circular(Dimensions.radius20),
-                                                    bottomRight: Radius.circular(Dimensions.radius20)
-                                                ),
-
-                                              ),
-                                              child:
-                                              Padding(padding: EdgeInsets.only(left: Dimensions.width10, right: Dimensions.width10),
-                                                child: Column(
-                                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                  children: [
-                                                    Column(
-                                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                                      children: [
-                                                        BigText(text: queryVendorMenu[index].menuData.foodName!, size: Dimensions.font20,),
-                                                        SizedBox(height: Dimensions.height10/2,),
-                                                        SmallText(text: queryVendorMenu[index].menuData.vendorName! + ", " + queryVendorMenu[index].menuData.vendorLoc!, size: Dimensions.font16*0.8, isOneLine: true,)
-                                                      ],
-                                                    ),
-                                                    Column(
-                                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                                      children: [
-                                                        BigText(text: "₱"+queryVendorMenu[index].menuData.foodPrice.toStringAsFixed(2), size: Dimensions.font16*.9),
-                                                        SizedBox(height: Dimensions.height10/2,),
-                                                        Row(
-                                                          children: [
-                                                            RectangleIconWidget(text: "NEW", iconColor: AppColors.isNew, isActivated: isNew(queryVendorMenu[index].menuData.food_created!)),
-                                                            isNew(queryVendorMenu[index].menuData.food_created!)?SizedBox(width: Dimensions.width10/2,):SizedBox(),
-                                                            queryVendorMenu[index].menuData.isSpicy=="true"?RectangleIconWidget(text: "SPICY", iconColor: Colors.red[900]!, isActivated: queryVendorMenu[index].menuData.isSpicy=="true"?true:false):Text(""),
-                                                          ],
-                                                        ),
-                                                        SizedBox(height: Dimensions.height10/2,)
-                                                      ],
-                                                    )
-                                                  ],
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                );
-                              } else {
-                                return Container();
-                              }
+                        height: Dimensions.pageView,
+                        // Press Transition
+                        child: PageView.builder(
+                            controller: pageController,
+                            itemCount: queryVendors.length,                                                 // Ilang ididisplay sa relevant food
+                            itemBuilder: (context, position){
+                              return _buildPageItem(position,  queryVendors[position].vendorData);
                             })
                     ),
                   ],
                 );
               }
-          });
-        }),
-      ],
+            },
+            ),
+            GetBuilder<VendorController>(builder: (_){
+              return DotsIndicator(// Page Dots animation
+                dotsCount: queryVendors.isEmpty?1:queryVendors.length,
+                position: _currPageValue,
+                decorator: DotsDecorator(
+                  activeColor: AppColors.iconColor1,
+                  size: const Size.square(9.0),
+                  activeSize: const Size(18.0, 9.0),
+                  activeShape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.0)),
+                ),
+              );
+            }),
+            SizedBox(height: Dimensions.height30,),
+            Container(
+              margin: EdgeInsets.only(left: Dimensions.width20),
+              child: Row(
+                crossAxisAlignment:CrossAxisAlignment.end ,
+                children: [
+                  BigText(text: widget.searchString==""?"What's nearby?":"Searching"),
+                  SizedBox(width: Dimensions.width10,),
+                  Container(
+                    margin: const EdgeInsets.only(bottom: 3),
+                    child: BigText(text: ".", color: Colors.black26),
+                  ),
+                  SizedBox(width: Dimensions.width10,),
+                  FutureBuilder(
+                      future: _userLocation,
+                      builder: (context, snapshot){
+                        if(snapshot.connectionState == ConnectionState.waiting){
+                          return shimmer(width: Dimensions.width30*3,);
+                        } else {
+                          var searchString = "";
+                          if(widget.searchString != ""){
+                            searchString += "${widget.searchString}/";
+                          }
+
+                          if (widget.budget != 10000){
+                            searchString += "₱${widget.budget.toStringAsFixed(2)}/";
+                          }
+
+
+                          searchString += "${snapshot.data}";
+
+
+                          return  SmallText(text: searchString, isOneLine: true,);
+                        }
+                      }
+                  )
+                ],
+              ),
+            ),
+            // Recommended Food scroll
+            GetBuilder<VendorController>(builder: (_){
+              for(var i = 0; i < _vendorController.vendorMenu.length; i++){
+                for(var j = 0; j < queryVendors.length; j++){
+                  if(_vendorController.vendorMenu[i].vendorId == queryVendors[j].vendorData.vendor_id){
+                    queryVendorMenu.add(VendorMenuWithDistance(menuData: _vendorController.vendorMenu[i], distance: queryVendors[j].distance));
+                  }
+                }
+              }
+
+              queryVendorMenu.sort((a, b) => a.distance.compareTo(b.distance));
+              return FutureBuilder(
+                future: _userLocation,
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting)
+                    {
+                      return ShimmerFoodList();
+                    }
+                  else if (queryVendorMenu.isEmpty) {
+                    return Container(
+                      height: Dimensions.width30*8,
+                      child: Center(
+                          child: Shimmer.fromColors(
+                              baseColor: Colors.black.withOpacity(0.1),
+                              highlightColor: Colors.black.withOpacity(0.08),
+                              child: Image.asset('assets/images/empty.png', height: Dimensions.width30*4, width: Dimensions.width30*4)
+                          )
+                      ),
+                    );
+                  } else {
+                    return Column(
+                      children: [
+                        Container(
+                            child: ListView.builder(
+                                physics: NeverScrollableScrollPhysics(),
+                                shrinkWrap: true,
+                                itemCount: queryVendorMenu.length,
+                                itemBuilder: (context, index) {
+                                  if(widget.budget >= queryVendorMenu[index].menuData.foodPrice &&
+                                      (queryVendorMenu[index].menuData.foodName.toString().toLowerCase().isCaseInsensitiveContainsAny(widget.searchString.toLowerCase()) || queryVendorMenu[index].menuData.foodName.toString().toLowerCase().isCaseInsensitiveContainsAny(widget.searchString.toLowerCase()))
+                                      && queryVendorMenu[index].menuData.isAvailable=="true"
+                                  ){
+                                    return GestureDetector(
+                                      onTap: () async {
+                                        Get.toNamed(RouteHelper.getFoodDetail(queryVendorMenu[index].menuData.vendorId!, queryVendorMenu[index].menuData.foodId!));
+                                      },
+                                      child: Opacity(
+                                        opacity: (queryVendorMenu[index].menuData.isAvailable=="true")?1:0.4,
+                                        child: Container(
+                                          margin: EdgeInsets.only(left: Dimensions.width20, right: Dimensions.width20, bottom: Dimensions.height20),
+                                          child: Row(
+                                            children: [
+                                              // image section
+                                              Container(
+                                                width: Dimensions.listViewImgSize,
+                                                height: Dimensions.listViewImgSize,
+                                                decoration: BoxDecoration(
+                                                    borderRadius: BorderRadius.circular(Dimensions.radius20),
+                                                    image: DecorationImage(
+                                                      fit: BoxFit.cover,
+                                                      image: NetworkImage(queryVendorMenu[index].menuData.foodImg!),
+                                                    )
+                                                ),
+                                              ),
+                                              Expanded(
+                                                child: Container(
+                                                  height: Dimensions.listViewTextContSize,
+                                                  decoration: BoxDecoration(
+                                                    borderRadius: BorderRadius.only(
+                                                        topRight: Radius.circular(Dimensions.radius20),
+                                                        bottomRight: Radius.circular(Dimensions.radius20)
+                                                    ),
+
+                                                  ),
+                                                  child:
+                                                  Padding(padding: EdgeInsets.only(left: Dimensions.width10, right: Dimensions.width10),
+                                                    child: Column(
+                                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                      children: [
+                                                        Column(
+                                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                                          children: [
+                                                            BigText(text: queryVendorMenu[index].menuData.foodName!, size: Dimensions.font20,),
+                                                            SizedBox(height: Dimensions.height10/2,),
+                                                            SmallText(text: queryVendorMenu[index].menuData.vendorName! + ", " + queryVendorMenu[index].menuData.vendorLoc!, size: Dimensions.font16*0.8, isOneLine: true,)
+                                                          ],
+                                                        ),
+                                                        Column(
+                                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                                          children: [
+                                                            BigText(text: "₱"+queryVendorMenu[index].menuData.foodPrice.toStringAsFixed(2), size: Dimensions.font16*.9),
+                                                            SizedBox(height: Dimensions.height10/2,),
+                                                            Row(
+                                                              children: [
+                                                                RectangleIconWidget(text: "NEW", iconColor: AppColors.isNew, isActivated: isNew(queryVendorMenu[index].menuData.food_created!)),
+                                                                isNew(queryVendorMenu[index].menuData.food_created!)?SizedBox(width: Dimensions.width10/2,):SizedBox(),
+                                                                queryVendorMenu[index].menuData.isSpicy=="true"?RectangleIconWidget(text: "SPICY", iconColor: Colors.red[900]!, isActivated: queryVendorMenu[index].menuData.isSpicy=="true"?true:false):Text(""),
+                                                              ],
+                                                            ),
+                                                            SizedBox(height: Dimensions.height10/2,)
+                                                          ],
+                                                        )
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    );
+                                  } else {
+                                    return Container();
+                                  }
+                                })
+                        ),
+                      ],
+                    );
+                  }
+              });
+            }),
+          ],
+        );
+      }
     );
   }
 
