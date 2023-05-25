@@ -98,7 +98,7 @@ class AccountDetailsPage extends StatelessWidget {
                                 Container(
                                   width: Dimensions.screenWidth * .9,
                                     decoration: BoxDecoration(
-                                        color: Colors.white,
+                                        color: Colors.grey[100],
                                         borderRadius: BorderRadius.circular(Dimensions.radius30),
                                         boxShadow: [
                                           BoxShadow(
@@ -118,7 +118,7 @@ class AccountDetailsPage extends StatelessWidget {
                                 Container(
                                   width: Dimensions.screenWidth * .9,
                                     decoration: BoxDecoration(
-                                        color: Colors.white,
+                                        color: Colors.grey[100],
                                         borderRadius: BorderRadius.circular(Dimensions.radius30),
                                         boxShadow: [
                                           BoxShadow(

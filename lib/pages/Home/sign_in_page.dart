@@ -66,6 +66,7 @@ class VendorSignInPage extends StatelessWidget {
                       child: AppTextField(
                         textController: emailController,
                         hintText: "Email",
+
                         icon: Icons.email_rounded,
                         backgroundColor: AppColors.mainColor,
                       ),
