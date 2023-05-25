@@ -37,7 +37,7 @@ class Home extends StatelessWidget {
     return GetMaterialApp(
       theme: ThemeData(
           primaryColor: AppColors.mainColor,
-          fontFamily: 'Roboto'
+          fontFamily: 'DMSans'
       ),
       debugShowCheckedModeBanner: false,
       title: 'IsKainan: Campus Food App',

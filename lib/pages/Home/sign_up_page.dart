@@ -3,7 +3,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:iskainan/base/show_custom_snackbar.dart';
 import 'package:iskainan/models/vendor_data_model.dart';
 import 'package:iskainan/widgets/app_text_field.dart';
@@ -24,26 +23,25 @@ class VendorSignUpPage extends StatelessWidget {
     var vendorNameController = TextEditingController();
     var phoneController = TextEditingController();
 
-    void _registration(){
-
+    void _registration() {
       String vendorName = vendorNameController.text.trim();
       String phone = phoneController.text.trim();
       String email = emailController.text.trim();
       String password = passwordController.text.trim();
 
-      if(email.isEmpty){
+      if (email.isEmpty) {
         showCustomerSnackBar("Type in your email address.", title: "Email address");
-      }else if(!GetUtils.isEmail(email)){
+      } else if (!GetUtils.isEmail(email)) {
         showCustomerSnackBar("Type in a valid email address.", title: "Valid email address");
-      }else if(password.isEmpty){
+      } else if (password.isEmpty) {
         showCustomerSnackBar("Type in your password", title: "Password");
-      }else if(password.length < 6){
+      } else if (password.length < 6) {
         showCustomerSnackBar("Password can not be less than 6 characters.", title: "Password");
-      }else if(vendorName.isEmpty){
+      } else if (vendorName.isEmpty) {
         showCustomerSnackBar("Type in the name of your establishment.", title: "Name");
-      }else if(phone.isEmpty){
+      } else if (phone.isEmpty) {
         showCustomerSnackBar("Type in your phone number.", title: "Phone Number");
-      }else{
+      } else {
         List<String> newTag = [];
 
         (vendorName).split(" ").forEach((word) {
@@ -56,10 +54,10 @@ class VendorSignUpPage extends StatelessWidget {
           vendor_name: vendorName,
           password: password,
           latitude: 14.654941990186154,
-          longitude: 121.0648511552033,   // Oble
+          longitude: 121.0648511552033, // Oble
           vendor_img: "",
           is_gcash: "false",
-          operating_hours: [480, 1200],   // 8:00 AM - 8:00 PM default
+          operating_hours: [480, 1200], // 8:00 AM - 8:00 PM default
           operating_days: [false, false, false, false, false, false, false],
           is_open: "false",
           account_created: Timestamp.now(),
@@ -72,72 +70,130 @@ class VendorSignUpPage extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: Colors.white,
-      body:
-        Center(
-          child:
-            SingleChildScrollView(
-              physics: BouncingScrollPhysics(),
-              child: Column(
-                children: [
-                  SizedBox(height: Dimensions.screenHeight*0.1),
-                  // App Logo
-                  Container(
-                    child: Center(child: Image.asset('assets/images/logo.png', width: Dimensions.splashImg,))
+      body: Container(
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage('assets/images/signup.png'),
+            fit: BoxFit.cover,
+          ),
+        ),
+        child: Center(
+          child: SingleChildScrollView(
+            physics: BouncingScrollPhysics(),
+            child: Column(
+              children: [
+                SizedBox(height: Dimensions.screenHeight * 0.1),
+                Container(
+                  width: Dimensions.screenWidth * .8,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      BigText(text: "Create", size: Dimensions.font20 * 2 + Dimensions.font26),
+                      BigText(text: "Account", size: Dimensions.font20 * 2 + Dimensions.font26),
+                    ],
                   ),
-                  SizedBox(height:Dimensions.height45*3/2),
+                ),
+                SizedBox(height: Dimensions.height20),
+                Container(
+                  width: Dimensions.screenWidth * .9,
+                  child: AppTextField(
+                    textController: emailController,
+                    hintText: "Email",
+                    icon: Icons.email_rounded,
+                    backgroundColor: AppColors.mainColor,
+                  ),
+                ),
 
-                  // Email
-                  AppTextField(textController: emailController, hintText: "Email", icon: Icons.email_rounded, backgroundColor: AppColors.mainColor,),
-                  SizedBox(height: Dimensions.height20),
+                SizedBox(height: Dimensions.height20),
+                Container(
+                  width: Dimensions.screenWidth * .9,
+                  child: AppTextField(
+                    textController: passwordController,
+                    hintText: "Password",
+                    icon: Icons.key_rounded,
+                    backgroundColor: AppColors.mainColor,
+                    isPassword: true,
+                  ),
+                ),
 
-                  // Password
-                  AppTextField(textController: passwordController, hintText: "Password", icon: Icons.key_rounded, backgroundColor: AppColors.mainColor, isPassword: true),
-                  SizedBox(height: Dimensions.height20),
+                SizedBox(height: Dimensions.height20),
+                Container(
+                  width: Dimensions.screenWidth * .9,
+                  child: AppTextField(
+                    textController: vendorNameController,
+                    hintText: "Name of Establishment",
+                    icon: Icons.food_bank_rounded,
+                    backgroundColor: AppColors.mainColor,
+                  ),
+                ),
 
-                  // Vendor Name
-                  AppTextField(textController: vendorNameController, hintText: "Name of Establishment", icon: Icons.food_bank_rounded, backgroundColor: AppColors.mainColor,),
-                  SizedBox(height: Dimensions.height20),
+                SizedBox(height: Dimensions.height20),
+                Container(
+                  width: Dimensions.screenWidth * .9,
+                  child: AppPhoneField(
+                    textController: phoneController,
+                    hintText: "Contact Number",
+                    icon: Icons.phone,
+                    backgroundColor: AppColors.mainColor,
+                  ),
+                ),
 
-                  // Contact Number
-                  AppPhoneField(textController: phoneController, hintText: "Contact Number", icon: Icons.phone, backgroundColor: AppColors.mainColor),
-                  SizedBox(height: Dimensions.height20*2),
-
-
-                  GestureDetector(
-                    onTap: (){
-                      _registration();
-                    },
-                    child: Container(
-                      width: Dimensions.screenWidth/2,
-                      height: Dimensions.screenHeight/13,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(Dimensions.radius30),
-                        color: AppColors.mainColor
-                      ),
-                      child: Center(
-                        child: BigText(
-                          text: "Sign up as Vendor",
-                          size: Dimensions.font20,
-                          color: Colors.white,
+                SizedBox(height: Dimensions.height20),
+                Padding(
+                  padding: EdgeInsets.only(right: Dimensions.screenWidth * .1),
+                  child: Align(
+                    alignment: Alignment.centerRight,
+                    child: GestureDetector(
+                      onTap: () {
+                        _registration();
+                      },
+                      child: Container(
+                        width: Dimensions.screenWidth / 3,
+                        height: Dimensions.screenHeight / 12,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(Dimensions.radius30),
+                          color: AppColors.mainColor,
+                        ),
+                        child: Center(
+                          child: BigText(
+                            text: "Sign up",
+                            size: Dimensions.font26,
+                            color: Colors.white,
+                          ),
                         ),
                       ),
                     ),
                   ),
-                  SizedBox(height: Dimensions.height10,),
-                  RichText(text: TextSpan(
-                    recognizer: TapGestureRecognizer()..onTap=()=>Get.back(),
-                    text: "Have an account already?",
-                      style:
-                      TextStyle(
-                        color: Colors.grey[500],
-                        fontSize: Dimensions.font16
+                ),
+                SizedBox(height: Dimensions.screenHeight * 0.05),
+                SizedBox(height: Dimensions.height10),
+                RichText(
+                  text: TextSpan(
+                    text: "Have an account? ",
+                    style: TextStyle(
+                      fontFamily: 'Montserrat',
+                      color: Colors.grey,
+                      fontSize: Dimensions.font16,
+                    ),
+                    children: [
+                      TextSpan(
+                        text: "Sign in instead",
+                        style: TextStyle(
+                          fontFamily: 'Montserrat',
+                          color: AppColors.mainColor,
+                          fontSize: Dimensions.font16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        recognizer: TapGestureRecognizer()..onTap = () => Get.back(),
                       ),
-                    )
-                  ,)
-                ],
-              ),
+                    ],
+                  ),
+                )
+              ],
             ),
+          ),
         ),
+      ),
     );
   }
 }

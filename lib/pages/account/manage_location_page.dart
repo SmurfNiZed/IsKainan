@@ -61,13 +61,13 @@ class _ManageLocationPage extends State<ManageLocationPage> {
           context: context,
           title: "All Set!",
           titleTextStyle: TextStyle(
-              fontFamily: 'Roboto',
+              fontFamily: 'Montserrat',
               fontSize: Dimensions.font26,
               fontWeight: FontWeight.bold
           ),
           desc: "Location updated.",
           descTextStyle: TextStyle(
-              fontFamily: 'Roboto',
+              fontFamily: 'Montserrat',
               fontSize: Dimensions.font20,
               fontWeight: FontWeight.normal
           ),
@@ -152,7 +152,7 @@ class _ManageLocationPage extends State<ManageLocationPage> {
                                             add,
                                             maxLines: 1,
                                             style: TextStyle(
-                                              fontFamily: 'Roboto',
+                                              fontFamily: 'Montserrat',
                                               fontWeight: FontWeight.normal,
                                               color: Colors.black,
                                               fontSize: 18,
@@ -177,7 +177,7 @@ class _ManageLocationPage extends State<ManageLocationPage> {
                                 height: 50,
                                 width: Dimensions.screenWidth,
                                 decoration: BoxDecoration(
-                                    color: AppColors.iconColor1,
+                                    color: Colors.lightGreen[400],
                                     borderRadius: BorderRadius.circular(Dimensions.radius30),
                                     boxShadow: [
                                       BoxShadow(
@@ -207,7 +207,7 @@ class _ManageLocationPage extends State<ManageLocationPage> {
                             "Can't find a street, move pin to a better spot!",
                             maxLines: 1,
                             style: TextStyle(
-                              fontFamily: 'Roboto',
+                              fontFamily: 'Montserrat',
                               fontWeight: FontWeight.normal,
                               color: Colors.black,
                               fontSize: 18,

@@ -34,7 +34,7 @@ class _RecommendedFoodDetailState extends State<RecommendedFoodDetail> {
     AwesomeDialog(
       context: context,
       titleTextStyle: TextStyle(
-          fontFamily: 'Roboto',
+          fontFamily: 'Montserrat',
           fontSize: Dimensions.font26,
           fontWeight: FontWeight.bold
       ),

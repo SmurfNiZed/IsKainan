@@ -32,6 +32,7 @@ class _AppTextFieldv2State extends State<AppTextFieldv2> {
             borderRadius: BorderRadius.circular(Dimensions.radius30),
         ),
         child: TextField(
+
           obscureText: (widget.isPassword! && _obscureText),
           cursorColor: AppColors.mainColor,
           controller: widget.textController,

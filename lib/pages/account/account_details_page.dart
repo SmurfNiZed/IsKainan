@@ -72,7 +72,7 @@ class AccountDetailsPage extends StatelessWidget {
                       onTap: (){
                         Navigator.pop(context);
                       },
-                      child: AppIcon(icon: Icons.clear, backgroundColor: AppColors.paraColor, iconColor: Colors.white,)),
+                      child: AppIcon(icon: Icons.arrow_back, backgroundColor: AppColors.mainColor, iconColor: Colors.white,)),
                 ),
                 body: Container(
                   color: Colors.white,
@@ -92,12 +92,44 @@ class AccountDetailsPage extends StatelessWidget {
                                 SizedBox(height: Dimensions.height45),
 
                                 // Email
-                                AppTextFieldv2(textController: emailController, hintText: "Email", icon: Icons.email_rounded, backgroundColor: AppColors.paraColor,),
+                                Container(
+                                  width: Dimensions.screenWidth * .9,
+                                    decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius: BorderRadius.circular(Dimensions.radius30),
+                                        boxShadow: [
+                                          BoxShadow(
+                                              blurRadius: 10,
+                                              spreadRadius: 7,
+                                              offset: Offset(1, 10),
+                                              color: Colors.grey.withOpacity(0.2)
+                                          )
+                                        ]
+                                    ),
+                                  child:AppTextFieldv2(textController: emailController, hintText: "Email", icon: Icons.email_rounded, backgroundColor: AppColors.paraColor)
+                                ),
+
                                 SizedBox(height: Dimensions.height20),
 
                                 // Password
-                                AppTextFieldv2(textController: passwordController, hintText: "Password", icon: Icons.key_rounded, backgroundColor: AppColors.paraColor, isPassword: true),
-                                SizedBox(height: Dimensions.height20),
+                                Container(
+                                  width: Dimensions.screenWidth * .9,
+                                    decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius: BorderRadius.circular(Dimensions.radius30),
+                                        boxShadow: [
+                                          BoxShadow(
+                                              blurRadius: 10,
+                                              spreadRadius: 7,
+                                              offset: Offset(1, 10),
+                                              color: Colors.grey.withOpacity(0.2)
+                                          )
+                                        ]
+                                    ),
+                                  child: AppTextFieldv2(textController: passwordController, hintText: "Password", icon: Icons.key_rounded, backgroundColor: AppColors.paraColor, isPassword: true)
+                                ),
+
+                                SizedBox(height: Dimensions.height20*3),
                                 GestureDetector(
                                   onTap: (){
                                     _updateAccountDetails(emailController, passwordController, user.vendor_id);
@@ -105,9 +137,9 @@ class AccountDetailsPage extends StatelessWidget {
                                   child: Container(
                                     margin: EdgeInsets.only(left: Dimensions.height20, right: Dimensions.height20),
                                     height: 50,
-                                    width: Dimensions.screenWidth,
+                                    width: Dimensions.screenWidth * .7,
                                     decoration: BoxDecoration(
-                                        color: AppColors.paraColor,
+                                        color: Colors.lightGreen[400],
                                         borderRadius: BorderRadius.circular(Dimensions.radius30),
                                         boxShadow: [
                                           BoxShadow(
@@ -128,65 +160,72 @@ class AccountDetailsPage extends StatelessWidget {
                                   ),
                                 ),
                                 SizedBox(height: Dimensions.height30),
-                                GestureDetector(
-                                  onTap: (){
-                                    AwesomeDialog(
-                                      context: context,
-                                      dialogType: DialogType.noHeader,
-                                      btnOkColor: AppColors.mainColor,
-                                      btnOkText: "Proceed",
-                                      btnOkIcon: Icons.delete,
-                                      btnOkOnPress: () async {
-                                        final userRepo = Get.put(UserRepository());
-                                        final FirebaseAuth _auth = FirebaseAuth.instance;
 
-                                        try{
-                                          await userRepo.deleteVendor(user.vendor_id!);
-                                          User acc = _auth.currentUser!;
-                                          await acc.delete();
-                                        }catch(e){
+                                Align(
+                                  alignment: Alignment.center,
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      AwesomeDialog(
+                                        context: context,
+                                        dialogType: DialogType.noHeader,
+                                        btnOkColor: AppColors.mainColor,
+                                        btnOkText: "Proceed",
+                                        btnOkIcon: Icons.delete,
+                                        btnOkOnPress: () async {
+                                          final userRepo = Get.put(UserRepository());
+                                          final FirebaseAuth _auth = FirebaseAuth.instance;
 
-                                        }
-                                      },
-                                      btnCancelColor: AppColors.paraColor,
-                                      btnCancelIcon: Icons.arrow_back,
-                                      btnCancelOnPress: (){
-
-                                      },
-                                      body: Container(
-                                        padding: EdgeInsets.only(left: Dimensions.width10, right: Dimensions.width10, bottom: Dimensions.width10),
-                                        child: Column(
-                                          children: [
-                                            BigText(text: "Delete Account"),
-                                            SizedBox(height: Dimensions.height10,),
-                                            SmallText(text: "You are about to delete this account.\nThis action cannot be undone once you proceed.", size: Dimensions.font16)
-                                          ],
+                                          try {
+                                            await userRepo.deleteVendor(user.vendor_id!);
+                                            User acc = _auth.currentUser!;
+                                            await acc.delete();
+                                          } catch (e) {}
+                                        },
+                                        btnCancelColor: AppColors.paraColor,
+                                        btnCancelIcon: Icons.arrow_back,
+                                        btnCancelOnPress: () {},
+                                        body: Container(
+                                          padding: EdgeInsets.only(
+                                            left: Dimensions.width10,
+                                            right: Dimensions.width10,
+                                            bottom: Dimensions.width10,
+                                          ),
+                                          child: Column(
+                                            children: [
+                                              BigText(text: "Delete Account"),
+                                              SizedBox(height: Dimensions.height10),
+                                              SmallText(
+                                                text:
+                                                "You are about to delete this account. This action cannot be undone once you proceed.",
+                                                size: Dimensions.font16,
+                                              ),
+                                            ],
+                                          ),
                                         ),
-                                      )
-                                    ).show();
-                                  },
-                                  child: Container(
-                                    margin: EdgeInsets.only(left: Dimensions.height20, right: Dimensions.height20),
-                                    height: 50,
-                                    width: Dimensions.screenWidth,
-                                    decoration: BoxDecoration(
+                                      ).show();
+                                    },
+                                    child: Container(
+                                      width: Dimensions.screenWidth * .7,
+                                      height: 50,
+                                      decoration: BoxDecoration(
                                         color: AppColors.mainColor,
                                         borderRadius: BorderRadius.circular(Dimensions.radius30),
                                         boxShadow: [
                                           BoxShadow(
-                                              blurRadius: 10,
-                                              spreadRadius: 7,
-                                              offset: Offset(1, 10),
-                                              color: Colors.grey.withOpacity(0.2)
-                                          )
-                                        ]
-                                    ),
-                                    child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      crossAxisAlignment: CrossAxisAlignment.center,
-                                      children: [
-                                        BigText(text: "Delete Account", color: Colors.white,),
-                                      ],
+                                            blurRadius: 10,
+                                            spreadRadius: 7,
+                                            offset: Offset(1, 10),
+                                            color: Colors.grey.withOpacity(0.2),
+                                          ),
+                                        ],
+                                      ),
+                                      child: Row(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                        children: [
+                                          BigText(text: "Delete Account", color: Colors.white),
+                                        ],
+                                      ),
                                     ),
                                   ),
                                 ),

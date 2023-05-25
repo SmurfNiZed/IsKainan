@@ -20,7 +20,7 @@ class BigText extends StatelessWidget {
       maxLines: 1,
       overflow: overFlow,
       style: TextStyle(
-        fontFamily: 'Roboto',
+        fontFamily: 'Montserrat',
         color: color,
         fontSize: size == 0?Dimensions.font20:size,
         fontWeight: FontWeight.w600

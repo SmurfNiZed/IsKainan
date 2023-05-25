@@ -100,13 +100,13 @@ class _MenuManagementPageState extends State<MenuManagementPage> {
         context: context,
         title: "Okay!",
         titleTextStyle: TextStyle(
-            fontFamily: 'Roboto',
+            fontFamily: 'Montserrat',
             fontSize: Dimensions.font26,
             fontWeight: FontWeight.bold
         ),
         desc: "Food Deleted",
         descTextStyle: TextStyle(
-            fontFamily: 'Roboto',
+            fontFamily: 'Montserrat',
             fontSize: Dimensions.font20,
             fontWeight: FontWeight.normal
         ),
@@ -222,7 +222,7 @@ class _MenuManagementPageState extends State<MenuManagementPage> {
                                           context: context,
                                           title: "Upload Food Photo",
                                           titleTextStyle: TextStyle(
-                                              fontFamily: 'Roboto',
+                                              fontFamily: 'Montserrat',
                                               fontSize: Dimensions.font20,
                                               fontWeight: FontWeight.bold
                                           ),
@@ -413,7 +413,7 @@ class _MenuManagementPageState extends State<MenuManagementPage> {
                                     height: Dimensions.height30*5,
                                     width: double.maxFinite,
                                     margin: EdgeInsets.only(left: Dimensions.width20, right: Dimensions.width20, bottom: Dimensions.height20, top: Dimensions.height20),
-                                    child: Center(child: Text("Nothing in here yet!", style: TextStyle(fontSize: Dimensions.font26,color: AppColors.paraColor, fontFamily: 'Roboto', fontWeight: FontWeight.bold),)),
+                                    child: Center(child: Text("Nothing in here yet!", style: TextStyle(fontSize: Dimensions.font26,color: AppColors.paraColor, fontFamily: 'Montserrat', fontWeight: FontWeight.bold),)),
                                     decoration: BoxDecoration(
                                       color: Colors.grey.withOpacity(0.06),
                                       borderRadius: BorderRadius.circular(Dimensions.radius20/2),
@@ -517,7 +517,7 @@ class _MenuManagementPageState extends State<MenuManagementPage> {
                                                                       context: context,
                                                                       title: "Edit Food Photo",
                                                                       titleTextStyle: TextStyle(
-                                                                          fontFamily: 'Roboto',
+                                                                          fontFamily: 'Montserrat',
                                                                           fontSize: Dimensions.font20,
                                                                           fontWeight: FontWeight.bold
                                                                       ),
@@ -827,7 +827,7 @@ class _MenuManagementPageState extends State<MenuManagementPage> {
                   Navigator.pop(context);
                 },
                 child: AppIcon(icon: Icons.arrow_back,
-                  backgroundColor: AppColors.iconColor1,
+                  backgroundColor: AppColors.mainColor,
                   iconColor: Colors.white,)),
           ),
         ],
