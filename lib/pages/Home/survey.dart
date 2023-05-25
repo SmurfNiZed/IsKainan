@@ -103,7 +103,8 @@ class _ChoicePageState extends State<ChoicePage> {
             Container(
               padding: EdgeInsets.symmetric(horizontal: Dimensions.width10/2),
               child: BigText(
-                  text: "What are you craving?"
+                  text: "What are you craving?",
+                  size: 19
               ),
             ),
             SizedBox(height: Dimensions.height20,),

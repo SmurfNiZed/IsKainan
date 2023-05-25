@@ -50,7 +50,7 @@ class _VendorDetailState extends State<VendorDetail> {
     AwesomeDialog(
       context: context,
       titleTextStyle: TextStyle(
-          fontFamily: 'Roboto',
+          fontFamily: 'Montserrat',
           fontSize: Dimensions.font26,
           fontWeight: FontWeight.bold
       ),

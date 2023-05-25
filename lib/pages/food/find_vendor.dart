@@ -89,7 +89,7 @@ class _FindVendorState extends State<FindVendor> {
                                   widget.vendorName + ", " + widget.vendorAddress,
                                   maxLines: 1,
                                   style: TextStyle(
-                                    fontFamily: 'Roboto',
+                                    fontFamily: 'Montserrat',
                                     fontWeight: FontWeight.normal,
                                     color: Colors.black,
                                     fontSize: 18,

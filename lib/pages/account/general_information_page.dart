@@ -74,13 +74,13 @@ class _GeneralInformationPageState extends State<GeneralInformationPage> {
             context: context,
             title: "All Set!",
             titleTextStyle: TextStyle(
-                fontFamily: 'Roboto',
+                fontFamily: 'Montserrat',
                 fontSize: Dimensions.font26,
                 fontWeight: FontWeight.bold
             ),
             desc: "Information updated.",
             descTextStyle: TextStyle(
-                fontFamily: 'Roboto',
+                fontFamily: 'Montserrat',
                 fontSize: Dimensions.font20,
                 fontWeight: FontWeight.normal
             ),
@@ -137,21 +137,51 @@ class _GeneralInformationPageState extends State<GeneralInformationPage> {
                                         size: Dimensions.height15 * 10),
                                     SizedBox(height: Dimensions.height45),
 
-                                    AppTextFieldv2(
-                                      textController: vendorNameController,
-                                      hintText: "Name of Establishment",
-                                      icon: Icons.food_bank_rounded,
-                                      backgroundColor: AppColors.iconColor1,
+                                    Container(
+                                        decoration: BoxDecoration(
+                                            color: Colors.white,
+                                            borderRadius: BorderRadius.circular(Dimensions.radius30),
+                                            boxShadow: [
+                                              BoxShadow(
+                                                  blurRadius: 10,
+                                                  spreadRadius: 7,
+                                                  offset: Offset(1, 10),
+                                                  color: Colors.grey.withOpacity(0.2)
+                                              )
+                                            ]
+                                        ),
+                                      child: AppTextFieldv2(
+                                        textController: vendorNameController,
+                                        hintText: "Name of Establishment",
+                                        icon: Icons.food_bank_rounded,
+                                        backgroundColor: AppColors.iconColor1,
+                                      )
                                     ),
+
                                     SizedBox(height: Dimensions.height20),
 
                                     // Contact Number
-                                    AppNumField(
-                                      textController: phoneController,
-                                      hintText: "Contact Number",
-                                      icon: Icons.phone,
-                                      backgroundColor: AppColors.iconColor1,
+                                    Container(
+                                      decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          borderRadius: BorderRadius.circular(Dimensions.radius30),
+                                          boxShadow: [
+                                            BoxShadow(
+                                                blurRadius: 10,
+                                                spreadRadius: 7,
+                                                offset: Offset(1, 10),
+                                                color: Colors.grey.withOpacity(0.2)
+                                            )
+                                          ]
+                                      ),
+                                      child: AppNumField(
+                                        textController: phoneController,
+                                        hintText: "Contact Number",
+                                        icon: Icons.phone,
+                                        backgroundColor: AppColors.iconColor1,
+                                      ),
                                     ),
+
                                     SizedBox(height: Dimensions.height20),
                                     Row(
                                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -223,7 +253,7 @@ class _GeneralInformationPageState extends State<GeneralInformationPage> {
                                                                   textAlign: TextAlign.justify,
                                                                   style: TextStyle(
                                                                       height: 1.5,
-                                                                      fontFamily: 'Roboto',
+                                                                      fontFamily: 'Montserrat',
                                                                       fontWeight: FontWeight.w500,
                                                                       color: Colors.grey
                                                                   ),
@@ -234,7 +264,7 @@ class _GeneralInformationPageState extends State<GeneralInformationPage> {
                                                                   textAlign: TextAlign.left,
                                                                   style: TextStyle(
                                                                       height: 1.5,
-                                                                      fontFamily: 'Roboto',
+                                                                      fontFamily: 'Montserrat',
                                                                       fontWeight: FontWeight.w500,
                                                                       color: Colors.grey
                                                                   ),
@@ -310,6 +340,14 @@ class _GeneralInformationPageState extends State<GeneralInformationPage> {
                                         decoration: BoxDecoration(
                                           color: Colors.grey[100],
                                           borderRadius: BorderRadius.circular(Dimensions.radius30),
+                                            boxShadow: [
+                                              BoxShadow(
+                                                  blurRadius: 10,
+                                                  spreadRadius: 7,
+                                                  offset: Offset(1, 10),
+                                                  color: Colors.grey.withOpacity(0.2)
+                                              )
+                                            ]
                                         ),
                                         child: StreamBuilder<String>(
                                           stream: _streamController.stream,
@@ -343,6 +381,14 @@ class _GeneralInformationPageState extends State<GeneralInformationPage> {
                                           decoration: BoxDecoration(
                                             color: Colors.grey[100],
                                             borderRadius: BorderRadius.circular(Dimensions.radius30),
+                                              boxShadow: [
+                                                BoxShadow(
+                                                    blurRadius: 10,
+                                                    spreadRadius: 7,
+                                                    offset: Offset(1, 10),
+                                                    color: Colors.grey.withOpacity(0.2)
+                                                )
+                                              ]
                                           ),
                                           child: Column(
                                             mainAxisSize: MainAxisSize.min,
@@ -373,6 +419,18 @@ class _GeneralInformationPageState extends State<GeneralInformationPage> {
                                     ),
                                     SizedBox(height: Dimensions.height20),
                                     Container(
+                                        decoration: BoxDecoration(
+                                            color: Colors.grey[100],
+                                            borderRadius: BorderRadius.circular(Dimensions.radius30),
+                                            boxShadow: [
+                                              BoxShadow(
+                                                  blurRadius: 10,
+                                                  spreadRadius: 7,
+                                                  offset: Offset(1, 10),
+                                                  color: Colors.grey.withOpacity(0.2)
+                                              )
+                                            ]
+                                        ),
                                       margin: EdgeInsets.symmetric(horizontal: Dimensions.height10),
                                       child: AppTextFieldLong(vendorDescriptionController: vendorDescriptionController)),
                                     SizedBox(height: Dimensions.height20),
@@ -407,7 +465,7 @@ class _GeneralInformationPageState extends State<GeneralInformationPage> {
                                                     textAlign: TextAlign.justify,
                                                     style: TextStyle(
                                                         height: 1.5,
-                                                        fontFamily: 'Roboto',
+                                                        fontFamily: 'Montserrat',
                                                         fontWeight: FontWeight.w500,
                                                         color: Colors.grey
                                                     ),
@@ -418,7 +476,7 @@ class _GeneralInformationPageState extends State<GeneralInformationPage> {
                                                     textAlign: TextAlign.justify,
                                                     style: TextStyle(
                                                         height: 1.5,
-                                                        fontFamily: 'Roboto',
+                                                        fontFamily: 'Montserrat',
                                                         fontWeight: FontWeight.w500,
                                                         color: Colors.grey
                                                     ),
@@ -458,7 +516,7 @@ class _GeneralInformationPageState extends State<GeneralInformationPage> {
                                         height: 50,
                                         width: Dimensions.screenWidth,
                                         decoration: BoxDecoration(
-                                            color: AppColors.iconColor1,
+                                            color: Colors.lightGreen[400],
                                             borderRadius: BorderRadius.circular(Dimensions.radius30),
                                             boxShadow: [
                                               BoxShadow(
@@ -493,7 +551,7 @@ class _GeneralInformationPageState extends State<GeneralInformationPage> {
                             Navigator.pop(context);
                           },
                           child: AppIcon(icon: Icons.arrow_back,
-                            backgroundColor: AppColors.iconColor1,
+                            backgroundColor: AppColors.mainColor,
                             iconColor: Colors.white,)),
                     ),
                   ],
