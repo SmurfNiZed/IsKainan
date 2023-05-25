@@ -131,6 +131,7 @@ class _GeneralInformationPageState extends State<GeneralInformationPage> {
                   children: [
 
                     Container(
+
                       padding: EdgeInsets.symmetric(horizontal: Dimensions.width10),
                       color: Colors.white,
                       child: Column(
@@ -151,7 +152,8 @@ class _GeneralInformationPageState extends State<GeneralInformationPage> {
                                     SizedBox(height: Dimensions.height45),
 
                                     Container(
-
+                                        padding: EdgeInsets.symmetric(horizontal: Dimensions.width10),
+                                        margin: EdgeInsets.only(left: Dimensions.height10, right: Dimensions.height10),
                                         decoration: BoxDecoration(
                                             color: Colors.grey[100],
                                             borderRadius: BorderRadius.circular(Dimensions.radius30),
@@ -176,6 +178,8 @@ class _GeneralInformationPageState extends State<GeneralInformationPage> {
 
                                     // Contact Number
                                     Container(
+                                      padding: EdgeInsets.symmetric(horizontal: Dimensions.width10),
+                                      margin: EdgeInsets.only(left: Dimensions.height10, right: Dimensions.height10),
                                       decoration: BoxDecoration(
                                           color: Colors.grey[100],
                                           borderRadius: BorderRadius.circular(Dimensions.radius30),
@@ -391,7 +395,7 @@ class _GeneralInformationPageState extends State<GeneralInformationPage> {
                                         return Container(
                                           padding: EdgeInsets.symmetric(horizontal: Dimensions.width20, vertical: Dimensions.width10),
                                           height: Dimensions.height20*5,
-                                          margin: EdgeInsets.only(left: Dimensions.height10/2, right: Dimensions.height10),
+                                          margin: EdgeInsets.only(left: Dimensions.height10, right: Dimensions.height10),
                                           decoration: BoxDecoration(
                                               color: Colors.grey[100],
                                               borderRadius: BorderRadius.circular(Dimensions.radius30),
@@ -433,6 +437,7 @@ class _GeneralInformationPageState extends State<GeneralInformationPage> {
                                     ),
                                     SizedBox(height: Dimensions.height20),
                                     Container(
+
                                         decoration: BoxDecoration(
                                             color: Colors.grey[100],
                                             borderRadius: BorderRadius.circular(Dimensions.radius30),
