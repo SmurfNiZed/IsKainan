@@ -55,21 +55,18 @@ class _AccountPageState extends State<AccountPage> {
             return Scaffold(
               extendBodyBehindAppBar: true,
               appBar: AppBar(
-                automaticallyImplyLeading: false,
                 backgroundColor: Colors.transparent,
                 elevation: 0,
-                title: GestureDetector(
-                    onTap: () {
-                      Get.offAll(() => SplashScreen(
-                          searchString: "",
-                          budget: 10000,
-                          position: LatLng(0, 0)));
-                    },
-                    child: AppIcon(
-                      icon: Icons.arrow_back,
-                      backgroundColor: AppColors.mainColor,
-                      iconColor: Colors.white,
-                    )),
+                leading: IconButton(
+                  icon: Icon(Icons.arrow_back, color: AppColors.mainColor, size: 40),
+                  onPressed: () {
+                    Get.offAll(() => SplashScreen(
+                      searchString: "",
+                      budget: 10000,
+                      position: LatLng(0, 0),
+                    ));
+                  },
+                ),
               ),
               body: Container(
                 decoration: BoxDecoration(
@@ -80,7 +77,7 @@ class _AccountPageState extends State<AccountPage> {
                 ),
                 child: Column(
                   children: [
-                    SizedBox(height: 20 * 3),
+                    SizedBox(height: 20 * 3.5),
                     Stack(
                       children: [
                         Row(

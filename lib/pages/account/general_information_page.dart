@@ -116,13 +116,26 @@ class _GeneralInformationPageState extends State<GeneralInformationPage> {
             late TextEditingController vendorDescriptionController =
                 TextEditingController(text: user.vendor_description.toString());
             return Scaffold(
+                extendBodyBehindAppBar: true,
+                appBar: AppBar(
+                  elevation: 0,
+                  backgroundColor: AppColors.mainColor,
+                  title: Text('Manage General Information',),
+                  titleTextStyle: TextStyle(
+                      fontFamily: 'Montserrat',
+                      fontSize: Dimensions.font26*1,
+                      fontWeight: FontWeight.bold
+                  ),
+                ),
                 body: Stack(
                   children: [
+
                     Container(
                       padding: EdgeInsets.symmetric(horizontal: Dimensions.width10),
                       color: Colors.white,
                       child: Column(
                         children: [
+                          SizedBox(height: 20),
                           // Can be scrolled if we add more options
                           Expanded(
                               child: SingleChildScrollView(
@@ -543,17 +556,7 @@ class _GeneralInformationPageState extends State<GeneralInformationPage> {
                         ],
                       ),
                     ),
-                    Positioned(
-                      top: Dimensions.height45 + Dimensions.height10,
-                      left: Dimensions.width20,
-                      child: GestureDetector(
-                          onTap: () {
-                            Navigator.pop(context);
-                          },
-                          child: AppIcon(icon: Icons.arrow_back,
-                            backgroundColor: AppColors.mainColor,
-                            iconColor: Colors.white,)),
-                    ),
+
                   ],
                 ));
           } else {

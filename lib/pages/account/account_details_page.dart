@@ -64,20 +64,23 @@ class AccountDetailsPage extends StatelessWidget {
             late TextEditingController emailController = TextEditingController(text: user.email.toString());
             late TextEditingController passwordController = TextEditingController(text: user.password.toString());
             return Scaffold(
+              extendBodyBehindAppBar: true,
                 appBar: AppBar(
-                  automaticallyImplyLeading: false,
-                  backgroundColor: Colors.white,
                   elevation: 0,
-                  title: GestureDetector(
-                      onTap: (){
-                        Navigator.pop(context);
-                      },
-                      child: AppIcon(icon: Icons.arrow_back, backgroundColor: AppColors.mainColor, iconColor: Colors.white,)),
+                  backgroundColor: AppColors.mainColor,
+                  title: Text('Manage Account Details',),
+                  titleTextStyle: TextStyle(
+                      fontFamily: 'Montserrat',
+                      fontSize: Dimensions.font26*1,
+                      fontWeight: FontWeight.bold
+                  ),
                 ),
                 body: Container(
+
                   color: Colors.white,
                   child: Column(
                     children: [
+                      SizedBox(height: 20*3.5),
                       // Can be scrolled if we add more options
                       Expanded(
                           child: SingleChildScrollView(
