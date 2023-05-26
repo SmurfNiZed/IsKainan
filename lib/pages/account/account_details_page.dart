@@ -159,77 +159,75 @@ class AccountDetailsPage extends StatelessWidget {
                                     ),
                                   ),
                                 ),
-                                SizedBox(height: Dimensions.height30),
-
-                                Align(
-                                  alignment: Alignment.center,
-                                  child: GestureDetector(
-                                    onTap: () {
-                                      AwesomeDialog(
-                                        context: context,
-                                        dialogType: DialogType.noHeader,
-                                        btnOkColor: AppColors.mainColor,
-                                        btnOkText: "Proceed",
-                                        btnOkIcon: Icons.delete,
-                                        btnOkOnPress: () async {
-                                          final userRepo = Get.put(UserRepository());
-                                          final FirebaseAuth _auth = FirebaseAuth.instance;
-
-                                          try {
-                                            await userRepo.deleteVendor(user.vendor_id!);
-                                            User acc = _auth.currentUser!;
-                                            await acc.delete();
-                                          } catch (e) {}
-                                        },
-                                        btnCancelColor: AppColors.paraColor,
-                                        btnCancelIcon: Icons.arrow_back,
-                                        btnCancelOnPress: () {},
-                                        body: Container(
-                                          padding: EdgeInsets.only(
-                                            left: Dimensions.width10,
-                                            right: Dimensions.width10,
-                                            bottom: Dimensions.width10,
-                                          ),
-                                          child: Column(
-                                            children: [
-                                              BigText(text: "Delete Account"),
-                                              SizedBox(height: Dimensions.height10),
-                                              SmallText(
-                                                text:
-                                                "You are about to delete this account. This action cannot be undone once you proceed.",
-                                                size: Dimensions.font16,
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ).show();
-                                    },
-                                    child: Container(
-                                      width: Dimensions.screenWidth * .7,
-                                      height: 50,
-                                      decoration: BoxDecoration(
-                                        color: AppColors.mainColor,
-                                        borderRadius: BorderRadius.circular(Dimensions.radius30),
-                                        boxShadow: [
-                                          BoxShadow(
-                                            blurRadius: 10,
-                                            spreadRadius: 7,
-                                            offset: Offset(1, 10),
-                                            color: Colors.grey.withOpacity(0.2),
-                                          ),
-                                        ],
-                                      ),
-                                      child: Row(
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        crossAxisAlignment: CrossAxisAlignment.center,
-                                        children: [
-                                          BigText(text: "Delete Account", color: Colors.white),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ),
-
+                                // SizedBox(height: Dimensions.height30),
+                                // Align(
+                                //   alignment: Alignment.center,
+                                //   child: GestureDetector(
+                                //     onTap: () {
+                                //       AwesomeDialog(
+                                //         context: context,
+                                //         dialogType: DialogType.noHeader,
+                                //         btnOkColor: AppColors.mainColor,
+                                //         btnOkText: "Proceed",
+                                //         btnOkIcon: Icons.delete,
+                                //         btnOkOnPress: () async {
+                                //           final userRepo = Get.put(UserRepository());
+                                //           final FirebaseAuth _auth = FirebaseAuth.instance;
+                                //
+                                //           try {
+                                //             await userRepo.deleteVendor(user.vendor_id!);
+                                //             User acc = _auth.currentUser!;
+                                //             await acc.delete();
+                                //           } catch (e) {}
+                                //         },
+                                //         btnCancelColor: AppColors.paraColor,
+                                //         btnCancelIcon: Icons.arrow_back,
+                                //         btnCancelOnPress: () {},
+                                //         body: Container(
+                                //           padding: EdgeInsets.only(
+                                //             left: Dimensions.width10,
+                                //             right: Dimensions.width10,
+                                //             bottom: Dimensions.width10,
+                                //           ),
+                                //           child: Column(
+                                //             children: [
+                                //               BigText(text: "Delete Account"),
+                                //               SizedBox(height: Dimensions.height10),
+                                //               SmallText(
+                                //                 text:
+                                //                 "You are about to delete this account. This action cannot be undone once you proceed.",
+                                //                 size: Dimensions.font16,
+                                //               ),
+                                //             ],
+                                //           ),
+                                //         ),
+                                //       ).show();
+                                //     },
+                                //     child: Container(
+                                //       width: Dimensions.screenWidth * .7,
+                                //       height: 50,
+                                //       decoration: BoxDecoration(
+                                //         color: AppColors.mainColor,
+                                //         borderRadius: BorderRadius.circular(Dimensions.radius30),
+                                //         boxShadow: [
+                                //           BoxShadow(
+                                //             blurRadius: 10,
+                                //             spreadRadius: 7,
+                                //             offset: Offset(1, 10),
+                                //             color: Colors.grey.withOpacity(0.2),
+                                //           ),
+                                //         ],
+                                //       ),
+                                //       child: Row(
+                                //         mainAxisAlignment: MainAxisAlignment.center,
+                                //         crossAxisAlignment: CrossAxisAlignment.center,
+                                //         children: [
+                                //           BigText(text: "Delete Account", color: Colors.white),
+                                //         ],
+                                //       ),
+                                //     ),
+                                //   ),
+                                // ),
                               ],
                             ),
                           ))
