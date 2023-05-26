@@ -101,28 +101,42 @@ class _GeneralInformationPageState extends State<GeneralInformationPage> {
           if (snapshot.connectionState == ConnectionState.done) {
             VendorData user = snapshot.data as VendorData;
             _streamController = StreamController<String>.broadcast();
-           startTime = '${(user.operating_hours![0]~/60)%12}:${((user.operating_hours![0]%60)).toString().padLeft(2, '0')} ${(user.operating_hours![0]~/60) < 12 ? 'AM' : 'PM'}';
-           endTime = '${(user.operating_hours![1]~/60)%12}:${((user.operating_hours![1]%60)).toString().padLeft(2, '0')} ${(user.operating_hours![1]~/60) < 12 ? 'AM' : 'PM'}';
-           String op_hours = startTime + " - " + endTime;
-           values = user.operating_days!;
+            startTime = '${(user.operating_hours![0]~/60)%12}:${((user.operating_hours![0]%60)).toString().padLeft(2, '0')} ${(user.operating_hours![0]~/60) < 12 ? 'AM' : 'PM'}';
+            endTime = '${(user.operating_hours![1]~/60)%12}:${((user.operating_hours![1]%60)).toString().padLeft(2, '0')} ${(user.operating_hours![1]~/60) < 12 ? 'AM' : 'PM'}';
+            String op_hours = startTime + " - " + endTime;
+            values = user.operating_days!;
 
             _checkBoxGCash = user.is_gcash == "true" ? true : false;
             _checkBoxOpen = user.is_open == "true" ? true : false;
             _isApproved = user.approved == "true"? true: false;
             late TextEditingController vendorNameController =
-                TextEditingController(text: user.vendor_name.toString());
+            TextEditingController(text: user.vendor_name.toString());
             late TextEditingController phoneController =
-                TextEditingController(text: user.phone.toString());
+            TextEditingController(text: user.phone.toString());
             late TextEditingController vendorDescriptionController =
-                TextEditingController(text: user.vendor_description.toString());
+            TextEditingController(text: user.vendor_description.toString());
             return Scaffold(
+                extendBodyBehindAppBar: true,
+                appBar: AppBar(
+                  elevation: 0,
+                  backgroundColor: AppColors.mainColor,
+                  title: Text('Manage General Information',),
+                  titleTextStyle: TextStyle(
+                      fontFamily: 'Montserrat',
+                      fontSize: Dimensions.font26*1,
+                      fontWeight: FontWeight.bold
+                  ),
+                ),
                 body: Stack(
                   children: [
+
                     Container(
+
                       padding: EdgeInsets.symmetric(horizontal: Dimensions.width10),
                       color: Colors.white,
                       child: Column(
                         children: [
+                          SizedBox(height: 20),
                           // Can be scrolled if we add more options
                           Expanded(
                               child: SingleChildScrollView(
@@ -138,8 +152,10 @@ class _GeneralInformationPageState extends State<GeneralInformationPage> {
                                     SizedBox(height: Dimensions.height45),
 
                                     Container(
+                                        padding: EdgeInsets.symmetric(horizontal: Dimensions.width10),
+                                        margin: EdgeInsets.only(left: Dimensions.height10, right: Dimensions.height10),
                                         decoration: BoxDecoration(
-                                            color: Colors.white,
+                                            color: Colors.grey[100],
                                             borderRadius: BorderRadius.circular(Dimensions.radius30),
                                             boxShadow: [
                                               BoxShadow(
@@ -150,20 +166,22 @@ class _GeneralInformationPageState extends State<GeneralInformationPage> {
                                               )
                                             ]
                                         ),
-                                      child: AppTextFieldv2(
-                                        textController: vendorNameController,
-                                        hintText: "Name of Establishment",
-                                        icon: Icons.food_bank_rounded,
-                                        backgroundColor: AppColors.iconColor1,
-                                      )
+                                        child: AppTextFieldv2(
+                                          textController: vendorNameController,
+                                          hintText: "Name of Establishment",
+                                          icon: Icons.food_bank_rounded,
+                                          backgroundColor: AppColors.iconColor1,
+                                        )
                                     ),
 
                                     SizedBox(height: Dimensions.height20),
 
                                     // Contact Number
                                     Container(
+                                      padding: EdgeInsets.symmetric(horizontal: Dimensions.width10),
+                                      margin: EdgeInsets.only(left: Dimensions.height10, right: Dimensions.height10),
                                       decoration: BoxDecoration(
-                                          color: Colors.white,
+                                          color: Colors.grey[100],
                                           borderRadius: BorderRadius.circular(Dimensions.radius30),
                                           boxShadow: [
                                             BoxShadow(
@@ -314,7 +332,7 @@ class _GeneralInformationPageState extends State<GeneralInformationPage> {
                                                 data: Theme.of(context).copyWith(
                                                     textButtonTheme: TextButtonThemeData(
                                                         style: TextButton.styleFrom(
-                                                        foregroundColor: AppColors.mainColor
+                                                            foregroundColor: AppColors.mainColor
                                                         )
                                                     )
                                                 ),
@@ -338,8 +356,8 @@ class _GeneralInformationPageState extends State<GeneralInformationPage> {
                                         height: 50,
                                         width: Dimensions.screenWidth,
                                         decoration: BoxDecoration(
-                                          color: Colors.grey[100],
-                                          borderRadius: BorderRadius.circular(Dimensions.radius30),
+                                            color: Colors.grey[100],
+                                            borderRadius: BorderRadius.circular(Dimensions.radius30),
                                             boxShadow: [
                                               BoxShadow(
                                                   blurRadius: 10,
@@ -361,7 +379,7 @@ class _GeneralInformationPageState extends State<GeneralInformationPage> {
                                                   children: [
                                                     Icon(Icons.timer, color: AppColors.iconColor1,),
                                                     SizedBox(width: Dimensions.width10,),
-                                                    SmallText(text: "Operating Hours: ${snapshot.data}", size: Dimensions.font16,),
+                                                    Text("Operating Hours: ${snapshot.data}", maxLines: 1, overflow: TextOverflow.ellipsis),
                                                   ],
                                                 ),
                                                 Icon(Icons.edit, color: AppColors.iconColor1,),
@@ -377,10 +395,10 @@ class _GeneralInformationPageState extends State<GeneralInformationPage> {
                                         return Container(
                                           padding: EdgeInsets.symmetric(horizontal: Dimensions.width20, vertical: Dimensions.width10),
                                           height: Dimensions.height20*5,
-                                          margin: EdgeInsets.only(left: Dimensions.height10/2, right: Dimensions.height10),
+                                          margin: EdgeInsets.only(left: Dimensions.height10, right: Dimensions.height10),
                                           decoration: BoxDecoration(
-                                            color: Colors.grey[100],
-                                            borderRadius: BorderRadius.circular(Dimensions.radius30),
+                                              color: Colors.grey[100],
+                                              borderRadius: BorderRadius.circular(Dimensions.radius30),
                                               boxShadow: [
                                                 BoxShadow(
                                                     blurRadius: 10,
@@ -419,6 +437,7 @@ class _GeneralInformationPageState extends State<GeneralInformationPage> {
                                     ),
                                     SizedBox(height: Dimensions.height20),
                                     Container(
+
                                         decoration: BoxDecoration(
                                             color: Colors.grey[100],
                                             borderRadius: BorderRadius.circular(Dimensions.radius30),
@@ -431,8 +450,8 @@ class _GeneralInformationPageState extends State<GeneralInformationPage> {
                                               )
                                             ]
                                         ),
-                                      margin: EdgeInsets.symmetric(horizontal: Dimensions.height10),
-                                      child: AppTextFieldLong(vendorDescriptionController: vendorDescriptionController)),
+                                        margin: EdgeInsets.symmetric(horizontal: Dimensions.height10),
+                                        child: AppTextFieldLong(vendorDescriptionController: vendorDescriptionController)),
                                     SizedBox(height: Dimensions.height20),
                                     RichText(text: TextSpan(
                                       text: "This vendor is ",
@@ -543,17 +562,7 @@ class _GeneralInformationPageState extends State<GeneralInformationPage> {
                         ],
                       ),
                     ),
-                    Positioned(
-                      top: Dimensions.height45 + Dimensions.height10,
-                      left: Dimensions.width20,
-                      child: GestureDetector(
-                          onTap: () {
-                            Navigator.pop(context);
-                          },
-                          child: AppIcon(icon: Icons.arrow_back,
-                            backgroundColor: AppColors.mainColor,
-                            iconColor: Colors.white,)),
-                    ),
+
                   ],
                 ));
           } else {
@@ -561,8 +570,8 @@ class _GeneralInformationPageState extends State<GeneralInformationPage> {
                 backgroundColor: Colors.white,
                 body: Center(
                     child: CircularProgressIndicator(
-                  color: AppColors.mainColor,
-                )));
+                      color: AppColors.mainColor,
+                    )));
           }
         });
   }

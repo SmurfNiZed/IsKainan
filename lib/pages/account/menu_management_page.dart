@@ -119,6 +119,16 @@ class _MenuManagementPageState extends State<MenuManagementPage> {
 
 
     return Scaffold(
+      appBar: AppBar(
+        elevation: 0,
+        backgroundColor: AppColors.mainColor,
+        title: Text('Manage Menu',),
+        titleTextStyle: TextStyle(
+            fontFamily: 'Montserrat',
+            fontSize: Dimensions.font26*1.2,
+            fontWeight: FontWeight.bold
+        ),
+      ),
       backgroundColor: Colors.white,
       body: Stack(
         alignment: Alignment.center,
@@ -129,7 +139,7 @@ class _MenuManagementPageState extends State<MenuManagementPage> {
               padding: EdgeInsets.only(top: Dimensions.height20),
               child: Column(
                 children: [
-                  SizedBox(height: Dimensions.height45*3),
+                  SizedBox(height: Dimensions.height45),
                   AppIcon(icon: Icons.restaurant_menu,
                       backgroundColor: AppColors.iconColor1,
                       iconColor: Colors.white,
@@ -819,17 +829,7 @@ class _MenuManagementPageState extends State<MenuManagementPage> {
               ),
             ),
           ),
-          Positioned(
-            top: Dimensions.height45 + Dimensions.height10,
-            left: Dimensions.width20,
-            child: GestureDetector(
-                onTap: () {
-                  Navigator.pop(context);
-                },
-                child: AppIcon(icon: Icons.arrow_back,
-                  backgroundColor: AppColors.mainColor,
-                  iconColor: Colors.white,)),
-          ),
+
         ],
       ),
     );

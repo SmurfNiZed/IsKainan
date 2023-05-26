@@ -76,13 +76,13 @@ class _AppColumnState extends State<AppColumn> {
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        BigText(text: vendorProfile.vendor_name!, size: Dimensions.font26,),
+        BigText(text: vendorProfile.vendor_name!, size: 18,),
         SizedBox(height: Dimensions.height10,),
         Row(
           children: [
-            SmallText(text: startTime + " - " + endTime, size: Dimensions.font16*0.8, isOneLine: true,),
+            SmallText(text: startTime + " - " + endTime, size: Dimensions.font16*0.7, isOneLine: true,),
             SizedBox(width: Dimensions.width10,),
-            SmallText(text: vendorProfile.vendor_location!, size: Dimensions.font16*0.8, isOneLine: true,),
+            SmallText(text: vendorProfile.vendor_location!, size: Dimensions.font16*0.7, isOneLine: true,),
           ],
         ),
         SizedBox(height: Dimensions.height10,),

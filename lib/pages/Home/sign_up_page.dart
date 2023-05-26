@@ -12,6 +12,7 @@ import '../../widgets/AppNumField.dart';
 import '../../widgets/app_phone_field.dart';
 import '../../widgets/big_text.dart';
 import '../../utils/colors.dart';
+import 'package:sizer/sizer.dart';
 
 class VendorSignUpPage extends StatelessWidget {
   const VendorSignUpPage({Key? key}) : super(key: key);
@@ -70,129 +71,139 @@ class VendorSignUpPage extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: Colors.white,
-      body: Container(
-        decoration: BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage('assets/images/signup.png'),
-            fit: BoxFit.cover,
-          ),
-        ),
-        child: Center(
-          child: SingleChildScrollView(
-            physics: BouncingScrollPhysics(),
-            child: Column(
-              children: [
-                SizedBox(height: Dimensions.screenHeight * 0.1),
-                Container(
-                  width: Dimensions.screenWidth * .8,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      BigText(text: "Create", size: Dimensions.font20 * 2 + Dimensions.font26),
-                      BigText(text: "Account", size: Dimensions.font20 * 2 + Dimensions.font26),
-                    ],
-                  ),
-                ),
-                SizedBox(height: Dimensions.height20),
-                Container(
-                  width: Dimensions.screenWidth * .9,
-                  child: AppTextField(
-                    textController: emailController,
-                    hintText: "Email",
-                    icon: Icons.email_rounded,
-                    backgroundColor: AppColors.mainColor,
-                  ),
-                ),
+      body: Sizer(
+        builder: (context, orientation, deviceType) {
+          return Container(
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage('assets/images/signup.png'),
+                fit: BoxFit.cover,
+              ),
+            ),
+            child: Center(
+              child: SingleChildScrollView(
+                physics: BouncingScrollPhysics(),
+                child: Column(
+                  children: [
+                    SizedBox(height: 15.h),
+                    Container(
+                      width: 80.w,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          BigText(text: "Create", size: 35.sp),
+                          BigText(text: "Account", size: 35.sp),
+                        ],
+                      ),
+                    ),
+                    SizedBox(height: 2.h),
+                    Container(
+                      width: 90.w,
+                      child: AppTextField(
+                        textController: emailController,
+                        hintText: "Email",
+                        icon: Icons.email_rounded,
+                        backgroundColor: AppColors.mainColor,
+                      ),
+                    ),
 
-                SizedBox(height: Dimensions.height20),
-                Container(
-                  width: Dimensions.screenWidth * .9,
-                  child: AppTextField(
-                    textController: passwordController,
-                    hintText: "Password",
-                    icon: Icons.key_rounded,
-                    backgroundColor: AppColors.mainColor,
-                    isPassword: true,
-                  ),
-                ),
+                    SizedBox(height: 2.h),
+                    Container(
+                      width: 90.w,
+                      child: AppTextField(
+                        textController: passwordController,
+                        hintText: "Password",
+                        icon: Icons.key_rounded,
+                        backgroundColor: AppColors.mainColor,
+                        isPassword: true,
+                      ),
+                    ),
 
-                SizedBox(height: Dimensions.height20),
-                Container(
-                  width: Dimensions.screenWidth * .9,
-                  child: AppTextField(
-                    textController: vendorNameController,
-                    hintText: "Name of Establishment",
-                    icon: Icons.food_bank_rounded,
-                    backgroundColor: AppColors.mainColor,
-                  ),
-                ),
+                    SizedBox(height: 2.h),
+                    Container(
+                      width: 90.w,
+                      child: AppTextField(
+                        textController: vendorNameController,
+                        hintText: "Name of Establishment",
+                        icon: Icons.food_bank_rounded,
+                        backgroundColor: AppColors.mainColor,
+                      ),
+                    ),
 
-                SizedBox(height: Dimensions.height20),
-                Container(
-                  width: Dimensions.screenWidth * .9,
-                  child: AppPhoneField(
-                    textController: phoneController,
-                    hintText: "Contact Number",
-                    icon: Icons.phone,
-                    backgroundColor: AppColors.mainColor,
-                  ),
-                ),
+                    SizedBox(height: 2.h),
+                    Container(
+                      width: 90.w,
+                      child: AppPhoneField(
+                        textController: phoneController,
+                        hintText: "Contact Number",
+                        icon: Icons.phone,
+                        backgroundColor: AppColors.mainColor,
+                      ),
+                    ),
 
-                SizedBox(height: Dimensions.height20),
-                Padding(
-                  padding: EdgeInsets.only(right: Dimensions.screenWidth * .1),
-                  child: Align(
-                    alignment: Alignment.centerRight,
-                    child: GestureDetector(
-                      onTap: () {
-                        _registration();
-                      },
-                      child: Container(
-                        width: Dimensions.screenWidth / 3,
-                        height: Dimensions.screenHeight / 12,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(Dimensions.radius30),
-                          color: AppColors.mainColor,
-                        ),
-                        child: Center(
-                          child: BigText(
-                            text: "Sign up",
-                            size: Dimensions.font26,
-                            color: Colors.white,
+                    SizedBox(height: 5.h),
+                    Padding(
+                      padding: EdgeInsets.only(right: 10.w),
+                      child: Align(
+                        alignment: Alignment.centerRight,
+                        child: GestureDetector(
+                          onTap: () {
+                            _registration();
+                          },
+                          child: Container(
+                            width: 30.w,
+                            height: 8.h,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(15.sp),
+                              color: AppColors.mainColor,
+                            ),
+                            child: Center(
+                              child: BigText(
+                                text: "Sign up",
+                                size: 12.sp,
+                                color: Colors.white,
+                              ),
+                            ),
                           ),
                         ),
                       ),
                     ),
-                  ),
-                ),
-                SizedBox(height: Dimensions.screenHeight * 0.05),
-                SizedBox(height: Dimensions.height10),
-                RichText(
-                  text: TextSpan(
-                    text: "Have an account? ",
-                    style: TextStyle(
-                      fontFamily: 'Montserrat',
-                      color: Colors.grey,
-                      fontSize: Dimensions.font16,
-                    ),
-                    children: [
-                      TextSpan(
-                        text: "Sign in instead",
-                        style: TextStyle(
-                          fontFamily: 'Montserrat',
-                          color: AppColors.mainColor,
-                          fontSize: Dimensions.font16,
-                          fontWeight: FontWeight.bold,
+                    SizedBox(height: 10.h),
+
+                    Align(
+                      alignment: Alignment.bottomCenter,
+                      child: Container(
+                        height: 20.sp,
+                        child: RichText(
+                          text: TextSpan(
+                            text: "Have an account? ",
+                            style: TextStyle(
+                              fontFamily: 'Montserrat',
+                              color: Colors.grey,
+                              fontSize: 10.sp,
+                            ),
+                            children: [
+                              TextSpan(
+                                text: "Sign in instead",
+                                style: TextStyle(
+                                  fontFamily: 'Montserrat',
+                                  color: AppColors.mainColor,
+                                  fontSize: 10.sp,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                                recognizer: TapGestureRecognizer()..onTap = () => Get.back(),
+                              ),
+                            ],
+                          ),
                         ),
-                        recognizer: TapGestureRecognizer()..onTap = () => Get.back(),
                       ),
-                    ],
-                  ),
-                )
-              ],
+                    ),
+                  ],
+                ),
+              ),
             ),
-          ),
-        ),
+          );
+        },
       ),
     );
   }
